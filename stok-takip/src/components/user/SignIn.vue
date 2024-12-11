@@ -22,36 +22,32 @@
           <div class="w-9/12">
             <Form :validation-schema="formSchema" @submit="onSubmit">
               <div class="mb-10">
-                <Field
-                  name="email"
-                  class=""
-                  v-slot="{ field, errors, errorMessage }"
-                >
+                <Field name="email" v-slot="{ field, errors }">
                   <p>Email Adresi</p>
                   <input
                     type="email"
                     class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
                     v-bind="field"
-                    :class="{ 'is-invalid': errors.length !== 0 }"
                   />
-                  <div v-if="errors.length !== 0">{{ errorMessage }}</div>
+                  <div v-if="errors.length">{{ errors[0] }}</div>
                 </Field>
               </div>
 
               <div class="mb-10">
-                <Field name="password" v-slot="{ field, errors, errorMessage }">
+                <Field name="password" v-slot="{ field, errors }">
                   <p>Şifre</p>
                   <input
                     type="password"
                     class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
                     v-bind="field"
                   />
-                  <div v-if="errors.length !== 0">{{ errorMessage }}</div>
+                  <div v-if="errors.length">{{ errors[0] }}</div>
                 </Field>
               </div>
 
               <div class="text-center mt-6">
                 <button
+                  type="submit"
                   class="w-full bg-[#fe9f43] text-white py-3 rounded-lg relative overflow-hidden group border border-[#fe9f43] hover:bg-white hover:text-[#fe9f43]"
                 >
                   <span
@@ -60,21 +56,15 @@
                   <span
                     class="relative group-hover:text-[#fe9f43] transition-colors duration-300"
                   >
-                    Sign In
+                    Giriş Yap
                   </span>
                 </button>
               </div>
             </Form>
+            <p v-if="userStore.error" class="text-red-500 mt-4">
+              {{ userStore.error }}
+            </p>
           </div>
-        </div>
-
-        <div class="text-center mt-6">
-          <p>
-            New on our platform?
-            <a href="#" class="text-orange-500 hover:underline"
-              >Create an account</a
-            >
-          </p>
         </div>
       </div>
     </div>
@@ -84,7 +74,6 @@
 <script setup>
 import { Field, Form } from "vee-validate";
 import * as yup from "yup";
-import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
@@ -98,6 +87,6 @@ const formSchema = yup.object({
 });
 
 function onSubmit(values, { resetForm }) {
-  userStore.register(values);
+  userStore.signIn(values);
 }
 </script>
