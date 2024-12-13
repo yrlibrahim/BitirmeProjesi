@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "vuetify": "^3.7.5",
     "yup": "^1.4.0"
   }
 }

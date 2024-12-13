@@ -1,8 +1,36 @@
 <template>
+  <!--Loading Iconu-->
+  <div
+    v-if="userStore.loading"
+    class="flex items-center justify-center min-h-screen"
+  >
+    <svg
+      class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+      ></path>
+    </svg>
+  </div>
+  <!--Loading Iconu-->
   <div
     class="relative min-h-screen bg-cover bg-center bg-[url('https://images.pexels.com/photos/1145434/pexels-photo-1145434.jpeg')]"
+    v-if="!userStore.loading"
   >
-    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
 
     <div class="relative z-10 flex items-left justify-start min-h-screen">
       <div
@@ -13,7 +41,7 @@
             <img
               src="../../assets/Images/logo-no-bg.png"
               alt="Logo"
-              class="w-[250px] h-[250px]"
+              class="w-[270px] h-[270px]"
             />
           </div>
           <h1 class="text-2xl font-semibold text-gray-800">Giriş Yap</h1>

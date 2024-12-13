@@ -1,14 +1,14 @@
 import { ref, computed, registerRuntimeCompiler } from "vue";
 import { defineStore } from "pinia";
 import { isAdmin } from "@firebase/util";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { DB, AUTH } from "@/utils/firebase";
 import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import router from "@/router";
+import { useToast } from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-sugar.css";
+
+const $toast = useToast();
 
 const DEFAULT_USER = {
   uid: null,
@@ -36,9 +36,10 @@ export const useUserStore = defineStore("user", {
           formData.password
         );
         console.log(response);
-        router.push("/home");
+        router.push("/");
+        $toast.success("Hoşgeldiniz");
       } catch (error) {
-        console.error("Error during registration:", error.message);
+        $toast.error("Hatalı Giriş");
       } finally {
         this.loading = false;
       }
