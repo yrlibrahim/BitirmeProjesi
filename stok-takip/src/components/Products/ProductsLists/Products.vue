@@ -1,28 +1,54 @@
 <template>
   <div class="h-screen">
-    <!-- Liste Başlık -->
-    <div class="grid grid-cols-6 gap-4 w-4/5 font-bold mb-4">
-      <span>Ürün</span>
-      <span>Araç</span>
-      <span>Model</span>
-      <span>Kategori</span>
-      <span>Adet</span>
-      <span>Fiyat</span>
-    </div>
-
-    <!-- Liste İçerik -->
-    <div>
-      <div
-        class="grid grid-cols-6 gap-4 w-4/5 mb-2"
-        v-for="doc in documents"
-        :key="doc.id"
+    <!-- Yükleniyor Göstergesi -->
+    <div v-if="isLoading" class="flex items-center justify-center min-h-screen">
+      <svg
+        class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
       >
-        <span>{{ doc.name }}</span>
-        <span>{{ doc.vehicle }}</span>
-        <span>{{ doc.model }}</span>
-        <span>{{ doc.subCollection }}</span>
-        <span>{{ doc.count }}</span>
-        <span>{{ doc.price }}₺</span>
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+        ></path>
+      </svg>
+    </div>
+    <!-- Liste -->
+    <div v-else>
+      <!-- Liste Başlık -->
+      <div class="grid grid-cols-6 gap-4 w-4/5 font-bold mb-4">
+        <span>Ürün</span>
+        <span>Araç</span>
+        <span>Model</span>
+        <span>Kategori</span>
+        <span>Adet</span>
+        <span>Fiyat</span>
+      </div>
+
+      <!-- Liste İçerik -->
+      <div>
+        <div
+          class="grid grid-cols-6 gap-4 w-4/5 mb-2"
+          v-for="doc in documents"
+          :key="doc.id"
+        >
+          <span>{{ doc.name }}</span>
+          <span>{{ doc.vehicle }}</span>
+          <span>{{ doc.model }}</span>
+          <span>{{ doc.subCollection }}</span>
+          <span>{{ doc.count }}</span>
+          <span>{{ doc.price }}₺</span>
+        </div>
       </div>
     </div>
   </div>
@@ -35,6 +61,7 @@ import { collection, getDocs } from "firebase/firestore";
 
 // Belgeleri tutmak için state tanımla
 const documents = ref([]);
+const isLoading = ref(true); // Yüklenme durumu için state
 
 // Araç ve Model bilgileri
 const vehicles = ["Mercedes"];
@@ -62,13 +89,6 @@ const fetchAllDocuments = async () => {
           // Koleksiyon içindeki belgeleri getir
           const querySnapshot = await getDocs(collectionRef);
 
-          // Eğer koleksiyon boşsa, konsola log yazdır
-          if (querySnapshot.empty) {
-            console.log(
-              `Veri bulunamadı: ${vehicleName} ${modelName} ${subCollectionName}`
-            );
-          }
-
           // Gelen belgeleri allData'ya ekle
           querySnapshot.docs.forEach((doc) => {
             allData.push({
@@ -87,6 +107,9 @@ const fetchAllDocuments = async () => {
     documents.value = allData;
   } catch (error) {
     console.error("Veri çekme hatası:", error);
+  } finally {
+    // Yüklenme durumunu false yap
+    isLoading.value = false;
   }
 };
 
