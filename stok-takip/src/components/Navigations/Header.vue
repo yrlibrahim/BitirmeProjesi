@@ -3,6 +3,7 @@
     <div>
       <router-link to="/">Anasayfa</router-link>
       <router-link to="Products">Ürün Listesi</router-link>
+      <router-link to="customer">Müşteri Sayfası</router-link>
     </div>
     <div class="p-1 border border-gray-300 rounded-md flex gap-2">
       <div>

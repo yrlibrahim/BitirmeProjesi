@@ -24,7 +24,17 @@
       </svg>
     </div>
     <!-- Liste -->
+
     <div v-else>
+      <!-- Yeni Ürün Ekle Butonu -->
+      <div class="flex justify-end w-4/5 mb-4">
+        <button
+          @click="goToCreateNewProduct"
+          class="bg-[#fe9f43] text-white px-4 py-2 rounded hover:bg-[#e88d3a] transition"
+        >
+          Yeni Ürün Ekle
+        </button>
+      </div>
       <!-- Liste Başlık -->
       <div class="grid grid-cols-6 gap-4 w-4/5 font-bold mb-4">
         <span>Ürün</span>
@@ -58,10 +68,19 @@
 import { ref, onMounted } from "vue";
 import { db } from "@/utils/firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { useRouter } from "vue-router"; // Router kullanımı için
 
 // Belgeleri tutmak için state tanımla
 const documents = ref([]);
 const isLoading = ref(true); // Yüklenme durumu için state
+
+// Router tanımla
+const router = useRouter();
+
+// Yeni Ürün Sayfasına Yönlendirme
+const goToCreateNewProduct = () => {
+  router.push("/create-new-product");
+};
 
 // Araç ve Model bilgileri
 const vehicles = ["Mercedes"];
@@ -143,5 +162,10 @@ onMounted(() => {
 /* Satır aralarındaki boşluk */
 .mb-2 {
   margin-bottom: 8px;
+}
+
+/* Yeni Ürün Ekle Butonu */
+button {
+  cursor: pointer;
 }
 </style>
