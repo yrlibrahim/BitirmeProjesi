@@ -103,8 +103,11 @@
 import { Field, Form } from "vee-validate";
 import * as yup from "yup";
 import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+import { watch } from "vue";
 
 const userStore = useUserStore();
+const router = useRouter();
 
 const formSchema = yup.object({
   email: yup
@@ -114,7 +117,17 @@ const formSchema = yup.object({
   password: yup.string().required("Bu alan boş bırakılamaz!"),
 });
 
-function onSubmit(values, { resetForm }) {
-  userStore.signIn(values);
+watch(
+  () => userStore.auth,
+  (auth) => {
+    if (auth) {
+      router.push({ name: "home" });
+    }
+  }
+);
+
+async function onSubmit(values, { resetForm }) {
+  await userStore.signIn(values);
+  resetForm();
 }
 </script>

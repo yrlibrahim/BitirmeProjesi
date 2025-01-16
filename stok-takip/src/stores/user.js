@@ -1,12 +1,13 @@
-import { ref, computed, registerRuntimeCompiler } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
-import { isAdmin } from "@firebase/util";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { DB, AUTH } from "@/utils/firebase";
-import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
-import router from "@/router";
+import {
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+} from "firebase/auth";
+import { AUTH } from "@/utils/firebase";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
+import { useRouter } from "vue-router";
 
 const $toast = useToast();
 
@@ -23,25 +24,37 @@ export const useUserStore = defineStore("user", {
     loading: false,
     user: DEFAULT_USER,
     auth: false,
+    error: null,
   }),
-  getters: {},
   actions: {
     async signIn(formData) {
       try {
         this.loading = true;
-
         const response = await signInWithEmailAndPassword(
           AUTH,
           formData.email,
           formData.password
         );
         console.log(response);
-        router.push("/");
+        this.auth = true;
         $toast.success("Hoşgeldiniz");
       } catch (error) {
+        this.error = error.message;
         $toast.error("Hatalı Giriş");
       } finally {
         this.loading = false;
+      }
+    },
+
+    async signOut() {
+      try {
+        const router = useRouter(); // Router'ı burada kullanmalısınız
+        await firebaseSignOut(AUTH);
+        $toast.success("Çıkış Yapıldı");
+        router.push({ name: "SignIn" }); // Giriş sayfasına yönlendirme
+      } catch (error) {
+        this.error = error.message;
+        $toast.error("Çıkış Yapılırken Hata Oluştu");
       }
     },
   },
