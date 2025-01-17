@@ -45,17 +45,5 @@ export const useUserStore = defineStore("user", {
         this.loading = false;
       }
     },
-
-    async signOut() {
-      try {
-        const router = useRouter(); // Router'ı burada kullanmalısınız
-        await firebaseSignOut(AUTH);
-        $toast.success("Çıkış Yapıldı");
-        router.push({ name: "SignIn" }); // Giriş sayfasına yönlendirme
-      } catch (error) {
-        this.error = error.message;
-        $toast.error("Çıkış Yapılırken Hata Oluştu");
-      }
-    },
   },
 });

@@ -14,32 +14,38 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Home,
+      meta: { requiresHeader: true },
     },
     {
       path: "/signin",
       name: "Signin",
       component: SignIn,
+      meta: { requiresHeader: false },
     },
     {
       path: "/product",
       name: "product",
       component: product,
+      meta: { requiresHeader: true },
     },
     {
       path: "/create-new-product",
       name: "createNewProduct",
       component: createNewProduct,
+      meta: { requiresHeader: true },
     },
     {
       path: "/customer",
       name: "customer",
       component: customer,
+      meta: { requiresHeader: true },
     },
     {
       path: "/customer/:id",
       name: "customerDetail",
       component: customerDetail,
       props: true,
+      meta: { requiresHeader: true },
     },
   ],
 });

@@ -1,7 +1,28 @@
 <template>
-  <div>
-    <!-- Diğer içerikler -->
+  <div v-if="isLoading">
+    <svg
+      class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+      ></path>
+    </svg>
+  </div>
 
+  <div v-else>
     <button
       @click="navigateToAddProduct"
       class="bg-blue-500 text-white py-2 px-4 rounded"
@@ -44,26 +65,22 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from "vue";
 import { useStockData } from "@/stores/useStockData";
-import { useRouter } from "vue-router"; // Router kullanımı
+import { useRouter } from "vue-router";
 
-export default {
-  setup() {
-    const { stockData, fetchStockData } = useStockData();
-    const router = useRouter(); // useRouter hook'u
+const { stockData, fetchStockData } = useStockData();
+const router = useRouter();
+const isLoading = ref(false);
 
-    onMounted(() => {
-      fetchStockData();
-    });
+onMounted(async () => {
+  isLoading.value = true;
+  await fetchStockData();
+  isLoading.value = false;
+});
 
-    // Yeni ürün ekleme butonuna tıklandığında yönlendirme fonksiyonu
-    const navigateToAddProduct = () => {
-      router.push("/create-new-product");
-    };
-
-    return { stockData, navigateToAddProduct };
-  },
+const navigateToAddProduct = () => {
+  router.push("/create-new-product");
 };
 </script>
