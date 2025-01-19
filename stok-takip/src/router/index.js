@@ -5,6 +5,11 @@ import product from "@/components/Products/ProductsLists/product.vue";
 import createNewProduct from "@/components/Products/ProductsLists/create-new-product.vue";
 import customer from "@/components/Customers/customer.vue";
 import customerDetail from "@/components/Customers/customer-detail.vue";
+import CreateInvoice from "@/components/Customers/create-invoice.vue";
+import InvoiceDetail from "@/components/Customers/customer-detail.vue";
+import company from "@/components/Companys/company.vue";
+import companyDetail from "@/components/Companys/company-detail.vue";
+import createIncmnginvoice from "@/components/Companys/create-incmnginvoice.vue";
 import { useUserStore } from "@/stores/user";
 
 const router = createRouter({
@@ -14,38 +19,61 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Home,
-      meta: { requiresHeader: true },
     },
     {
       path: "/signin",
       name: "Signin",
       component: SignIn,
-      meta: { requiresHeader: false },
     },
     {
       path: "/product",
       name: "product",
       component: product,
-      meta: { requiresHeader: true },
     },
     {
       path: "/create-new-product",
       name: "createNewProduct",
       component: createNewProduct,
-      meta: { requiresHeader: true },
     },
     {
       path: "/customer",
       name: "customer",
       component: customer,
-      meta: { requiresHeader: true },
     },
     {
       path: "/customer/:id",
       name: "customerDetail",
       component: customerDetail,
       props: true,
-      meta: { requiresHeader: true },
+    },
+    {
+      path: "/customer/:id/create-invoice",
+      name: "CreateInvoice",
+      component: CreateInvoice,
+      props: true,
+    },
+    {
+      path: "/invoices/:id/:invoiceId",
+      name: "InvoicesDetail",
+      component: InvoiceDetail,
+      props: true,
+    },
+    {
+      path: "/company",
+      name: "company",
+      component: company,
+    },
+    {
+      path: "/company/:id",
+      name: "companyDetail",
+      component: companyDetail,
+      props: true,
+    },
+    {
+      path: "/customer/:id/create-incmnginvoice",
+      name: "CreateIncMngInvoice",
+      component: createIncmnginvoice,
+      props: true,
     },
   ],
 });

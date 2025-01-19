@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading">
+  <div v-if="isLoading" class="flex justify-center items-center h-screen">
     <svg
       class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
       xmlns="http://www.w3.org/2000/svg"
@@ -30,38 +30,37 @@
       Yeni Ürün Ekle
     </button>
 
-    <ul>
-      <li v-for="brand in stockData" :key="brand.id">
-        {{ brand.id }}
-        <ul>
-          <li v-for="model in brand.models" :key="model.id">
-            {{ model.id }}
-            <ul>
-              <li v-for="category in model.categories" :key="category.id">
-                {{ category.id }}
-                <ul>
-                  <li
-                    v-for="subCategory in category.subCategories"
-                    :key="subCategory.id"
-                  >
-                    {{ subCategory.name }}
-                    <ul>
-                      <li
-                        v-for="product in subCategory.products"
-                        :key="product.id"
-                      >
-                        {{ product.name }} - {{ product.price }} TL
-                        {{ product.count }}adet
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
+    <div v-for="brand in stockData" :key="brand.id" class="mb-4">
+      <h2 class="text-xl font-semibold">{{ brand.id }}</h2>
+      <div v-for="model in brand.models" :key="model.id" class="mt-2">
+        <h3 class="text-lg">{{ model.id }}</h3>
+        <div
+          v-for="category in model.categories"
+          :key="category.id"
+          class="mt-2"
+        >
+          <h4 class="text-md">{{ category.id }}</h4>
+          <div
+            v-for="subCategory in category.subCategories"
+            :key="subCategory.id"
+            class="mt-2"
+          >
+            <h5 class="text-sm font-medium">{{ subCategory.name }}</h5>
+            <ul class="list-none">
+              <li
+                v-for="product in subCategory.products"
+                :key="product.id"
+                class="flex"
+              >
+                <span>{{ product.name }} - {{ product.price }} TL</span>
+                ----
+                <span>{{ product.count }} adet</span>
               </li>
             </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

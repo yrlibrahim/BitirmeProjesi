@@ -69,7 +69,7 @@
                     class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
                     v-bind="field"
                   />
-                  <div v-if="errors.length">{{ errors[0] }}</div>
+                  <div v-if="errors.length" class="">{{ errors[0] }}</div>
                 </Field>
               </div>
 
@@ -89,9 +89,6 @@
                 </button>
               </div>
             </Form>
-            <p v-if="userStore.error" class="text-red-500 mt-4">
-              {{ userStore.error }}
-            </p>
           </div>
         </div>
       </div>
@@ -102,9 +99,9 @@
 <script setup>
 import { Field, Form } from "vee-validate";
 import * as yup from "yup";
+import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useRouter } from "vue-router";
-import { watch } from "vue";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -117,17 +114,8 @@ const formSchema = yup.object({
   password: yup.string().required("Bu alan boş bırakılamaz!"),
 });
 
-watch(
-  () => userStore.auth,
-  (auth) => {
-    if (auth) {
-      router.push({ name: "home" });
-    }
-  }
-);
-
-async function onSubmit(values, { resetForm }) {
-  await userStore.signIn(values);
+function onSubmit(values, { resetForm }) {
+  userStore.signIn(values);
   resetForm();
 }
 </script>
