@@ -3,23 +3,23 @@
     <h1 class="text-2xl font-bold mb-6">Yeni Fatura Oluştur</h1>
 
     <!-- Fatura Bilgileri -->
-    <form @submit.prevent="addInvoice">
+    <form @submit.prevent="addinCmngInvoice">
       <div class="mb-4">
-        <label for="invoiceId" class="block mb-2">Fatura ID</label>
+        <label for="inCmnginvoiceId" class="block mb-2">Fatura ID</label>
         <input
-          v-model="newInvoice.id"
+          v-model="newinCmngInvoice.id"
           type="text"
-          id="invoiceId"
+          id="inCmnginvoiceId"
           class="border p-2 w-full"
           required
         />
       </div>
       <div class="mb-4">
-        <label for="invoiceDate" class="block mb-2">Fatura Tarihi</label>
+        <label for="inCmnginvoiceDate" class="block mb-2">Fatura Tarihi</label>
         <input
-          v-model="newInvoice.date"
+          v-model="newinCmngInvoice.date"
           type="date"
-          id="invoiceDate"
+          id="inCmnginvoiceDate"
           class="border p-2 w-full"
           required
         />
@@ -28,12 +28,21 @@
       <!-- Ürünler -->
       <div>
         <h2 class="text-lg font-bold mb-4">Ürünler</h2>
+
         <div
-          v-for="(product, index) in newInvoice.products"
+          v-for="(product, index) in newinCmngInvoice.products"
           :key="index"
-          class="grid grid-cols-7 gap-4 mb-4"
+          class="flex item-center justify-center gap-4 mb-4"
         >
-          <div>
+          <div class="w-1 flex items-center justify-center">
+            <input
+              type="checkbox"
+              v-model="selectedProducts"
+              :value="index"
+              class="mr-2"
+            />
+          </div>
+          <div class="w-1/2">
             <label class="block mb-2">Araç Markası</label>
             <select
               v-model="product.brand"
@@ -50,7 +59,7 @@
               </option>
             </select>
           </div>
-          <div>
+          <div class="w-1/2">
             <label class="block mb-2">Model</label>
             <select
               v-model="product.model"
@@ -67,7 +76,7 @@
               </option>
             </select>
           </div>
-          <div>
+          <div class="w-1/2">
             <label class="block mb-2">Kategori</label>
             <select
               v-model="product.category"
@@ -84,7 +93,7 @@
               </option>
             </select>
           </div>
-          <div>
+          <div class="w-1/2">
             <label class="block mb-2">Alt Kategori</label>
             <select
               v-model="product.subCategory"
@@ -101,7 +110,7 @@
               </option>
             </select>
           </div>
-          <div>
+          <div class="w-1/2">
             <label class="block mb-2">Ürün</label>
             <select
               v-model="product.product"
@@ -117,23 +126,34 @@
               </option>
             </select>
           </div>
-          <div>
+          <div class="w-1/2">
             <label class="block mb-2">Ürün Adedi</label>
             <input
               v-model="product.count"
               type="number"
               class="border p-2 w-full"
+              required
             />
           </div>
-          <div>
+          <div class="w-1/2">
             <label class="block mb-2">Ürün Fiyatı</label>
             <input
               v-model="product.price"
               type="number"
               class="border p-2 w-full"
+              required
             />
           </div>
         </div>
+
+        <!-- Satırları Sil Butonu -->
+        <button
+          type="button"
+          @click="removeSelectedProducts"
+          class="bg-red-500 text-white p-2 rounded me-2"
+        >
+          Satırları Sil
+        </button>
 
         <!-- Satır Ekle Butonu -->
         <button
@@ -151,7 +171,7 @@
           Fatura Kaydet
         </button>
         <router-link
-          :to="{ name: 'customerDetail', params: { id: customerId } }"
+          :to="{ name: 'companyDetail', params: { id: companyId } }"
           class="bg-red-500 text-white p-2 rounded"
         >
           İptal
@@ -160,7 +180,6 @@
     </form>
   </div>
 </template>
-
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { useStockData } from "@/stores/useStockData";
@@ -177,17 +196,20 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const customerId = route.params.id;
+const companyId = route.params.id;
 
 // Stock data for brands
 const stockData = ref([]);
 
-// New invoice model
-const newInvoice = ref({
+// New inCmnginvoice model
+const newinCmngInvoice = ref({
   id: "",
   date: "",
   products: [],
 });
+
+// Array of selected products (indices of selected rows)
+const selectedProducts = ref([]);
 
 // Function to fetch stock brands from Firestore
 const fetchBrands = async () => {
@@ -203,6 +225,7 @@ const fetchModels = async (product, index) => {
   product.models = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };
 
+// Function to fetch categories for selected model
 const fetchCategories = async (product, index) => {
   const categoriesCollection = collection(
     db,
@@ -219,6 +242,7 @@ const fetchCategories = async (product, index) => {
   }));
 };
 
+// Function to fetch subcategories for selected category
 const fetchSubCategories = async (product, index) => {
   const subCategoriesCollection = collection(
     db,
@@ -237,6 +261,7 @@ const fetchSubCategories = async (product, index) => {
   }));
 };
 
+// Function to fetch products for selected subcategory
 const fetchProducts = async (product, index) => {
   const productsCollection = collection(
     db,
@@ -257,27 +282,40 @@ const fetchProducts = async (product, index) => {
   }));
 };
 
+// Add product row to the inCmnginvoice
 const addProductRow = () => {
-  newInvoice.value.products.push({
+  newinCmngInvoice.value.products.push({
     brand: "",
     model: "",
     category: "",
     subCategory: "",
     product: "",
-    count: 1,
-    price: 0,
+    count: null,
+    price: null,
   });
 };
 
-// Add invoice to Firestore and update stock
-const addInvoice = async () => {
-  try {
-    // Faturayı Firestore'a ekleyin
-    const invoiceRef = collection(db, "Musteri", customerId, "Faturalar");
-    await addDoc(invoiceRef, { ...newInvoice.value });
+// Remove selected products from invoice
+const removeSelectedProducts = () => {
+  selectedProducts.value.forEach((index) => {
+    newinCmngInvoice.value.products.splice(index, 1);
+  });
+  selectedProducts.value = []; // Clear selected products
+};
 
-    // Ürünlerin adetlerini stoktan düşür
-    for (const product of newInvoice.value.products) {
+// Add inCmnginvoice to Firestore and update stock
+const addinCmngInvoice = async () => {
+  try {
+    if (!companyId) {
+      throw new Error("Company ID is missing!");
+    }
+
+    // Fatura bilgilerini Firestore'a ekleyin
+    const inCmnginvoiceRef = collection(db, "Firmalar", companyId, "Faturalar");
+    await addDoc(inCmnginvoiceRef, { ...newinCmngInvoice.value });
+
+    // Ürünlerin adetlerini stoğa ekleyin ve fiyatını güncelleyin
+    for (const product of newinCmngInvoice.value.products) {
       const productRef = doc(
         db,
         "Stok",
@@ -291,29 +329,22 @@ const addInvoice = async () => {
         "Ürünler",
         product.product
       );
-
       const productSnapshot = await getDoc(productRef);
       if (productSnapshot.exists()) {
         const currentStock = productSnapshot.data().count;
-
-        // Yalnızca adet değerini güncelle
-        await setDoc(
-          productRef,
-          {
-            count: currentStock - product.count,
-          },
-          { merge: true } // Sadece count alanını güncelle, diğer alanlar bozulmasın
-        );
+        const currentPrice = productSnapshot.data().price;
+      } else {
+        console.log("Ürün bulunamadı:", productRef.id);
       }
     }
 
-    // Fatura başarıyla eklendikten sonra, müşteri detaylarına yönlendirme
-    router.push({ name: "customerDetail", params: { id: customerId } });
+    router.push({ name: "product" });
   } catch (error) {
-    console.error("Fatura eklenirken hata oluştu: ", error);
+    console.error("Fatura eklenirken hata oluştu:", error);
   }
 };
 
-// On mounted, fetch brands
-onMounted(fetchBrands);
+onMounted(() => {
+  fetchBrands();
+});
 </script>

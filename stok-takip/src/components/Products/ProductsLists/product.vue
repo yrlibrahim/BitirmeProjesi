@@ -29,32 +29,39 @@
     >
       Yeni Ürün Ekle
     </button>
-
-    <div v-for="brand in stockData" :key="brand.id" class="mb-4">
-      <h2 class="text-xl font-semibold">{{ brand.id }}</h2>
-      <div v-for="model in brand.models" :key="model.id" class="mt-2">
-        <h3 class="text-lg">{{ model.id }}</h3>
-        <div
-          v-for="category in model.categories"
-          :key="category.id"
-          class="mt-2"
-        >
-          <h4 class="text-md">{{ category.id }}</h4>
+    <div>
+      <ul>
+        <li class="flex item-center justify-center">
+          <span class="w-1/3">Ürün</span>
+          <span class="w-1/3">Araç</span>
+          <span class="w-1/3">Model</span>
+          <span class="w-1/3">Kategori</span>
+          <span class="w-1/3">Alt Kategori</span>
+          <span class="w-1/3">Fiyat</span>
+          <span class="w-1/3">Adet</span>
+        </li>
+      </ul>
+    </div>
+    <div v-for="brand in stockData" :key="brand.id">
+      <div v-for="model in brand.models" :key="model.id">
+        <div v-for="category in model.categories" :key="category.id">
           <div
             v-for="subCategory in category.subCategories"
             :key="subCategory.id"
-            class="mt-2"
           >
-            <h5 class="text-sm font-medium">{{ subCategory.name }}</h5>
             <ul class="list-none">
               <li
                 v-for="product in subCategory.products"
                 :key="product.id"
-                class="flex"
+                class="flex item-center justify-center"
               >
-                <span>{{ product.name }} - {{ product.price }} TL</span>
-                ----
-                <span>{{ product.count }} adet</span>
+                <span class="w-1/3">{{ product.name }}</span>
+                <span class="w-1/3">{{ brand.id }}</span>
+                <span class="w-1/3">{{ model.id }}</span>
+                <span class="w-1/3">{{ category.id }}</span>
+                <span class="w-1/3">{{ subCategory.id }}</span>
+                <span class="w-1/3">{{ product.price }} TL</span>
+                <span class="w-1/3">{{ product.count }} adet</span>
               </li>
             </ul>
           </div>

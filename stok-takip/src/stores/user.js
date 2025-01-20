@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { AUTH, DB } from "@/utils/firebase";
 import router from "@/router";
@@ -26,6 +26,13 @@ export const useUserStore = defineStore("user", {
     setUser(user) {
       this.user = { ...this.user, ...user };
       this.auth = true;
+    },
+
+    async signOut() {
+      await signOut(AUTH);
+      this.user = DEFAULT_USER;
+      this.auth = false;
+      router.push({ name: "Signin" });
     },
 
     async autoSignIn(uid) {
