@@ -33,6 +33,32 @@ const route = useRoute();
   </div>
   <div v-else>
     <app-header></app-header>
-    <router-view></router-view>
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="w-48 h-screen bg-gray-800 text-white p-4 hidden md:block">
+        <h2 class="text-2xl font-semibold mb-4">Sidebar</h2>
+        <ul>
+          <li class="mb-2">
+            <router-link to="/">
+              <span>Anasayfa</span>
+            </router-link>
+          </li>
+          <li class="mb-2">
+            <router-link to="product"> <span>Ürün Listesi</span></router-link>
+          </li>
+          <li class="mb-2">
+            <router-link to="customer">Müşteri Sayfası</router-link>
+          </li>
+          <li>
+            <router-link to="company">Şirketler</router-link>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Ana İçerik -->
+      <div class="flex-1 bg-gray-100 p-6">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>

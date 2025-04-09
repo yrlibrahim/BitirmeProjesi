@@ -1,170 +1,74 @@
 import { ref } from "vue";
-import { db } from "@/utils/firebase"; // Firebase yapılandırma dosyanız
-import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/utils/firebase";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 
 export const useStockData = () => {
-  const stockData = ref([]);
-  const cache = ref(new Map()); // Önbellek oluşturma
+  // Kullanıcıdan alınan ürün bilgileri
+  const brand = ref("");
+  const model = ref("");
+  const category = ref("");
+  const subCategory = ref("");
+  const name = ref("");
+  const price = ref("");
+  const count = ref("");
+  const urunler = ref([]); // Firestore'dan çekilecek ürünler
 
+  // Firestore'dan ürünleri çeken fonksiyon
   const fetchStockData = async () => {
-    if (stockData.value.length > 0) return; // Veri önceden yüklenmişse tekrar yükleme
-
-    const stockCollection = collection(db, "Stok");
-    const stockSnapshot = await getDocs(stockCollection);
-
-    // Markaları paralel olarak işle
-    const brands = await Promise.all(
-      stockSnapshot.docs.map(async (docSnapshot) => {
-        const brand = docSnapshot.data();
-        const models = await fetchModels(docSnapshot.id); // Modelleri paralel olarak yükle
-        return {
-          id: docSnapshot.id,
-          ...brand,
-          models,
-        };
-      })
-    );
-
-    stockData.value = brands; // Stok verilerini güncelle
-  };
-
-  const fetchModels = async (brandId) => {
-    if (cache.value.has(`models-${brandId}`)) {
-      return cache.value.get(`models-${brandId}`); // Önbellekten getir
+    try {
+      const querySnapshot = await getDocs(collection(db, "deneme"));
+      urunler.value = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data().urun, // "urun" adlı map içeriğini al
+      }));
+    } catch (error) {
+      console.error("Ürünler alınırken hata oluştu:", error);
     }
-
-    const modelsCollection = collection(db, "Stok", brandId, "Modeller");
-    const modelsSnapshot = await getDocs(modelsCollection);
-
-    // Modelleri paralel olarak işle
-    const models = await Promise.all(
-      modelsSnapshot.docs.map(async (modelDoc) => {
-        const modelData = modelDoc.data();
-        const categories = await fetchCategories(brandId, modelDoc.id);
-        return {
-          id: modelDoc.id,
-          ...modelData,
-          categories,
-        };
-      })
-    );
-
-    cache.value.set(`models-${brandId}`, models); // Önbelleğe ekle
-    return models;
   };
 
-  const fetchCategories = async (brandId, modelId) => {
-    if (cache.value.has(`categories-${brandId}-${modelId}`)) {
-      return cache.value.get(`categories-${brandId}-${modelId}`);
+  // Ürün ekleme fonksiyonu (kontrolsüz)
+  const addProduct = async () => {
+    try {
+      // Firestore'a yeni ürün ekle
+      await addDoc(collection(db, "deneme"), {
+        urun: {
+          brand: brand.value,
+          model: model.value,
+          category: category.value,
+          subCategory: subCategory.value,
+          name: name.value,
+          price: Number(price.value), // Fiyatı sayı olarak sakla
+          count: Number(count.value), // Adeti sayı olarak sakla
+        },
+      });
+
+      alert("Ürün başarıyla eklendi!");
+      fetchStockData(); // Yeni eklenen ürünü listeye ekle
+
+      // Formu temizle
+      brand.value = "";
+      model.value = "";
+      category.value = "";
+      subCategory.value = "";
+      name.value = "";
+      price.value = "";
+      count.value = "";
+    } catch (error) {
+      console.error("Ürün eklenirken hata oluştu:", error);
+      alert("Ürün eklenirken bir hata oluştu!");
     }
-
-    const categoriesCollection = collection(
-      db,
-      "Stok",
-      brandId,
-      "Modeller",
-      modelId,
-      "Kategoriler"
-    );
-    const categoriesSnapshot = await getDocs(categoriesCollection);
-
-    // Kategorileri paralel olarak işle
-    const categories = await Promise.all(
-      categoriesSnapshot.docs.map(async (categoryDoc) => {
-        const categoryData = categoryDoc.data();
-        const subCategories = await fetchSubCategories(
-          brandId,
-          modelId,
-          categoryDoc.id
-        );
-        return {
-          id: categoryDoc.id,
-          ...categoryData,
-          subCategories,
-        };
-      })
-    );
-
-    cache.value.set(`categories-${brandId}-${modelId}`, categories);
-    return categories;
   };
 
-  const fetchSubCategories = async (brandId, modelId, categoryId) => {
-    if (cache.value.has(`subCategories-${brandId}-${modelId}-${categoryId}`)) {
-      return cache.value.get(
-        `subCategories-${brandId}-${modelId}-${categoryId}`
-      );
-    }
-
-    const subCategoriesCollection = collection(
-      db,
-      "Stok",
-      brandId,
-      "Modeller",
-      modelId,
-      "Kategoriler",
-      categoryId,
-      "Alt Kategoriler"
-    );
-    const subCategoriesSnapshot = await getDocs(subCategoriesCollection);
-
-    // Alt kategorileri paralel olarak işle
-    const subCategories = await Promise.all(
-      subCategoriesSnapshot.docs.map(async (subCategoryDoc) => {
-        const subCategoryData = subCategoryDoc.data();
-        const products = await fetchProducts(
-          brandId,
-          modelId,
-          categoryId,
-          subCategoryDoc.id
-        );
-        return {
-          id: subCategoryDoc.id,
-          ...subCategoryData,
-          products,
-        };
-      })
-    );
-
-    cache.value.set(
-      `subCategories-${brandId}-${modelId}-${categoryId}`,
-      subCategories
-    );
-    return subCategories;
+  return {
+    brand,
+    model,
+    category,
+    subCategory,
+    name,
+    price,
+    count,
+    urunler,
+    fetchStockData,
+    addProduct,
   };
-
-  const fetchProducts = async (brandId, modelId, categoryId, subCategoryId) => {
-    if (
-      cache.value.has(
-        `products-${brandId}-${modelId}-${categoryId}-${subCategoryId}`
-      )
-    ) {
-      return cache.value.get(
-        `products-${brandId}-${modelId}-${categoryId}-${subCategoryId}`
-      );
-    }
-
-    const productsCollection = collection(
-      db,
-      "Stok",
-      brandId,
-      "Modeller",
-      modelId,
-      "Kategoriler",
-      categoryId,
-      "Alt Kategoriler",
-      subCategoryId,
-      "Ürünler"
-    );
-    const productsSnapshot = await getDocs(productsCollection);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
-
-    cache.value.set(
-      `products-${brandId}-${modelId}-${categoryId}-${subCategoryId}`,
-      products
-    );
-    return products;
-  };
-
-  return { stockData, fetchStockData };
 };
