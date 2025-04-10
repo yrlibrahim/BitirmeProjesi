@@ -1,12 +1,14 @@
 <template>
   <div>
     <h1>Şirketler</h1>
-    <button
-      @click="showModal = true"
-      class="bg-blue-500 text-white p-2 rounded absolute top-4 right-4"
-    >
-      Yeni Şirket Ekle
-    </button>
+    <div v-if="!userStore.user.isAdmin">
+      <button
+        @click="showModal = true"
+        class="bg-blue-500 text-white p-2 rounded"
+      >
+        Yeni Şirket Ekle
+      </button>
+    </div>
 
     <!-- Modal Popup -->
     <div
@@ -71,6 +73,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router"; // Vue Router'ı import et
 import { db } from "@/utils/firebase";
 import { addDoc, collection, getDocs } from "firebase/firestore";
+import { useUserStore } from "@/stores/user";
 
 // Müşteri verilerini tutmak için reactive bir değişken
 const companys = ref([]);
@@ -131,4 +134,6 @@ onMounted(() => {
 const goTocompanyDetails = (companyId) => {
   router.push({ name: "companyDetail", params: { id: companyId } });
 };
+// Admin degeri sorgulama
+const userStore = useUserStore();
 </script>

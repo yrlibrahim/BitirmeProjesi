@@ -8,7 +8,6 @@ import { useToast } from "vue-toast-notification";
 const $toast = useToast();
 
 const DEFAULT_USER = {
-  name: null,
   uid: null,
   firstname: null,
   lastname: null,
@@ -22,6 +21,11 @@ export const useUserStore = defineStore("user", {
     user: DEFAULT_USER,
     auth: false,
   }),
+  getters: {
+    getUserData(state) {
+      return state.user;
+    },
+  },
   actions: {
     setUser(user) {
       this.user = { ...this.user, ...user };

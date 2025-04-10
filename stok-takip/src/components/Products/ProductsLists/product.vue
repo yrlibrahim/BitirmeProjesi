@@ -25,39 +25,44 @@
 
   <div v-else>
     <!-- Ürün Ekle Butonu -->
-    <button
-      @click="router.push('/create-new-product')"
-      class="bg-blue-500 text-white py-2 px-4 rounded"
-    >
-      Yeni Ürün Ekle
-    </button>
+    <div v-if="!userStore.user.isAdmin">
+      <button
+        @click="router.push('/create-new-product')"
+        class="bg-blue-500 text-white py-2 px-4 rounded"
+      >
+        Yeni Ürün Ekle
+      </button>
+    </div>
 
     <!-- Ürün Listesi -->
-    <div>
-      <ul>
-        <li class="flex item-center justify-center font-bold">
-          <span class="w-1/4">Ürün</span>
-          <span class="w-1/4">Araç</span>
-          <span class="w-1/4">Model</span>
-          <span class="w-1/4">Kategori</span>
-          <span class="w-1/4">Alt Kategori</span>
-          <span class="w-1/4">Fiyat</span>
-          <span class="w-1/4">Adet</span>
-        </li>
-        <li
-          v-for="urun in urunler"
-          :key="urun.id"
-          class="flex item-center justify-center"
-        >
-          <span class="w-1/4">{{ urun.name }}</span>
-          <span class="w-1/4">{{ urun.brand }}</span>
-          <span class="w-1/4">{{ urun.model }}</span>
-          <span class="w-1/4">{{ urun.category }}</span>
-          <span class="w-1/4">{{ urun.subCategory }}</span>
-          <span class="w-1/4">{{ urun.price }}</span>
-          <span class="w-1/4">{{ urun.count }}</span>
-        </li>
-      </ul>
+    <div class="border rounded-md p-5 shadow-sm mt-4">
+      <h1 class="text-2xl font-bold mb-3">Urun Listesi</h1>
+      <div>
+        <ul>
+          <li class="flex item-center justify-center text-lg border-b py-2">
+            <span class="w-1/4">Ürün</span>
+            <span class="w-1/4">Araç</span>
+            <span class="w-1/4">Model</span>
+            <span class="w-1/4">Kategori</span>
+            <span class="w-1/4">Alt Kategori</span>
+            <span class="w-1/4">Fiyat</span>
+            <span class="w-1/4">Adet</span>
+          </li>
+          <li
+            v-for="urun in urunler"
+            :key="urun.id"
+            class="flex items-center justify-center text-base border-b mt-2 py-2"
+          >
+            <span class="w-1/4">{{ urun.name }}</span>
+            <span class="w-1/4">{{ urun.brand }}</span>
+            <span class="w-1/4">{{ urun.model }}</span>
+            <span class="w-1/4">{{ urun.category }}</span>
+            <span class="w-1/4">{{ urun.subCategory }}</span>
+            <span class="w-1/4">{{ urun.price }}</span>
+            <span class="w-1/4">{{ urun.count }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -66,6 +71,7 @@
 import { ref, onMounted } from "vue";
 import { useStockData } from "@/stores/useStockData";
 import router from "@/router";
+import { useUserStore } from "@/stores/user";
 
 // useStockData fonksiyonunu çağır
 const {
@@ -95,4 +101,7 @@ const addProductAndClose = async () => {
   await fetchStockData(); // Listeyi güncelle
   showModal.value = false; // Modalı kapat
 };
+
+// Admin degeri sorgulama
+const userStore = useUserStore();
 </script>

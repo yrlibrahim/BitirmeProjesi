@@ -1,146 +1,116 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">Yeni Ürün Ekle</h1>
-
-    <!-- Ürün Ekleme Formu -->
-    <form @submit.prevent="addNewProduct">
-      <div>
-        <h2 class="text-lg font-bold mb-4">Ürünler</h2>
-
-        <div
-          v-for="(urun, index) in newProduct.products"
-          :key="index"
-          class="flex item-center justify-center gap-4 mb-4"
-        >
-          <div class="w-1 flex items-center justify-center">
+  <!--Loading Iconu-->
+  <div v-if="loading" class="flex items-center justify-center min-h-screen">
+    <svg
+      class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+      ></path>
+    </svg>
+  </div>
+  <!--Loading Iconu-->
+  <div v-else>
+    <Form @submit="onSubmit">
+      <div
+        class="flex items-center justify-center gap-4 mb-4"
+        v-for="(urun, index) in newProduct.products"
+        :key="index"
+      >
+        <input type="checkbox" v-model="urun.selected" class="w-4 h-4" />
+        <div class="mb-10">
+          <Field name="brand" v-slot="{ field, errors }">
+            <p>Araç</p>
             <input
-              type="checkbox"
-              v-model="selectedProducts"
-              :value="index"
-              class="mr-2"
+              type="text"
+              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              v-bind="field"
             />
-          </div>
-
-          <!-- Marka -->
-          <div class="w-1/2">
-            <label class="block mb-2">Araç</label>
-            <input
-              v-model="urun.brand"
-              list="brandList"
-              class="border p-2 w-full"
-              required
-            />
-            <datalist id="brandList">
-              <option
-                v-for="brand in uniqueBrands"
-                :key="brand"
-                :value="brand"
-              />
-            </datalist>
-          </div>
-
-          <!-- Model -->
-          <div class="w-1/2">
-            <label class="block mb-2">Model</label>
-            <input
-              v-model="urun.model"
-              :list="`modelList-${index}`"
-              class="border p-2 w-full"
-              :disabled="!urun.brand"
-              required
-            />
-            <datalist :id="`modelList-${index}`">
-              <option
-                v-for="model in filteredModels(index)"
-                :key="model"
-                :value="model"
-              />
-            </datalist>
-          </div>
-
-          <!-- Kategori -->
-          <div class="w-1/2">
-            <label class="block mb-2">Kategori</label>
-            <input
-              v-model="urun.category"
-              :list="`categoryList-${index}`"
-              class="border p-2 w-full"
-              :disabled="!urun.model"
-              required
-            />
-            <datalist :id="`categoryList-${index}`">
-              <option
-                v-for="category in filteredCategories(index)"
-                :key="category"
-                :value="category"
-              />
-            </datalist>
-          </div>
-
-          <!-- Alt Kategori -->
-          <div class="w-1/2">
-            <label class="block mb-2">Alt Kategori</label>
-            <input
-              v-model="urun.subCategory"
-              :list="`subCategoryList-${index}`"
-              class="border p-2 w-full"
-              :disabled="!urun.category"
-              required
-            />
-            <datalist :id="`subCategoryList-${index}`">
-              <option
-                v-for="subCategory in filteredSubCategories(index)"
-                :key="subCategory"
-                :value="subCategory"
-              />
-            </datalist>
-          </div>
-
-          <!-- Ürün -->
-          <div class="w-1/2">
-            <label class="block mb-2">Ürün</label>
-            <input
-              v-model="urun.product"
-              :list="`productList-${index}`"
-              class="border p-2 w-full"
-              :disabled="!urun.subCategory"
-              required
-            />
-            <datalist :id="`productList-${index}`">
-              <option
-                v-for="product in filteredProducts(index)"
-                :key="product.id"
-                :value="product.name"
-              />
-            </datalist>
-          </div>
-
-          <!-- Adet -->
-          <div class="w-1/2">
-            <label class="block mb-2">Ürün Adedi</label>
-            <input
-              v-model="urun.count"
-              type="number"
-              class="border p-2 w-full"
-              :disabled="!urun.product"
-              required
-            />
-          </div>
-
-          <!-- Fiyat -->
-          <div class="w-1/2">
-            <label class="block mb-2">Ürün Fiyatı</label>
-            <input
-              v-model="urun.price"
-              type="number"
-              class="border p-2 w-full"
-              :disabled="!urun.product"
-              required
-            />
-          </div>
+            <div v-if="errors.length">{{ errors[0] }}</div>
+          </Field>
         </div>
 
-        <!-- Satır Sil -->
+        <div class="mb-10">
+          <Field name="model" v-slot="{ field, errors }">
+            <p>Model</p>
+            <input
+              type="text"
+              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              v-bind="field"
+            />
+            <div v-if="errors.length" class="">{{ errors[0] }}</div>
+          </Field>
+        </div>
+        <div class="mb-10">
+          <Field name="category" v-slot="{ field, errors }">
+            <p>Kategori</p>
+            <input
+              type="text"
+              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              v-bind="field"
+            />
+            <div v-if="errors.length" class="">{{ errors[0] }}</div>
+          </Field>
+        </div>
+        <div class="mb-10">
+          <Field name="subCategory" v-slot="{ field, errors }">
+            <p>Alt Kategori</p>
+            <input
+              type="text"
+              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              v-bind="field"
+            />
+            <div v-if="errors.length" class="">{{ errors[0] }}</div>
+          </Field>
+        </div>
+        <div class="mb-10">
+          <Field name="name" v-slot="{ field, errors }">
+            <p>Urun</p>
+            <input
+              type="text"
+              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              v-bind="field"
+            />
+            <div v-if="errors.length" class="">{{ errors[0] }}</div>
+          </Field>
+        </div>
+        <div class="mb-10">
+          <Field name="count" v-slot="{ field, errors }">
+            <p>Adet</p>
+            <input
+              type="number"
+              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              v-bind="field"
+            />
+            <div v-if="errors.length" class="">{{ errors[0] }}</div>
+          </Field>
+        </div>
+        <div class="mb-10">
+          <Field name="price" v-slot="{ field, errors }">
+            <p>Fiyat</p>
+            <input
+              type="number"
+              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              v-bind="field"
+            />
+            <div v-if="errors.length" class="">{{ errors[0] }}</div>
+          </Field>
+        </div>
+      </div>
+      <div>
         <button
           type="button"
           @click="removeSelectedProducts"
@@ -148,7 +118,6 @@
         >
           Satırları Sil
         </button>
-
         <!-- Yeni Satır -->
         <button
           type="button"
@@ -158,130 +127,87 @@
           Yeni Satır Ekle
         </button>
       </div>
+      <!-- Satır Sil -->
 
-      <!-- Kaydet / İptal -->
-      <div class="flex justify-between mt-6">
-        <button type="submit" class="bg-green-500 text-white p-2 rounded">
-          Ürünü Ekle
-        </button>
-        <router-link
-          :to="{ name: 'product' }"
-          class="bg-red-500 text-white p-2 rounded"
+      <div class="text-center mt-6">
+        <button
+          type="submit"
+          class="w-full bg-[#fe9f43] text-white py-3 rounded-lg relative overflow-hidden group border border-[#fe9f43] hover:bg-white hover:text-[#fe9f43]"
         >
-          İptal
-        </router-link>
+          <span
+            class="absolute inset-0 bg-white scale-y-0 group-hover:scale-y-100 transform transition-transform duration-300 origin-top"
+          ></span>
+          <span
+            class="relative group-hover:text-[#fe9f43] transition-colors duration-300"
+          >
+            Urun Ekle
+          </span>
+        </button>
       </div>
-    </form>
+    </Form>
   </div>
 </template>
-
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useStockData } from "@/stores/useStockData";
+import { ref } from "vue";
+import { Field, Form } from "vee-validate";
+import * as yup from "yup";
+import { useStockData } from "@/stores/stock";
+import { useToast } from "vue-toast-notification";
+import { errorMessages } from "vue/compiler-sfc";
 
-const router = useRouter();
-const { urunler, fetchStockData, addProduct } = useStockData();
-const isLoading = ref(true);
+const $toast = useToast();
 
 const newProduct = ref({
-  products: [],
+  products: [
+    {
+      brand: "",
+      model: "",
+      category: "",
+      subCategory: "",
+      name: "",
+      count: null,
+      price: null,
+      selected: false,
+    },
+  ],
 });
-const selectedProducts = ref([]);
-
-const getUniqueValues = (key) => {
-  return computed(() => {
-    const uniqueSet = new Set(urunler.value.map((urun) => urun[key]));
-    return [...uniqueSet].filter((item) => item);
-  });
-};
-
-const uniqueBrands = getUniqueValues("brand");
-
-const filteredModels = (index) => {
-  const brand = newProduct.value.products[index].brand;
-  return urunler.value
-    .filter((urun) => urun.brand === brand)
-    .map((urun) => urun.model)
-    .filter((v, i, a) => a.indexOf(v) === i);
-};
-
-const filteredCategories = (index) => {
-  const { brand, model } = newProduct.value.products[index];
-  return urunler.value
-    .filter((urun) => urun.brand === brand && urun.model === model)
-    .map((urun) => urun.category)
-    .filter((v, i, a) => a.indexOf(v) === i);
-};
-
-const filteredSubCategories = (index) => {
-  const { brand, model, category } = newProduct.value.products[index];
-  return urunler.value
-    .filter(
-      (urun) =>
-        urun.brand === brand &&
-        urun.model === model &&
-        urun.category === category
-    )
-    .map((urun) => urun.subCategory)
-    .filter((v, i, a) => a.indexOf(v) === i);
-};
-
-const filteredProducts = (index) => {
-  const { brand, model, category, subCategory } =
-    newProduct.value.products[index];
-  return urunler.value.filter(
-    (urun) =>
-      urun.brand === brand &&
-      urun.model === model &&
-      urun.category === category &&
-      urun.subCategory === subCategory
-  );
-};
-
-const addNewProduct = async () => {
-  try {
-    console.log("Eklenen ürünler:", newProduct.value.products);
-    for (const urun of newProduct.value.products) {
-      const newUrun = {
-        brand: urun.brand,
-        model: urun.model,
-        category: urun.category,
-        subCategory: urun.subCategory,
-        name: urun.product, // Sadece ürün adı olarak string
-        price: Number(urun.price),
-        count: Number(urun.count),
-      };
-      await addProduct(newUrun);
-    }
-    await fetchStockData();
-    router.push({ name: "product" });
-  } catch (error) {
-    console.error("Ürün eklenirken hata oluştu:", error);
-  }
-};
-
+// urun satiri ekleme islemi
 const addProductRow = () => {
   newProduct.value.products.push({
     brand: "",
     model: "",
     category: "",
     subCategory: "",
-    product: "",
+    name: "",
     count: null,
     price: null,
+    selected: false,
   });
 };
-
+// secilen satiri silme islemi
 const removeSelectedProducts = () => {
   newProduct.value.products = newProduct.value.products.filter(
-    (_, index) => !selectedProducts.value.includes(index)
+    (product) => !product.selected
   );
-  selectedProducts.value = [];
 };
+//urun eklenirken loading ikonu gosterilmesi
+const loading = ref(false);
+// Urunleri database ekleme
+const stockData = useStockData();
 
-onMounted(async () => {
-  await fetchStockData();
-  isLoading.value = false;
-});
+function onSubmit(values, { resetForm }) {
+  loading.value = true;
+  stockData
+    .getStockData(values)
+    .then(() => {
+      $toast.success("Ürün başarı ile eklendi !");
+    })
+    .catch((error) => {
+      $toast.error("Ürün eklenirken hata oluştu !");
+      $toast.error(error.message);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+}
 </script>
