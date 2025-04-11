@@ -2,56 +2,9 @@
   <div>
     <h1>Müşteriler</h1>
     <div v-if="!userStore.user.isAdmin">
-      <button
-        @click="showModal = true"
-        class="bg-blue-500 text-white p-2 rounded"
-      >
-        Yeni Müşteri Ekle
+      <button class="bg-blue-500 text-white p-2 rounded">
+        <router-link to="/add-customer">Musteri Ekle</router-link>
       </button>
-    </div>
-
-    <!-- Modal Popup -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50"
-    >
-      <div class="bg-white p-6 rounded-md w-1/3">
-        <h2 class="text-lg font-bold mb-4">Yeni Müşteri Ekle</h2>
-        <form @submit.prevent="addCustomer">
-          <div class="mb-4">
-            <label for="name" class="block mb-2">Müşteri Adı</label>
-            <input
-              v-model="newCustomer.name"
-              type="text"
-              id="name"
-              class="border p-2 w-full"
-              required
-            />
-          </div>
-          <div class="mb-4">
-            <label for="email" class="block mb-2">E-posta</label>
-            <input
-              v-model="newCustomer.email"
-              type="email"
-              id="email"
-              class="border p-2 w-full"
-              required
-            />
-          </div>
-          <div class="flex justify-between">
-            <button type="submit" class="bg-green-500 text-white p-2 rounded">
-              Ekle
-            </button>
-            <button
-              type="button"
-              @click="closeModal"
-              class="bg-red-500 text-white p-2 rounded"
-            >
-              Kapat
-            </button>
-          </div>
-        </form>
-      </div>
     </div>
 
     <!-- Müşteri Listesi -->

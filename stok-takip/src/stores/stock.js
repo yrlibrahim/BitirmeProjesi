@@ -22,6 +22,8 @@ let stockCol = collection(DB, "Stock");
 export const useStockData = defineStore("stock", {
   state: () => ({
     homeStock: "",
+    adminStock: "",
+    adminLastVisible: "",
   }),
   actions: {
     async getStockData(formData) {
@@ -38,6 +40,17 @@ export const useStockData = defineStore("stock", {
         ...formData,
       });
       router.push({ name: "product" });
+    },
+    async adminGetStock(docLimit) {
+      const q = query(stockCol, orderBy("timestamp", "desc"), limit(docLimit));
+      const querySnapshot = await getDocs(q);
+      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      const stocks = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      this.adminStock = stocks;
+      this.adminLastVisible = lastVisible;
     },
   },
 });

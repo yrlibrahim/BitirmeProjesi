@@ -18,7 +18,7 @@
       <path
         class="opacity-75"
         fill="currentColor"
-        d="M4 12a8 8 0 018-8v8h8a8 8 8 01-8 8z"
+        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
       ></path>
     </svg>
   </div>
@@ -35,73 +35,119 @@
     </div>
 
     <!-- Ürün Listesi -->
-    <div class="border rounded-md p-5 shadow-sm mt-4">
-      <h1 class="text-2xl font-bold mb-3">Urun Listesi</h1>
-      <div>
-        <ul>
-          <li class="flex item-center justify-center text-lg border-b py-2">
-            <span class="w-1/4">Ürün</span>
-            <span class="w-1/4">Araç</span>
-            <span class="w-1/4">Model</span>
-            <span class="w-1/4">Kategori</span>
-            <span class="w-1/4">Alt Kategori</span>
-            <span class="w-1/4">Fiyat</span>
-            <span class="w-1/4">Adet</span>
-          </li>
-          <li
-            v-for="urun in urunler"
-            :key="urun.id"
-            class="flex items-center justify-center text-base border-b mt-2 py-2"
+    <div class="overflow-x-auto rounded-lg shadow mt-6">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th
+              v-for="header in headers"
+              :key="header.key"
+              @click="sortBy(header.key)"
+              class="px-4 py-3 text-left text-sm font-medium text-gray-700 cursor-pointer hover:text-indigo-500 select-none"
+            >
+              {{ header.label }}
+              <span v-if="sortKey === header.key">
+                {{ sortOrder === "asc" ? "▲" : "▼" }}
+              </span>
+            </th>
+            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">
+              İşlemler
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr
+            v-for="item in stockData.adminStock"
+            :key="item.id"
+            class="hover:bg-gray-50"
           >
-            <span class="w-1/4">{{ urun.name }}</span>
-            <span class="w-1/4">{{ urun.brand }}</span>
-            <span class="w-1/4">{{ urun.model }}</span>
-            <span class="w-1/4">{{ urun.category }}</span>
-            <span class="w-1/4">{{ urun.subCategory }}</span>
-            <span class="w-1/4">{{ urun.price }}</span>
-            <span class="w-1/4">{{ urun.count }}</span>
-          </li>
-        </ul>
-      </div>
+            <td class="px-4 py-2">{{ item.name }}</td>
+            <td class="px-4 py-2">{{ item.brand }}</td>
+            <td class="px-4 py-2">{{ item.model }}</td>
+            <td class="px-4 py-2">{{ item.category }}</td>
+            <td class="px-4 py-2">{{ item.subCategory }}</td>
+            <td class="px-4 py-2">{{ item.count }}</td>
+            <td class="px-4 py-2">{{ item.price }} ₺</td>
+            <td class="px-4 py-2 flex items-center gap-2">
+              <button class="p-2 rounded hover:bg-gray-100">
+                <font-awesome-icon icon="eye" />
+              </button>
+              <button class="p-2 rounded hover:bg-gray-100">
+                <font-awesome-icon icon="pen-to-square" />
+              </button>
+              <button class="p-2 rounded hover:bg-gray-100 text-red-500">
+                <font-awesome-icon icon="trash" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useStockData } from "@/stores/useStockData";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { useStockData } from "@/stores/stock";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  faEye,
+  faPenToSquare,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
 
-// useStockData fonksiyonunu çağır
-const {
-  brand,
-  model,
-  category,
-  subCategory,
-  name,
-  price,
-  count,
-  urunler,
-  fetchStockData,
-  addProduct,
-} = useStockData();
+// Font Awesome ikonlarını ekle
+library.add(faEye, faPenToSquare, faTrash);
 
-const isLoading = ref(true); // Yüklenme durumu
+// FontAwesome bileşenini register et
+defineProps();
+defineEmits();
+defineExpose();
+const stockData = useStockData();
+const userStore = useUserStore();
+const isLoading = ref(false);
 
-// Sayfa yüklendiğinde verileri çek
-onMounted(async () => {
-  await fetchStockData();
-  isLoading.value = false;
+// Sıralama için değişkenler
+const sortKey = ref("");
+const sortOrder = ref("asc");
+
+const headers = [
+  { key: "name", label: "Ürün" },
+  { key: "brand", label: "Araç" },
+  { key: "model", label: "Model" },
+  { key: "category", label: "Kategori" },
+  { key: "subCategory", label: "Alt Kategori" },
+  { key: "count", label: "Adet" },
+  { key: "price", label: "Fiyat" },
+];
+
+// Sayfa yüklendiğinde veriyi çek
+onMounted(() => {
+  isLoading.value = true;
+  stockData.adminGetStock(20).then(() => {
+    isLoading.value = false;
+  });
 });
 
-// Ürün ekleme fonksiyonu
-const addProductAndClose = async () => {
-  await addProduct(); // Firestore'a ekleme işlemi
-  await fetchStockData(); // Listeyi güncelle
-  showModal.value = false; // Modalı kapat
-};
+// Sıralama fonksiyonu
+function sortBy(key) {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+  } else {
+    sortKey.value = key;
+    sortOrder.value = "asc";
+  }
 
-// Admin degeri sorgulama
-const userStore = useUserStore();
+  stockData.adminStock.sort((a, b) => {
+    const aVal = a[key]?.toString().toLowerCase() || "";
+    const bVal = b[key]?.toString().toLowerCase() || "";
+
+    if (aVal < bVal) return sortOrder.value === "asc" ? -1 : 1;
+    if (aVal > bVal) return sortOrder.value === "asc" ? 1 : -1;
+    return 0;
+  });
+}
 </script>

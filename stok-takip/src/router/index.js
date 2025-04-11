@@ -7,6 +7,7 @@ import customer from "@/components/Customers/customer.vue";
 import customerDetail from "@/components/Customers/customer-detail.vue";
 import CreateInvoice from "@/components/Customers/create-invoice.vue";
 import InvoiceDetail from "@/components/Customers/customer-detail.vue";
+import AddCustomer from "@/components/Customers/add-customer.vue";
 import company from "@/components/Companys/company.vue";
 import companyDetail from "@/components/Companys/company-detail.vue";
 import createIncmnginvoice from "@/components/Companys/create-incmnginvoice.vue";
@@ -39,6 +40,11 @@ const router = createRouter({
       path: "/customer",
       name: "customer",
       component: customer,
+    },
+    {
+      path: "/add-customer",
+      name: "addCustomer",
+      component: AddCustomer,
     },
     {
       path: "/customer/:id",
