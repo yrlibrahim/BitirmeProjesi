@@ -40,7 +40,7 @@
           <Field name="brand" v-slot="{ field, errors }">
             <p>E-Mail</p>
             <input
-              type="text"
+              type="email"
               class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
               v-bind="field"
             />

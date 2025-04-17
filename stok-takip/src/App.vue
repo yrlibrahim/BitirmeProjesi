@@ -47,18 +47,19 @@ const route = useRoute();
             <router-link to="product"> <span>Ürün Listesi</span></router-link>
           </li>
           <li class="mb-2">
-            <router-link to="customer">Müşteri Sayfası</router-link>
+            <router-link to="">Müşteri Sayfası</router-link>
           </li>
           <li>
-            <router-link to="company">Şirketler</router-link>
+            <router-link to="">Şirketler</router-link>
           </li>
         </ul>
       </div>
 
       <!-- Ana İçerik -->
-      <div class="flex-1 bg-gray-100 p-6">
+      <div class="flex-1 bg-[#f3f3f2] p-6">
         <router-view></router-view>
       </div>
     </div>
   </div>
 </template>
+<style scoped></style>

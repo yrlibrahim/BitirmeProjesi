@@ -23,128 +23,143 @@
     </svg>
   </div>
   <!--Loading Iconu-->
-  <div v-else>
-    <Form @submit="onSubmit">
-      <div
-        class="flex items-center justify-center gap-4 mb-4"
-        v-for="(urun, index) in newProduct.products"
-        :key="index"
+
+  <div v-else class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl">Ürün Oluştur</h1>
+      <p class="text-lg">Yeni ürün ekle</p>
+    </div>
+    <div class="">
+      <button
+        class="bg-[#092c4c] rounded-md p-2 text-[#ffffff]"
+        @click="router.back()"
       >
-        <input type="checkbox" v-model="urun.selected" class="w-4 h-4" />
-        <div class="mb-10">
-          <Field name="brand" v-slot="{ field, errors }">
-            <p>Araç</p>
-            <input
-              type="text"
-              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              v-bind="field"
-            />
-            <div v-if="errors.length">{{ errors[0] }}</div>
-          </Field>
-        </div>
+        <font-awesome-icon icon="fa-solid fa-arrow-left" />
+        Geri Dön
+      </button>
+    </div>
+  </div>
+  <div class="bg-[#ffffff] mt-4 px-4 p-2 rounded-lg border border-[#c1c7cc]">
+    <h1 class="text-2xl border-b mb-4 p-2">Urun Bilgileri</h1>
+    <div>
+      <Form @submit="onSubmit">
+        <div>
+          <div class="flex items-center justify-start gap-4 mb-4">
+            <div class="mb-10 w-1/2">
+              <Field name="sku" v-slot="{ field, errors }">
+                <p>Stok Kodu</p>
+                <input
+                  type="text"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
+            <div class="mb-10 w-1/2">
+              <Field name="name" v-slot="{ field, errors }">
+                <p>Urun</p>
+                <input
+                  type="text"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
+          </div>
 
-        <div class="mb-10">
-          <Field name="model" v-slot="{ field, errors }">
-            <p>Model</p>
-            <input
-              type="text"
-              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              v-bind="field"
-            />
-            <div v-if="errors.length" class="">{{ errors[0] }}</div>
-          </Field>
-        </div>
-        <div class="mb-10">
-          <Field name="category" v-slot="{ field, errors }">
-            <p>Kategori</p>
-            <input
-              type="text"
-              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              v-bind="field"
-            />
-            <div v-if="errors.length" class="">{{ errors[0] }}</div>
-          </Field>
-        </div>
-        <div class="mb-10">
-          <Field name="subCategory" v-slot="{ field, errors }">
-            <p>Alt Kategori</p>
-            <input
-              type="text"
-              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              v-bind="field"
-            />
-            <div v-if="errors.length" class="">{{ errors[0] }}</div>
-          </Field>
-        </div>
-        <div class="mb-10">
-          <Field name="name" v-slot="{ field, errors }">
-            <p>Urun</p>
-            <input
-              type="text"
-              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              v-bind="field"
-            />
-            <div v-if="errors.length" class="">{{ errors[0] }}</div>
-          </Field>
-        </div>
-        <div class="mb-10">
-          <Field name="count" v-slot="{ field, errors }">
-            <p>Adet</p>
-            <input
-              type="number"
-              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              v-bind="field"
-            />
-            <div v-if="errors.length" class="">{{ errors[0] }}</div>
-          </Field>
-        </div>
-        <div class="mb-10">
-          <Field name="price" v-slot="{ field, errors }">
-            <p>Fiyat</p>
-            <input
-              type="number"
-              class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              v-bind="field"
-            />
-            <div v-if="errors.length" class="">{{ errors[0] }}</div>
-          </Field>
-        </div>
-      </div>
-      <div>
-        <button
-          type="button"
-          @click="removeSelectedProducts"
-          class="bg-red-500 text-white p-2 rounded me-2"
-        >
-          Satırları Sil
-        </button>
-        <!-- Yeni Satır -->
-        <button
-          type="button"
-          @click="addProductRow"
-          class="bg-gray-500 text-white p-2 rounded"
-        >
-          Yeni Satır Ekle
-        </button>
-      </div>
-      <!-- Satır Sil -->
+          <div class="flex items-center justify-center gap-4 mb-4">
+            <div class="mb-10 w-1/2">
+              <Field name="brand" v-slot="{ field, errors }">
+                <p>Araç</p>
+                <input
+                  type="text"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length">{{ errors[0] }}</div>
+              </Field>
+            </div>
 
-      <div class="text-center mt-6">
-        <button
-          type="submit"
-          class="w-full bg-[#fe9f43] text-white py-3 rounded-lg relative overflow-hidden group border border-[#fe9f43] hover:bg-white hover:text-[#fe9f43]"
-        >
-          <span
-            class="absolute inset-0 bg-white scale-y-0 group-hover:scale-y-100 transform transition-transform duration-300 origin-top"
-          ></span>
-          <span
-            class="relative group-hover:text-[#fe9f43] transition-colors duration-300"
+            <div class="mb-10 w-1/2">
+              <Field name="model" v-slot="{ field, errors }">
+                <p>Model</p>
+                <input
+                  type="text"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
+          </div>
+          <div class="flex items-center justify-center gap-4 mb-4">
+            <div class="mb-10 w-1/2">
+              <Field name="category" v-slot="{ field, errors }">
+                <p>Kategori</p>
+                <input
+                  type="text"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
+            <div class="mb-10 w-1/2">
+              <Field name="subCategory" v-slot="{ field, errors }">
+                <p>Alt Kategori</p>
+                <input
+                  type="text"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
+          </div>
+          <div class="flex items-center justify-center gap-4 mb-4">
+            <div class="mb-10 w-1/2">
+              <Field name="count" v-slot="{ field, errors }">
+                <p>Adet</p>
+                <input
+                  type="number"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
+            <div class="mb-10 w-1/2">
+              <Field name="price" v-slot="{ field, errors }">
+                <p>Fiyat</p>
+                <input
+                  type="number"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-6">
+          <button
+            type="submit"
+            class="w-full bg-[#fe9f43] text-white py-3 rounded-lg relative overflow-hidden group border border-[#fe9f43] hover:bg-white hover:text-[#fe9f43]"
           >
-            Urun Ekle
-          </span>
-        </button>
-      </div>
-    </Form>
+            <span
+              class="absolute inset-0 bg-white scale-y-0 group-hover:scale-y-100 transform transition-transform duration-300 origin-top"
+            ></span>
+            <span
+              class="relative group-hover:text-[#fe9f43] transition-colors duration-300"
+            >
+              Urun Ekle
+            </span>
+          </button>
+        </div>
+      </Form>
+    </div>
   </div>
 </template>
 <script setup>
@@ -154,42 +169,16 @@ import * as yup from "yup";
 import { useStockData } from "@/stores/stock";
 import { useToast } from "vue-toast-notification";
 import { errorMessages } from "vue/compiler-sfc";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "vue-router";
 
+library.add(faArrowLeft);
+
+const router = useRouter();
 const $toast = useToast();
 
-const newProduct = ref({
-  products: [
-    {
-      brand: "",
-      model: "",
-      category: "",
-      subCategory: "",
-      name: "",
-      count: null,
-      price: null,
-      selected: false,
-    },
-  ],
-});
-// urun satiri ekleme islemi
-const addProductRow = () => {
-  newProduct.value.products.push({
-    brand: "",
-    model: "",
-    category: "",
-    subCategory: "",
-    name: "",
-    count: null,
-    price: null,
-    selected: false,
-  });
-};
-// secilen satiri silme islemi
-const removeSelectedProducts = () => {
-  newProduct.value.products = newProduct.value.products.filter(
-    (product) => !product.selected
-  );
-};
 //urun eklenirken loading ikonu gosterilmesi
 const loading = ref(false);
 // Urunleri database ekleme

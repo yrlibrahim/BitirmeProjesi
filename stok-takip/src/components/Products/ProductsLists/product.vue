@@ -69,13 +69,22 @@
             <td class="px-4 py-2">{{ item.count }}</td>
             <td class="px-4 py-2">{{ item.price }} ₺</td>
             <td class="px-4 py-2 flex items-center gap-2">
-              <button class="p-2 rounded hover:bg-gray-100">
+              <button
+                class="p-2 rounded hover:bg-gray-100"
+                @click="goToProductInfo(item.id)"
+              >
                 <font-awesome-icon icon="eye" />
               </button>
-              <button class="p-2 rounded hover:bg-gray-100">
+              <button
+                class="p-2 rounded hover:bg-gray-100"
+                @click="goToSetProduct(item.id)"
+              >
                 <font-awesome-icon icon="pen-to-square" />
               </button>
-              <button class="p-2 rounded hover:bg-gray-100 text-red-500">
+              <button
+                class="p-2 rounded hover:bg-gray-100 text-red-500"
+                @click="removeStock(item.id)"
+              >
                 <font-awesome-icon icon="trash" />
               </button>
             </td>
@@ -98,6 +107,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import Swal from "sweetalert2";
 
 // Font Awesome ikonlarını ekle
 library.add(faEye, faPenToSquare, faTrash);
@@ -127,7 +137,7 @@ const headers = [
 // Sayfa yüklendiğinde veriyi çek
 onMounted(() => {
   isLoading.value = true;
-  stockData.adminGetStock(20).then(() => {
+  stockData.adminGetStock(5).then(() => {
     isLoading.value = false;
   });
 });
@@ -150,4 +160,33 @@ function sortBy(key) {
     return 0;
   });
 }
+// Urun silme fonksiyonu
+
+const removeStock = (itemID) => {
+  Swal.fire({
+    title: "Emin misiniz?",
+    text: "Bu işlem geri alınamaz!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Evet, sil!",
+    cancelButtonText: "İptal",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      stockData.removeByID(itemID).then(() => {
+        Swal.fire("Silindi!", "Ürün başarıyla silindi.", "success");
+      });
+    }
+  });
+};
+// Urun detay sayfasi
+const goToProductInfo = (id) => {
+  router.push({ name: "productInfo", params: { id } });
+};
+
+// Urun set sayfasi
+const goToSetProduct = (id) => {
+  router.push({ name: "setProduct", params: { id } });
+};
 </script>

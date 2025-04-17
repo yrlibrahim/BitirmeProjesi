@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import router from "@/router";
-import { DB } from "@/utils/firebase";
+import { db, DB } from "@/utils/firebase";
 import {
   collection,
   getDoc,
@@ -14,6 +14,7 @@ import {
   orderBy,
   limit,
   startAfter,
+  deleteDoc,
 } from "firebase/firestore";
 import { useUserStore } from "./user";
 
@@ -39,7 +40,7 @@ export const useStockData = defineStore("stock", {
         },
         ...formData,
       });
-      router.push({ name: "product" });
+      router.push({ name: "product", query: { reload: true } });
     },
     async adminGetStock(docLimit) {
       const q = query(stockCol, orderBy("timestamp", "desc"), limit(docLimit));
@@ -51,6 +52,13 @@ export const useStockData = defineStore("stock", {
       }));
       this.adminStock = stocks;
       this.adminLastVisible = lastVisible;
+    },
+    async removeByID(itemID) {
+      await deleteDoc(doc(DB, "Stock", itemID));
+      const newList = this.adminStock.filter((stock) => {
+        return stock.id != itemID;
+      });
+      this.adminStock = newList;
     },
   },
 });
