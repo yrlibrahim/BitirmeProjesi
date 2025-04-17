@@ -33,10 +33,6 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { doc, getDoc } from "firebase/firestore";
 import { DB } from "@/utils/firebase";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-library.add(faArrowLeft);
 
 const router = useRouter();
 const route = useRoute();
@@ -53,6 +49,7 @@ onMounted(async () => {
     productData.value = docSnap.data();
     productFields.value = {
       "Stok Kodu": productData.value.sku || "-",
+      Satıcı: productData.value.seller || "-",
       Ürün: productData.value.name || "-",
       Araç: productData.value.brand || "-",
       Model: productData.value.model || "-",

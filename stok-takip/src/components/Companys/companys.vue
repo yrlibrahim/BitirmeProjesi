@@ -24,20 +24,18 @@
   </div>
 
   <div v-else class="p-6">
-    <!-- Ürün Ekle Butonu -->
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold mb-4">Ürünler</h1>
+      <h1 class="text-2xl font-bold mb-4">Şirketler</h1>
       <div v-if="!userStore.user.isAdmin">
         <button
-          @click="router.push('/create-new-product')"
+          @click="router.push('/addCompany')"
           class="bg-blue-500 text-white py-2 px-4 rounded"
         >
-          Yeni Ürün Ekle
+          Yeni Firma Ekle
         </button>
       </div>
     </div>
 
-    <!-- Ürün Listesi -->
     <div class="overflow-x-auto rounded-lg shadow mt-6">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -53,42 +51,38 @@
                 {{ sortOrder === "asc" ? "▲" : "▼" }}
               </span>
             </th>
-            <th class="px-4 py-3 text-left text-md font-medium text-gray-700">
-              İşlemler
-            </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <tr
-            v-for="item in stockData.adminStock"
+            v-for="item in sortedCompanies"
             :key="item.id"
             class="hover:bg-gray-50"
           >
-            <td class="px-4 py-2">{{ item.name }}</td>
-            <td class="px-4 py-2">{{ item.seller }}</td>
-            <td class="px-4 py-2">{{ item.brand }}</td>
-            <td class="px-4 py-2">{{ item.model }}</td>
-            <td class="px-4 py-2">{{ item.category }}</td>
-            <td class="px-4 py-2">{{ item.subCategory }}</td>
-            <td class="px-4 py-2">{{ item.count }}</td>
-            <td class="px-4 py-2">{{ item.price }} ₺</td>
+            <td class="px-4 py-2">{{ item.companyName }}</td>
+            <td class="px-4 py-2">{{ item.email }}</td>
+            <td class="px-4 py-2">{{ item.taxNumber }}</td>
+            <td class="px-4 py-2">{{ item.taxOffice }}</td>
+            <td class="px-4 py-2">{{ item.invoiceTitle }}</td>
+            <td class="px-4 py-2">{{ item.invoiceAddress }}</td>
+            <td class="px-4 py-2">{{ item.phone }}</td>
             <td class="px-4 py-2 flex items-center gap-2">
               <button
                 class="p-2 rounded hover:bg-gray-100"
-                @click="goToProductInfo(item.id)"
+                @click="goToCompanyInfo(item.id)"
               >
                 <font-awesome-icon icon="eye" />
               </button>
               <div v-if="!userStore.user.isAdmin">
                 <button
                   class="p-2 rounded hover:bg-gray-100"
-                  @click="goToSetProduct(item.id)"
+                  @click="goToSetCompany(item.id)"
                 >
                   <font-awesome-icon icon="pen-to-square" />
                 </button>
                 <button
                   class="p-2 rounded hover:bg-gray-100 text-red-500"
-                  @click="removeStock(item.id)"
+                  @click="removeCompany(item.id)"
                 >
                   <font-awesome-icon icon="trash" />
                 </button>
@@ -102,63 +96,57 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useCompanyStore } from "@/stores/company";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
-import { useStockData } from "@/stores/stock";
 import Swal from "sweetalert2";
 
-defineProps();
-defineEmits();
-defineExpose();
-const stockData = useStockData();
+const companyStore = useCompanyStore();
 const userStore = useUserStore();
-const isLoading = ref(false);
-
-// Sıralama için değişkenler
+const isLoading = ref(true);
 const sortKey = ref("");
 const sortOrder = ref("asc");
 
 const headers = [
-  { key: "name", label: "Ürün" },
-  { key: "seller", label: "Satıcı" },
-  { key: "brand", label: "Araç" },
-  { key: "model", label: "Model" },
-  { key: "category", label: "Kategori" },
-  { key: "subCategory", label: "Alt Kategori" },
-  { key: "count", label: "Adet" },
-  { key: "price", label: "Fiyat" },
+  { key: "companyName", label: "Firma Adı" },
+  { key: "email", label: "Mail Adresi" },
+  { key: "taxNumber", label: "Vergi Numarası" },
+  { key: "taxOffice", label: "Vergi Dairesi" },
+  { key: "invoiceTitle", label: "Fatura Başlığı" },
+  { key: "invoiceAddress", label: "Fatura Adresi" },
+  { key: "phone", label: "Telefon Numarası" },
+  { key: "description", label: "Açıklama" },
 ];
 
-// Sayfa yüklendiğinde veriyi çek
-onMounted(() => {
-  isLoading.value = true;
-  stockData.adminGetStock().then(() => {
-    isLoading.value = false;
-  });
+// Sayfa açıldığında şirket verilerini çek
+onMounted(async () => {
+  await companyStore.fetchCompanies();
+  isLoading.value = false;
 });
 
 // Sıralama fonksiyonu
-function sortBy(key) {
+const sortBy = (key) => {
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
   } else {
     sortKey.value = key;
     sortOrder.value = "asc";
   }
+};
 
-  stockData.adminStock.sort((a, b) => {
-    const aVal = a[key]?.toString().toLowerCase() || "";
-    const bVal = b[key]?.toString().toLowerCase() || "";
-
+const sortedCompanies = computed(() => {
+  return [...companyStore.companyList].sort((a, b) => {
+    const aVal = a[sortKey.value]?.toString().toLowerCase() || "";
+    const bVal = b[sortKey.value]?.toString().toLowerCase() || "";
     if (aVal < bVal) return sortOrder.value === "asc" ? -1 : 1;
     if (aVal > bVal) return sortOrder.value === "asc" ? 1 : -1;
     return 0;
   });
-}
+});
 // Urun silme fonksiyonu
 
-const removeStock = (itemID) => {
+const removeCompany = (itemID) => {
   Swal.fire({
     title: "Emin misiniz?",
     text: "Bu işlem geri alınamaz!",
@@ -170,19 +158,27 @@ const removeStock = (itemID) => {
     cancelButtonText: "İptal",
   }).then((result) => {
     if (result.isConfirmed) {
-      stockData.removeByID(itemID).then(() => {
-        Swal.fire("Silindi!", "Ürün başarıyla silindi.", "success");
+      companyStore.removeByID(itemID).then(() => {
+        Swal.fire("Silindi!", "Firma başarıyla silindi.", "success");
       });
     }
   });
 };
-// Urun detay sayfasi
-const goToProductInfo = (id) => {
-  router.push({ name: "productInfo", params: { id } });
-};
 
-// Urun set sayfasi
-const goToSetProduct = (id) => {
-  router.push({ name: "setProduct", params: { id } });
+// Firma detay sayfasi
+const goToCompanyInfo = (id) => {
+  router.push({ name: "companyInfo", params: { id } });
+};
+// Firma set sayfasi
+const goToSetCompany = (id) => {
+  router.push({ name: "setCompany", params: { id } });
 };
 </script>
+
+<style scoped>
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

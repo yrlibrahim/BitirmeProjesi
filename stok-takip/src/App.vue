@@ -1,6 +1,11 @@
 <script setup>
+import { computed } from "vue";
 import { RouterView, useRoute } from "vue-router";
 import { firstLoad } from "./composables/auth";
+const hideSidebarRoutes = ["/signin"];
+const shouldShowSidebar = computed(
+  () => !hideSidebarRoutes.includes(route.path)
+);
 
 const { loading } = firstLoad();
 const route = useRoute();
@@ -35,7 +40,10 @@ const route = useRoute();
     <app-header></app-header>
     <div class="flex">
       <!-- Sidebar -->
-      <div class="w-48 h-screen bg-gray-800 text-white p-4 hidden md:block">
+      <div
+        class="w-48 h-screen bg-gray-800 text-white p-4 hidden md:block"
+        v-if="shouldShowSidebar"
+      >
         <h2 class="text-2xl font-semibold mb-4">Sidebar</h2>
         <ul>
           <li class="mb-2">
@@ -50,13 +58,13 @@ const route = useRoute();
             <router-link to="">Müşteri Sayfası</router-link>
           </li>
           <li>
-            <router-link to="">Şirketler</router-link>
+            <router-link to="companys">Şirketler</router-link>
           </li>
         </ul>
       </div>
 
       <!-- Ana İçerik -->
-      <div class="flex-1 bg-[#f3f3f2] p-6">
+      <div class="flex-1 bg-[#f3f3f2]">
         <router-view></router-view>
       </div>
     </div>

@@ -5,10 +5,11 @@ import product from "@/components/Products/ProductsLists/product.vue";
 import createNewProduct from "@/components/Products/ProductsLists/create-new-product.vue";
 import setProduct from "@/components/Products/ProductsLists/setProduct.vue";
 import productInfo from "@/components/Products/ProductsLists/productInfo.vue";
-import AddCustomer from "@/components/Customers/add-customer.vue";
-
+import addCompany from "@/components/Companys/addCompany.vue";
+import companys from "@/components/Companys/companys.vue";
+import companyInfo from "@/components/Companys/companyInfo.vue";
+import setCompany from "@/components/Companys/setCompany.vue";
 import { useUserStore } from "@/stores/user";
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -43,9 +44,24 @@ const router = createRouter({
       component: productInfo,
     },
     {
-      path: "/add-customer",
-      name: "addCustomer",
-      component: AddCustomer,
+      path: "/addCompany",
+      name: "addCompany",
+      component: addCompany,
+    },
+    {
+      path: "/companys",
+      name: "companys",
+      component: companys,
+    },
+    {
+      path: "/setCompany/:id",
+      name: "setCompany",
+      component: setCompany,
+    },
+    {
+      path: "/companyInfo/:id",
+      name: "companyInfo",
+      component: companyInfo,
     },
   ],
 });

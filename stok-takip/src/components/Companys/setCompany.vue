@@ -25,8 +25,8 @@
   <div v-else class="p-6">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl">Ürün Güncelle</h1>
-        <p class="text-lg">Bu ürünü düzenle</p>
+        <h1 class="text-3xl">Firma Güncelle</h1>
+        <p class="text-lg">Bu firmayı düzenle</p>
       </div>
       <div>
         <button
@@ -40,16 +40,16 @@
     </div>
 
     <div class="bg-white mt-4 px-4 py-2 rounded-lg border border-[#c1c7cc]">
-      <h1 class="text-2xl border-b mb-4 p-2">Ürün Bilgileri</h1>
-      <Form :initial-values="productData" @submit="onSubmit">
+      <h1 class="text-2xl border-b mb-4 p-2">Firma Bilgileri</h1>
+      <Form :initial-values="companyData" @submit="onSubmit">
         <div class="grid grid-cols-2 gap-4">
-          <Field name="sku" v-slot="{ field, errors }">
+          <Field name="companyName" v-slot="{ field, errors }">
             <div>
-              <label>Stok Kodu</label>
+              <label>Firma Adı</label>
               <input
                 v-bind="field"
                 type="text"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
               />
               <div v-if="errors.length" class="text-red-500">
                 {{ errors[0] }}
@@ -57,35 +57,13 @@
             </div>
           </Field>
 
-          <Field name="seller" v-slot="{ field, errors }">
+          <Field name="email" v-slot="{ field, errors }">
             <div>
-              <label>Satıcı Firma</label>
-              <select
-                v-bind="field"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              >
-                <option disabled value="">Satıcı firma seçin</option>
-                <option
-                  v-for="company in companyOptions"
-                  :key="company.id"
-                  :value="company.companyName"
-                >
-                  {{ company.companyName }}
-                </option>
-              </select>
-              <div v-if="errors.length" class="text-red-500 mt-1">
-                {{ errors[0] }}
-              </div>
-            </div>
-          </Field>
-
-          <Field name="name" v-slot="{ field, errors }">
-            <div>
-              <label>Ürün</label>
+              <label>Mail Adresi</label>
               <input
                 v-bind="field"
-                type="text"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                type="email"
+                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
               />
               <div v-if="errors.length" class="text-red-500">
                 {{ errors[0] }}
@@ -93,69 +71,13 @@
             </div>
           </Field>
 
-          <Field name="brand" v-slot="{ field, errors }">
+          <Field name="taxNumber" v-slot="{ field, errors }">
             <div>
-              <label>Araç</label>
-              <input
-                v-bind="field"
-                type="text"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              />
-              <div v-if="errors.length" class="text-red-500">
-                {{ errors[0] }}
-              </div>
-            </div>
-          </Field>
-
-          <Field name="model" v-slot="{ field, errors }">
-            <div>
-              <label>Model</label>
-              <input
-                v-bind="field"
-                type="text"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              />
-              <div v-if="errors.length" class="text-red-500">
-                {{ errors[0] }}
-              </div>
-            </div>
-          </Field>
-
-          <Field name="category" v-slot="{ field, errors }">
-            <div>
-              <label>Kategori</label>
-              <input
-                v-bind="field"
-                type="text"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              />
-              <div v-if="errors.length" class="text-red-500">
-                {{ errors[0] }}
-              </div>
-            </div>
-          </Field>
-
-          <Field name="subCategory" v-slot="{ field, errors }">
-            <div>
-              <label>Alt Kategori</label>
-              <input
-                v-bind="field"
-                type="text"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-              />
-              <div v-if="errors.length" class="text-red-500">
-                {{ errors[0] }}
-              </div>
-            </div>
-          </Field>
-
-          <Field name="count" v-slot="{ field, errors }">
-            <div>
-              <label>Adet</label>
+              <label>Vergi Numarası</label>
               <input
                 v-bind="field"
                 type="number"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
               />
               <div v-if="errors.length" class="text-red-500">
                 {{ errors[0] }}
@@ -163,14 +85,70 @@
             </div>
           </Field>
 
-          <Field name="price" v-slot="{ field, errors }">
+          <Field name="taxOffice" v-slot="{ field, errors }">
             <div>
-              <label>Fiyat</label>
+              <label>Vergi Dairesi</label>
+              <input
+                v-bind="field"
+                type="text"
+                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
+              />
+              <div v-if="errors.length" class="text-red-500">
+                {{ errors[0] }}
+              </div>
+            </div>
+          </Field>
+
+          <Field name="invoiceTitle" v-slot="{ field, errors }">
+            <div>
+              <label>Fatura Başlığı</label>
+              <input
+                v-bind="field"
+                type="text"
+                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
+              />
+              <div v-if="errors.length" class="text-red-500">
+                {{ errors[0] }}
+              </div>
+            </div>
+          </Field>
+
+          <Field name="invoiceAddress" v-slot="{ field, errors }">
+            <div>
+              <label>Fatura Adresi</label>
+              <input
+                v-bind="field"
+                type="text"
+                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
+              />
+              <div v-if="errors.length" class="text-red-500">
+                {{ errors[0] }}
+              </div>
+            </div>
+          </Field>
+
+          <Field name="phone" v-slot="{ field, errors }">
+            <div>
+              <label>Telefon Numarası</label>
               <input
                 v-bind="field"
                 type="number"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
               />
+              <div v-if="errors.length" class="text-red-500">
+                {{ errors[0] }}
+              </div>
+            </div>
+          </Field>
+
+          <Field name="description" v-slot="{ field, errors }">
+            <div>
+              <label>Açıklama</label>
+              <textarea
+                v-bind="field"
+                class="w-full rounded-md border mt-1 px-4 py-1"
+                rows="3"
+              ></textarea>
               <div v-if="errors.length" class="text-red-500">
                 {{ errors[0] }}
               </div>
@@ -198,44 +176,37 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { DB } from "@/utils/firebase";
-import { useCompanyStore } from "@/stores/company";
 
-const companyStore = useCompanyStore();
-const companyOptions = ref([]);
-const seller = ref(""); // select ile bağlı olacak
 const router = useRouter();
 const route = useRoute();
 const $toast = useToast();
 
 const loading = ref(true);
-const productData = ref({});
+const companyData = ref({});
 
-const productId = route.params.id;
+const companyId = route.params.id;
 
 onMounted(async () => {
   try {
-    const docRef = doc(DB, "Stock", productId);
+    const docRef = doc(DB, "Companys", companyId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      productData.value = {
-        sku: data.sku || "",
-        seller: data.seller || "",
-        name: data.name || "",
-        brand: data.brand || "",
-        model: data.model || "",
-        category: data.category || "",
-        subCategory: data.subCategory || "",
-        count: data.count ?? 0,
-        price: data.price ?? 0,
+      companyData.value = {
+        companyName: data.companyName || "",
+        email: data.email || "",
+        taxNumber: data.taxNumber || "",
+        taxOffice: data.taxOffice || "",
+        invoiceTitle: data.invoiceTitle || "",
+        invoiceAddress: data.invoiceAddress || "",
+        phone: data.phone || "",
+        description: data.description || "",
       };
     } else {
-      $toast.error("Ürün bulunamadı");
+      $toast.error("Firma bulunamadı");
       router.back();
     }
-    await companyStore.fetchCompanies();
-    companyOptions.value = companyStore.companyList;
   } catch (err) {
     $toast.error("Veri alınırken hata oluştu");
     console.error("Firestore hatası:", err);
@@ -252,8 +223,8 @@ async function onSubmit(values) {
       if (values[key] !== undefined) filtered[key] = values[key];
     }
 
-    await updateDoc(doc(DB, "Stock", productId), filtered);
-    $toast.success("Ürün başarıyla güncellendi!");
+    await updateDoc(doc(DB, "Companys", companyId), filtered);
+    $toast.success("Firma başarıyla güncellendi!");
     router.back();
   } catch (err) {
     $toast.error("Güncelleme sırasında hata oluştu");
