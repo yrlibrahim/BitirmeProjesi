@@ -25,8 +25,8 @@
   <div v-else class="p-6 m-6">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl">Firma Güncelle</h1>
-        <p class="text-lg">Bu firmayı düzenle</p>
+        <h1 class="text-3xl">Müşteri Güncelle</h1>
+        <p class="text-lg">Bu müşteriyi düzenle</p>
       </div>
       <div>
         <button
@@ -40,10 +40,10 @@
     </div>
 
     <div class="bg-white mt-4 px-4 py-2 rounded-lg border border-[#c1c7cc]">
-      <h1 class="text-2xl border-b mb-4 p-2">Firma Bilgileri</h1>
-      <Form :initial-values="companyData" @submit="onSubmit">
+      <h1 class="text-2xl border-b mb-4 p-2">Müşteri Bilgileri</h1>
+      <Form :initial-values="customerData" @submit="onSubmit">
         <div class="grid grid-cols-2 gap-4">
-          <Field name="companyName" v-slot="{ field, errors }">
+          <Field name="name" v-slot="{ field, errors }">
             <div>
               <label>Firma Adı</label>
               <input
@@ -76,7 +76,7 @@
               <label>Vergi Numarası</label>
               <input
                 v-bind="field"
-                type="number"
+                type="text"
                 class="w-full h-10 rounded-md border mt-1 px-4 py-1"
               />
               <div v-if="errors.length" class="text-red-500">
@@ -132,7 +132,7 @@
               <label>Telefon Numarası</label>
               <input
                 v-bind="field"
-                type="number"
+                type="text"
                 class="w-full h-10 rounded-md border mt-1 px-4 py-1"
               />
               <div v-if="errors.length" class="text-red-500">
@@ -182,19 +182,19 @@ const route = useRoute();
 const $toast = useToast();
 
 const loading = ref(true);
-const companyData = ref({});
+const customerData = ref({});
 
-const companyId = route.params.id;
+const customerId = route.params.id;
 
 onMounted(async () => {
   try {
-    const docRef = doc(DB, "Companys", companyId);
+    const docRef = doc(DB, "Customers", customerId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      companyData.value = {
-        companyName: data.companyName || "",
+      customerData.value = {
+        name: data.name || "",
         email: data.email || "",
         taxNumber: data.taxNumber || "",
         taxOffice: data.taxOffice || "",
@@ -204,7 +204,7 @@ onMounted(async () => {
         description: data.description || "",
       };
     } else {
-      $toast.error("Firma bulunamadı");
+      $toast.error("Müşteri bulunamadı");
       router.back();
     }
   } catch (err) {
@@ -223,8 +223,8 @@ async function onSubmit(values) {
       if (values[key] !== undefined) filtered[key] = values[key];
     }
 
-    await updateDoc(doc(DB, "Companys", companyId), filtered);
-    $toast.success("Firma başarıyla güncellendi!");
+    await updateDoc(doc(DB, "Customers", customerId), filtered);
+    $toast.success("Müşteri başarıyla güncellendi!");
     router.back();
   } catch (err) {
     $toast.error("Güncelleme sırasında hata oluştu");

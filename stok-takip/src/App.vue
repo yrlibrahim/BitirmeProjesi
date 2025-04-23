@@ -55,7 +55,7 @@ const route = useRoute();
             <router-link to="product"> <span>Ürün Listesi</span></router-link>
           </li>
           <li class="mb-2">
-            <router-link to="">Müşteri Sayfası</router-link>
+            <router-link to="customers">Müşteri Sayfası</router-link>
           </li>
           <li>
             <router-link to="companys">Şirketler</router-link>

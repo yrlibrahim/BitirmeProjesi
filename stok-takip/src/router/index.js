@@ -9,6 +9,10 @@ import addCompany from "@/components/Companys/addCompany.vue";
 import companys from "@/components/Companys/companys.vue";
 import companyInfo from "@/components/Companys/companyInfo.vue";
 import setCompany from "@/components/Companys/setCompany.vue";
+import customers from "@/components/Customers/customers.vue";
+import addCustomer from "@/components/Customers/addCustomer.vue";
+import customerInfo from "@/components/Customers/customerInfo.vue";
+import setCustomer from "@/components/Customers/setCustomer.vue";
 import { useUserStore } from "@/stores/user";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +66,26 @@ const router = createRouter({
       path: "/companyInfo/:id",
       name: "companyInfo",
       component: companyInfo,
+    },
+    {
+      path: "/customers",
+      name: "customers",
+      component: customers,
+    },
+    {
+      path: "/addCustomer",
+      name: "addCustomer",
+      component: addCustomer,
+    },
+    {
+      path: "/setCustomer/:id",
+      name: "setCustomer",
+      component: setCustomer,
+    },
+    {
+      path: "/customerInfo/:id",
+      name: "customerInfo",
+      component: customerInfo,
     },
   ],
 });

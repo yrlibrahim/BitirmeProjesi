@@ -25,13 +25,13 @@
 
   <div v-else class="p-6">
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold mb-4">Şirketler</h1>
+      <h1 class="text-2xl font-bold mb-4">Müşteriler</h1>
       <div v-if="!userStore.user.isAdmin">
         <button
-          @click="router.push('/addCompany')"
+          @click="router.push('/addCustomer')"
           class="bg-[#fe9f43] hover:bg-orange-500 text-white px-4 py-2 rounded-md"
         >
-          Yeni Firma Ekle
+          Yeni Müşteri Ekle
         </button>
       </div>
     </div>
@@ -55,11 +55,11 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <tr
-            v-for="item in sortedCompanies"
+            v-for="item in sortedCustomers"
             :key="item.id"
             class="hover:bg-gray-50"
           >
-            <td class="px-4 py-2">{{ item.companyName }}</td>
+            <td class="px-4 py-2">{{ item.name }}</td>
             <td class="px-4 py-2">{{ item.email }}</td>
             <td class="px-4 py-2">{{ item.taxNumber }}</td>
             <td class="px-4 py-2">{{ item.taxOffice }}</td>
@@ -69,20 +69,20 @@
             <td class="px-4 py-2 flex items-center gap-2">
               <button
                 class="p-2 rounded hover:bg-gray-100"
-                @click="goToCompanyInfo(item.id)"
+                @click="goToCustomerInfo(item.id)"
               >
                 <font-awesome-icon icon="eye" />
               </button>
               <div v-if="!userStore.user.isAdmin">
                 <button
                   class="p-2 rounded hover:bg-gray-100"
-                  @click="goToSetCompany(item.id)"
+                  @click="goToSetCustomer(item.id)"
                 >
                   <font-awesome-icon icon="pen-to-square" />
                 </button>
                 <button
                   class="p-2 rounded hover:bg-gray-100 text-red-500"
-                  @click="removeCompany(item.id)"
+                  @click="removeCustomer(item.id)"
                 >
                   <font-awesome-icon icon="trash" />
                 </button>
@@ -97,19 +97,19 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useCompanyStore } from "@/stores/company";
-import router from "@/router";
+import { useCustomerStore } from "@/stores/customer";
 import { useUserStore } from "@/stores/user";
 import Swal from "sweetalert2";
+import router from "@/router";
 
-const companyStore = useCompanyStore();
+const customerStore = useCustomerStore();
 const userStore = useUserStore();
 const isLoading = ref(true);
 const sortKey = ref("");
 const sortOrder = ref("asc");
 
 const headers = [
-  { key: "companyName", label: "Firma Adı" },
+  { key: "name", label: "Firma Adı" },
   { key: "email", label: "Mail Adresi" },
   { key: "taxNumber", label: "Vergi Numarası" },
   { key: "taxOffice", label: "Vergi Dairesi" },
@@ -119,13 +119,13 @@ const headers = [
   { key: "description", label: "İşlemler" },
 ];
 
-// Sayfa açıldığında şirket verilerini çek
+// Veri çekme
 onMounted(async () => {
-  await companyStore.fetchCompanies();
+  await customerStore.fetchCustomers();
   isLoading.value = false;
 });
 
-// Sıralama fonksiyonu
+// Sıralama
 const sortBy = (key) => {
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
@@ -135,8 +135,8 @@ const sortBy = (key) => {
   }
 };
 
-const sortedCompanies = computed(() => {
-  return [...companyStore.companyList].sort((a, b) => {
+const sortedCustomers = computed(() => {
+  return [...customerStore.customerList].sort((a, b) => {
     const aVal = a[sortKey.value]?.toString().toLowerCase() || "";
     const bVal = b[sortKey.value]?.toString().toLowerCase() || "";
     if (aVal < bVal) return sortOrder.value === "asc" ? -1 : 1;
@@ -144,9 +144,9 @@ const sortedCompanies = computed(() => {
     return 0;
   });
 });
-// Urun silme fonksiyonu
 
-const removeCompany = (itemID) => {
+// Silme işlemi
+const removeCustomer = (id) => {
   Swal.fire({
     title: "Emin misiniz?",
     text: "Bu işlem geri alınamaz!",
@@ -158,27 +158,18 @@ const removeCompany = (itemID) => {
     cancelButtonText: "İptal",
   }).then((result) => {
     if (result.isConfirmed) {
-      companyStore.removeByID(itemID).then(() => {
-        Swal.fire("Silindi!", "Firma başarıyla silindi.", "success");
+      customerStore.removeByID(id).then(() => {
+        Swal.fire("Silindi!", "Müşteri başarıyla silindi.", "success");
       });
     }
   });
 };
 
-// Firma detay sayfasi
-const goToCompanyInfo = (id) => {
-  router.push({ name: "companyInfo", params: { id } });
+// Sayfa yönlendirmeleri
+const goToCustomerInfo = (id) => {
+  router.push({ name: "customerInfo", params: { id } });
 };
-// Firma set sayfasi
-const goToSetCompany = (id) => {
-  router.push({ name: "setCompany", params: { id } });
+const goToSetCustomer = (id) => {
+  router.push({ name: "setCustomer", params: { id } });
 };
 </script>
-
-<style scoped>
-.truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-</style>

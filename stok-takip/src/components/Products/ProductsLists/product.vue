@@ -30,7 +30,7 @@
       <div v-if="!userStore.user.isAdmin">
         <button
           @click="router.push('/create-new-product')"
-          class="bg-blue-500 text-white py-2 px-4 rounded"
+          class="bg-[#fe9f43] hover:bg-orange-500 text-white px-4 py-2 rounded-md"
         >
           Yeni Ürün Ekle
         </button>

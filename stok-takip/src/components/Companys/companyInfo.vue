@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-md">
+  <div class="p-6 m-6 bg-white rounded-lg border border-gray-200 shadow-md">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-2xl font-bold mb-4">Firma Detayları</h2>
       <button
