@@ -46,7 +46,7 @@
         <div class="grid grid-cols-2 md:grid-cols-2 gap-6">
           <div>
             <label class="form-label">Firma Adı</label>
-            <Field name="name" type="text" v-slot="{ field, errors }">
+            <Field name="companyName" type="text" v-slot="{ field, errors }">
               <input
                 v-bind="field"
                 class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"

@@ -60,6 +60,9 @@ const route = useRoute();
           <li>
             <router-link to="companys">Şirketler</router-link>
           </li>
+          <li>
+            <router-link to="addInvoice">Fatura ekle</router-link>
+          </li>
         </ul>
       </div>
 

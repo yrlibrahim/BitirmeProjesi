@@ -13,6 +13,7 @@ import customers from "@/components/Customers/customers.vue";
 import addCustomer from "@/components/Customers/addCustomer.vue";
 import customerInfo from "@/components/Customers/customerInfo.vue";
 import setCustomer from "@/components/Customers/setCustomer.vue";
+import addInvoice from "@/components/Invoices/addInvoice.vue";
 import { useUserStore } from "@/stores/user";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -86,6 +87,11 @@ const router = createRouter({
       path: "/customerInfo/:id",
       name: "customerInfo",
       component: customerInfo,
+    },
+    {
+      path: "/addInvoice",
+      name: "addInvoice",
+      component: addInvoice,
     },
   ],
 });
