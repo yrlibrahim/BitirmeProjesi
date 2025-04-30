@@ -1,68 +1,119 @@
 <template>
-  <div
-    v-if="userStore.auth"
-    class="flex items-center justify-between px-10 py-3 bg-gray-800 text-white p-4"
+  <header
+    class="w-full bg-white shadow px-4 py-2 flex items-center justify-between"
   >
-    <div>
-      <h1 class="text-2xl font-semibold text-white">On Muhasabe Sistemi</h1>
+    <!-- Arama Kutusu -->
+    <div class="flex items-center gap-3">
+      <div class="relative">
+        <input
+          type="text"
+          placeholder="Ara..."
+          class="pl-10 pr-4 py-2 border rounded-md w-64 focus:outline-none focus:ring"
+          v-model="searchQuery"
+        />
+        <MagnifyingGlassIcon
+          class="w-5 h-5 text-gray-400 absolute top-1/2 left-3 -translate-y-1/2"
+        />
+      </div>
     </div>
-    <div>
-      <div class="relative inline-block text-left">
-        <!-- Dropdown Button -->
-        <button
-          @click="toggleMenu"
-          type="button"
-          class="inline-flex justify-center w-full rounded-md border border-gray-300 bg-gray-800 text-white px-4 py-2 text-sm font-medium hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Menü
-        </button>
 
-        <!-- Dropdown Menu -->
-        <div
-          v-if="isMenuOpen"
-          class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+    <!-- Add New + Kullanıcı Menüsü -->
+    <div class="flex items-center gap-4">
+      <!-- Add New Dropdown -->
+      <div class="relative">
+        <button
+          @click="toggleAddMenu"
+          class="bg-[#FE9F43] text-white px-4 py-2 rounded-md flex items-center gap-2"
         >
-          <div class="py-1">
-            <a
-              href="/profile"
-              class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
-              >Profil</a
-            >
-            <button
-              @click="userStore.signOut()"
-              class="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
-            >
-              Çıkış Yap
-            </button>
-          </div>
+          <i class="fas fa-plus-circle text-xl">+</i>Add New
+        </button>
+        <div
+          v-if="showAddMenu"
+          class="absolute right-0 mt-2 w-48 bg-white border shadow-md rounded-md z-10"
+        >
+          <ul class="divide-y divide-gray-200">
+            <li>
+              <router-link
+                to="/create-new-product"
+                class="block px-4 py-2 hover:bg-gray-100"
+                >➕ Yeni Ürün</router-link
+              >
+            </li>
+            <li>
+              <router-link
+                to="/addCustomer"
+                class="block px-4 py-2 hover:bg-gray-100"
+                >👤 Yeni Müşteri</router-link
+              >
+            </li>
+            <li>
+              <router-link
+                to="/addCompany"
+                class="block px-4 py-2 hover:bg-gray-100"
+                >🏢 Yeni Firma</router-link
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Kullanıcı Dropdown -->
+      <div class="relative">
+        <button @click="toggleUserMenu" class="flex items-center gap-2">
+          <img src="" class="w-8 h-8 rounded-full" />
+        </button>
+        <div
+          v-if="showUserMenu"
+          class="absolute right-0 mt-2 w-48 bg-white border shadow-md rounded-md z-10"
+        >
+          <ul class="divide-y divide-gray-200">
+            <li>
+              <router-link
+                to="/profile"
+                class="block px-4 py-2 hover:bg-gray-100"
+                >👤 Profil</router-link
+              >
+            </li>
+            <li>
+              <button
+                @click="logout"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+              >
+                🚪 Çıkış Yap
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
-
-const router = useRouter();
+import { MagnifyingGlassIcon } from "@heroicons/vue/24/solid";
 const userStore = useUserStore();
 
-//Dropdown
-import { ref } from "vue";
+const searchQuery = ref("");
+const showAddMenu = ref(false);
+const showUserMenu = ref(false);
 
-// Menü açılma durumunu kontrol etmek için ref
-const isMenuOpen = ref(false);
-
-// Menü açma/kapama fonksiyonu
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value;
+const toggleAddMenu = () => {
+  showAddMenu.value = !showAddMenu.value;
+  showUserMenu.value = false;
 };
 
-// Çıkış yapma fonksiyonu
+const toggleUserMenu = () => {
+  showUserMenu.value = !showUserMenu.value;
+  showAddMenu.value = false;
+};
+
 const logout = () => {
-  alert("Çıkış yapılıyor...");
-  // Burada oturumdan çıkma işlemi yapılabilir.
-  // Örneğin: authService.logout();
+  userStore.signOut();
 };
 </script>
+
+<style scoped>
+/* İsteğe bağlı responsive tweaks burada yapılabilir */
+</style>
