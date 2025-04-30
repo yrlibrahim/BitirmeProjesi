@@ -1,14 +1,19 @@
 <template>
-  <div class="page-wrapper">
+  <div class="">
     <div class="content">
       <!-- Başlık ve Buton -->
-      <div class="page-header d-flex justify-between align-items-center">
-        <div class="page-title">
-          <h4 class="fw-bold">Ürün Listesi</h4>
-          <h6>Ürünlerinizi yönetin</h6>
+      <div class="flex justify-between items-center">
+        <div class="">
+          <h4 class="text-3xl">Ürün Listesi</h4>
+          <h6 class="text-xl text-[#646B72] pt-4">Ürünlerinizi yönetin</h6>
         </div>
-        <button @click="goToCreateProduct" class="btn btn-primary">
-          <i class="ti ti-circle-plus me-1"></i>Ürün Ekle
+        <button
+          @click="goToCreateProduct"
+          class="btn bg-[#FE9F43] text-white rounded-md border px-4 py-2"
+        >
+          <div class="flex items-center">
+            <span><PlusCircleIcon class="w-5 me-2" /></span>Ürün Ekle
+          </div>
         </button>
       </div>
 
@@ -115,16 +120,16 @@
 
         <div class="overflow-x-auto">
           <table class="min-w-full text-sm text-left">
-            <thead class="bg-gray-100 text-gray-600 uppercase">
+            <thead class="bg-[#F9FAFB] text-gray-600">
               <tr>
                 <th class="p-3">SKU</th>
-                <th class="p-3">Satici</th>
+                <th class="p-3">Satıcı</th>
                 <th class="p-3">Ürün Adı</th>
                 <th class="p-3">Marka</th>
                 <th class="p-3">Model</th>
                 <th class="p-3">Kategori</th>
                 <th class="p-3">Alt Kategori</th>
-                <th class="p-3">Price</th>
+                <th class="p-3">Fiyat</th>
                 <th class="p-3">Adet</th>
                 <th class="p-3">Actions</th>
               </tr>
@@ -133,7 +138,7 @@
               <tr
                 v-for="item in filteredProducts"
                 :key="item.id"
-                class="hover:bg-gray-50 transition"
+                class="hover:bg-[#F9FAFB] transition"
               >
                 <td class="p-3 font-medium text-gray-800">
                   {{ item.sku || "N/A" }}
@@ -192,6 +197,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
   ChevronDownIcon,
+  PlusCircleIcon,
 } from "@heroicons/vue/24/outline";
 
 const stockData = useStockData();

@@ -1,24 +1,13 @@
 <template>
   <div class="p-6 max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Yeni Fatura Oluştur</h1>
+    <h1 class="text-3xl font-bold mb-6">Gelen Fatura Oluştur</h1>
 
     <Form @submit="onSubmit" class="space-y-6">
-      <!-- ✅ FATURA BİLGİLERİ -->
+      <!-- ✅ Firma Seçimi -->
       <div class="bg-white border rounded-md p-4 shadow">
         <h2 class="text-xl font-semibold mb-4">Fatura Bilgileri</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- ✅ Fatura Türü -->
           <div>
-            <label class="form-label">Fatura Türü *</label>
-            <select v-model="formValues.type" class="form-input" required>
-              <option disabled value="">Seç</option>
-              <option value="gelen">Gelen</option>
-              <option value="giden">Giden</option>
-            </select>
-          </div>
-
-          <!-- ✅ Firma Seçimi (fatura türü gelen ise) -->
-          <div v-if="formValues.type === 'gelen'">
             <label class="form-label">Firma Seç *</label>
             <select v-model="formValues.clientId" class="form-input" required>
               <option disabled value="">Firma Seç</option>
@@ -31,47 +20,31 @@
               </option>
             </select>
           </div>
-
-          <!-- ✅ Müşteri Seçimi (fatura türü giden ise) -->
-          <div v-if="formValues.type === 'giden'">
-            <label class="form-label">Müşteri Seç *</label>
-            <select v-model="formValues.clientId" class="form-input" required>
-              <option disabled value="">Müşteri Seç</option>
-              <option
-                v-for="cus in customerStore.customerList"
-                :key="cus.id"
-                :value="cus.id"
-              >
-                {{ cus.companyName }}
-              </option>
-            </select>
-          </div>
         </div>
       </div>
 
-      <!-- 💡 ÜRÜNLER BLOĞU -->
+      <!-- ✅ Ürünler -->
       <div class="bg-white border rounded-md p-4 shadow">
         <h2 class="text-xl font-semibold mb-4">Ürünler</h2>
 
         <div
-          v-for="(item, index) in formValues.products"
-          :key="index"
+          v-for="(item, index) in products"
+          :key="item.key"
           class="grid grid-cols-1 md:grid-cols-6 gap-4 items-start mb-4"
         >
-          <!-- SKU -->
           <div class="col-span-2">
             <label class="form-label">Stok Kodu</label>
             <input
-              v-model="item.sku"
+              v-model="item.value.sku"
               class="form-input"
-              @blur="autoFillProduct(item, index)"
+              @blur="autoFillProduct(item.value)"
             />
           </div>
 
           <div>
             <label class="form-label">Adet</label>
             <input
-              v-model.number="item.quantity"
+              v-model.number="item.value.quantity"
               type="number"
               class="form-input"
             />
@@ -80,7 +53,7 @@
           <div>
             <label class="form-label">Fiyat</label>
             <input
-              v-model.number="item.price"
+              v-model.number="item.value.price"
               type="number"
               class="form-input"
             />
@@ -89,7 +62,7 @@
           <div>
             <label class="form-label">KDV (%)</label>
             <input
-              v-model.number="item.taxRate"
+              v-model.number="item.value.taxRate"
               type="number"
               class="form-input"
             />
@@ -98,25 +71,28 @@
           <div>
             <label class="form-label">İskonto (%)</label>
             <input
-              v-model.number="item.discount"
+              v-model.number="item.value.discount"
               type="number"
               class="form-input"
             />
           </div>
 
-          <!-- Otomatik Dolu Bilgiler -->
           <div class="col-span-full text-sm text-gray-600 mt-1">
-            {{ item.name }} / {{ item.brand }} / {{ item.model }} /
-            {{ item.category }} / {{ item.subCategory }}
+            {{ item.value.name }} / {{ item.value.brand }} /
+            {{ item.value.model }} / {{ item.value.category }} /
+            {{ item.value.subCategory }}
           </div>
         </div>
 
         <button type="button" class="text-blue-500" @click="addProductRow">
           + Ürün Ekle
         </button>
+        <p class="text-xs text-gray-500 mt-2">
+          Toplam Ürün Sayısı: {{ products.length }}
+        </p>
       </div>
 
-      <!-- TOPLAMLAR -->
+      <!-- ✅ Toplamlar -->
       <div class="bg-white border rounded-md p-4 shadow">
         <h2 class="text-xl font-semibold mb-4">Toplamlar</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -137,7 +113,7 @@
         </div>
       </div>
 
-      <!-- NOTLAR -->
+      <!-- ✅ Açıklama ve Kaydet -->
       <div class="bg-white border rounded-md p-4 shadow">
         <Field name="notes" v-slot="{ field }">
           <label class="form-label">Açıklama</label>
@@ -158,51 +134,37 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted } from "vue";
-import { Form, Field, useForm } from "vee-validate";
-import { useCustomerStore } from "@/stores/customer";
+import { computed, onMounted } from "vue";
+import { Form, Field, useForm, useFieldArray } from "vee-validate";
 import { useCompanyStore } from "@/stores/company";
 import { useInvoiceStore } from "@/stores/invoice";
 
-const customerStore = useCustomerStore();
 const companyStore = useCompanyStore();
 const invoiceStore = useInvoiceStore();
 
 onMounted(() => {
-  customerStore.fetchCustomers();
   companyStore.fetchCompanies();
 });
 
 const { values: formValues } = useForm({
   initialValues: {
-    type: "",
+    type: "gelen",
     clientId: "",
     notes: "",
-    products: [
-      {
-        sku: "",
-        name: "",
-        quantity: 1,
-        price: 0,
-        discount: 0,
-        taxRate: 18,
-        brand: "",
-        model: "",
-        category: "",
-        subCategory: "",
-      },
-    ],
+    products: [],
   },
 });
 
+const { fields: products, push } = useFieldArray("products");
+
 const addProductRow = () => {
-  formValues.products.push({
+  push({
     sku: "",
     name: "",
     quantity: 1,
     price: 0,
     discount: 0,
-    taxRate: 18,
+    taxRate: 20,
     brand: "",
     model: "",
     category: "",
@@ -210,8 +172,7 @@ const addProductRow = () => {
   });
 };
 
-// 🔍 SKU'ya göre ürünü doldur
-const autoFillProduct = async (item, index) => {
+const autoFillProduct = async (item) => {
   const found = await invoiceStore.getProductBySku(item.sku);
   if (found) {
     Object.assign(item, {
@@ -225,7 +186,6 @@ const autoFillProduct = async (item, index) => {
   }
 };
 
-// Hesaplamalar
 const totalSubtotal = computed(() =>
   formValues.products.reduce((acc, item) => acc + item.quantity * item.price, 0)
 );
@@ -246,6 +206,7 @@ const totalNet = computed(() =>
 const onSubmit = async (values) => {
   await invoiceStore.addInvoiceWithStock({
     ...values,
+    notes: values.notes || "",
     taxAmount: totalTax.value,
     netAmount: totalNet.value,
     totalAmount: totalSubtotal.value,
@@ -259,8 +220,5 @@ const onSubmit = async (values) => {
 }
 .form-input {
   @apply w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none;
-}
-.form-error {
-  @apply text-red-500 text-xs mt-1;
 }
 </style>

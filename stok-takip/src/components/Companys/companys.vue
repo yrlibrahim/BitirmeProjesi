@@ -136,7 +136,7 @@ const sortBy = (key) => {
 };
 
 const sortedCompanies = computed(() => {
-  return [...companyStore.companyList].sort((a, b) => {
+  return [...companyStore.companys].sort((a, b) => {
     const aVal = a[sortKey.value]?.toString().toLowerCase() || "";
     const bVal = b[sortKey.value]?.toString().toLowerCase() || "";
     if (aVal < bVal) return sortOrder.value === "asc" ? -1 : 1;
@@ -144,6 +144,7 @@ const sortedCompanies = computed(() => {
     return 0;
   });
 });
+
 // Urun silme fonksiyonu
 
 const removeCompany = (itemID) => {

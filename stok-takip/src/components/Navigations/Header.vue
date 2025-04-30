@@ -25,7 +25,9 @@
           @click="toggleAddMenu"
           class="bg-[#FE9F43] text-white px-4 py-2 rounded-md flex items-center gap-2"
         >
-          <i class="fas fa-plus-circle text-xl">+</i>Add New
+          <div class="flex items-center">
+            <span><PlusCircleIcon class="w-5 me-2" /></span>Yeni Ekle
+          </div>
         </button>
         <div
           v-if="showAddMenu"
@@ -92,7 +94,7 @@
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
-import { MagnifyingGlassIcon } from "@heroicons/vue/24/solid";
+import { MagnifyingGlassIcon, PlusCircleIcon } from "@heroicons/vue/24/solid";
 const userStore = useUserStore();
 
 const searchQuery = ref("");

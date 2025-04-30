@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import router from "@/router";
-import { db, DB } from "@/utils/firebase";
+import { DB } from "@/utils/firebase";
 import {
   collection,
   getDoc,
@@ -33,11 +33,12 @@ export const useCompanyStore = defineStore("companys", {
     },
     async fetchCompanies() {
       const snapshot = await getDocs(collection(DB, "Companys"));
-      this.companyList = snapshot.docs.map((doc) => ({
+      this.companys = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
     },
+
     async removeByID(id) {
       await deleteDoc(doc(DB, "Companys", id));
       await this.fetchCompanies();

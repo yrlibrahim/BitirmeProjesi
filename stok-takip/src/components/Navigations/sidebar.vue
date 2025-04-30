@@ -1,6 +1,12 @@
 <template>
-  <div class="w-60 h-screen bg-white text-gray-800 p-4 shadow-md">
-    <h2 class="text-2xl font-bold mb-6">Menü</h2>
+  <div class="w-60 h-screen bg-white text-gray-800 px-4 shadow-md">
+    <div class="flex items-center">
+      <img src="../../assets/Images/logo-no-bg.png" class="w-24 h-2w-24" />
+      <h1 class="text-2xl font-medium font-serif">
+        <p>Yerli</p>
+        <p>Otomakas</p>
+      </h1>
+    </div>
     <ul class="space-y-1">
       <!-- Anasayfa -->
       <li>
@@ -59,12 +65,12 @@
           to="/purchase-invoices"
           class="block px-3 py-2 rounded hover:bg-gray-100"
           active-class="text-orange-500 font-semibold"
-          >Alış Faturaları</router-link
+          >Gelen Faturalar</router-link
         >
       </li>
       <li class="ml-4">
         <router-link
-          to="/create-purchase-invoice"
+          to="/addInvoice"
           class="block px-3 py-2 rounded hover:bg-gray-100"
           active-class="text-orange-500 font-semibold"
           >Fatura Oluştur</router-link
@@ -77,7 +83,7 @@
           to="/sales-invoices"
           class="block px-3 py-2 rounded hover:bg-gray-100"
           active-class="text-orange-500 font-semibold"
-          >Satış Faturaları</router-link
+          >Giden Faturalar</router-link
         >
       </li>
       <li class="ml-4">

@@ -47,8 +47,9 @@ const route = useRoute();
     </div>
 
     <!-- İçerik alanı -->
-    <div class="flex-1 ml-60 overflow-y-auto h-screen">
-      <Header />
+    <div class="flex-1 ml-60 overflow-y-auto h-screen bg-[#F7F7F7]">
+      <div class=""><Header /></div>
+
       <main class="p-4">
         <RouterView />
       </main>

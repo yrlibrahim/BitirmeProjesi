@@ -79,11 +79,11 @@ export const useInvoiceStore = defineStore("invoices", {
 
       // 🧾 Fatura verisi oluştur
       const invoiceData = {
-        ...form,
-        totalAmount: productList.reduce(
-          (acc, p) => acc + p.quantity * p.price,
-          0
-        ),
+        type: form.type,
+        clientId: form.clientId,
+        notes: form.notes || "",
+        products: form.products || [],
+        totalAmount: form.totalAmount,
         taxAmount: form.taxAmount,
         netAmount: form.netAmount,
         createdAt: serverTimestamp(),
