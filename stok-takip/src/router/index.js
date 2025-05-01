@@ -13,7 +13,10 @@ import customers from "@/components/Customers/customers.vue";
 import addCustomer from "@/components/Customers/addCustomer.vue";
 import customerInfo from "@/components/Customers/customerInfo.vue";
 import setCustomer from "@/components/Customers/setCustomer.vue";
-import addInvoice from "@/components/Invoices/addInvoice.vue";
+import addPurchaseInvoice from "@/components/Invoices/Purchase/addPurchaseInvoice.vue";
+import purchaseInvoices from "@/components/Invoices/Purchase/purchaseInvoices.vue";
+import purchaseInvoiceInfo from "@/components/Invoices/Purchase/purchaseInvoiceInfo.vue";
+import setPurchaseInvoice from "@/components/Invoices/Purchase/setPurchaseInvoice.vue";
 import { useUserStore } from "@/stores/user";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,9 +92,24 @@ const router = createRouter({
       component: customerInfo,
     },
     {
-      path: "/addInvoice",
-      name: "addInvoice",
-      component: addInvoice,
+      path: "/addPurchaseInvoice",
+      name: "addPurchaseInvoice",
+      component: addPurchaseInvoice,
+    },
+    {
+      path: "/purchase-invoices",
+      name: "purchaseInvoices",
+      component: purchaseInvoices,
+    },
+    {
+      path: "/purchase-invoices/:id",
+      name: "purchaseInvoiceInfo",
+      component: purchaseInvoiceInfo,
+    },
+    {
+      path: "/set-purchase-invoices/:id",
+      name: "setPurchaseInvoiceInfo",
+      component: setPurchaseInvoice,
     },
   ],
 });

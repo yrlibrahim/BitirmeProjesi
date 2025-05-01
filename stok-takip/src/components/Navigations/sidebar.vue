@@ -70,7 +70,7 @@
       </li>
       <li class="ml-4">
         <router-link
-          to="/addInvoice"
+          to="/addPurchaseInvoice"
           class="block px-3 py-2 rounded hover:bg-gray-100"
           active-class="text-orange-500 font-semibold"
           >Fatura Oluştur</router-link
