@@ -26,43 +26,66 @@
 
   <div v-else class="flex items-center justify-between">
     <div>
-      <h1 class="text-3xl">Ürün Oluştur</h1>
-      <p class="text-lg">Yeni ürün ekle</p>
+      <h1 class="text-[22px]">Ürün Oluştur</h1>
+      <p class="text-[18px] text-[#646B72] pt-4">Yeni ürün ekle</p>
     </div>
     <div class="">
       <button
-        class="bg-[#092c4c] rounded-md p-2 text-[#ffffff]"
+        class="bg-[#092c4c] rounded-md p-2 text-[#ffffff] flex items-center gap-3"
         @click="router.back()"
       >
-        <font-awesome-icon icon="fa-solid fa-arrow-left" />
+        <ArrowUturnLeftIcon class="w-5 h-5" />
         Geri Dön
       </button>
     </div>
   </div>
   <div class="bg-[#ffffff] mt-4 px-4 p-2 rounded-lg border border-[#c1c7cc]">
-    <h1 class="text-2xl border-b mb-4 p-2">Urun Bilgileri</h1>
+    <h1 class="text-2xl border-b mb-4 p-2">Ürün Bilgileri</h1>
     <div>
       <Form @submit="onSubmit">
         <div>
           <div class="flex items-center justify-start gap-4 mb-3">
             <div class="mb-10 w-1/2">
-              <Field name="seller" v-slot="{ field, errors }">
-                <p>Satıcı Firma</p>
-                <input
-                  type="text"
-                  list="companyList"
-                  v-bind="field"
-                  v-model="seller"
-                  placeholder="Satıcı firma adı seçin"
-                  class="w-full h-10 rounded-md border border-grey-2 px-4 py-1 focus:outline-none"
-                />
-                <datalist id="companyList">
-                  <option
-                    v-for="company in companyOptions"
-                    :key="company.id"
-                    :value="company.companyName"
-                  />
-                </datalist>
+              <Field name="seller" v-slot="{ errors }">
+                <p class="mb-1">Satıcı Firma</p>
+                <div class="relative w-full" ref="companyWrapper">
+                  <!-- Seçilen firma gösterilir -->
+                  <div
+                    @click="dropdownOpen = !dropdownOpen"
+                    class="border px-4 py-2 rounded-md bg-white shadow-sm cursor-pointer flex justify-between items-center"
+                  >
+                    <span>{{ seller || "Satıcı firma seçin" }}</span>
+                    <svg
+                      class="w-4 h-4 text-gray-500"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+
+                  <!-- Firma listesi -->
+                  <div
+                    v-if="dropdownOpen"
+                    class="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-auto"
+                  >
+                    <div
+                      v-for="company in companyOptions"
+                      :key="company.id"
+                      @click="selectCompany(company.companyName)"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {{ company.companyName }}
+                    </div>
+                  </div>
+                </div>
+
                 <div v-if="errors.length" class="text-red-500 mt-1">
                   {{ errors[0] }}
                 </div>
@@ -91,11 +114,12 @@
             </div>
             <div class="mb-10 w-1/2">
               <Field name="name" v-slot="{ field, errors }">
-                <p>Urun</p>
+                <p>Ürün</p>
                 <input
                   type="text"
                   class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
                   v-bind="field"
+                  placeholder="Ürün adı girin"
                 />
                 <div v-if="errors.length" class="">{{ errors[0] }}</div>
                 <div class="mt-1 h-3 text-red-500">
@@ -107,19 +131,34 @@
 
           <div class="flex items-center justify-center gap-4 mb-3">
             <div class="mb-10 w-1/2">
-              <Field name="brand" v-slot="{ field, errors }">
-                <p>Araç</p>
-                <input
-                  type="text"
-                  list="brandList"
-                  v-bind="field"
-                  v-model="brand"
-                  placeholder="Araç adı yaz veya seç"
-                  class="w-full h-10 rounded-md border border-grey-2 px-4 py-1 focus:outline-none"
-                />
-                <datalist id="brandList">
-                  <option v-for="b in brandOptions" :key="b" :value="b" />
-                </datalist>
+              <Field name="brand" v-slot="{ errors }">
+                <p class="mb-1">Araç</p>
+                <div class="relative w-full" ref="brandWrapper">
+                  <!-- Input alanı -->
+                  <input
+                    type="text"
+                    v-model="brand"
+                    @focus="brandDropdownOpen = true"
+                    @input="brandDropdownOpen = true"
+                    placeholder="Araç adı yaz veya seç"
+                    class="w-full px-4 py-2 border rounded bg-white shadow-sm focus:outline-none"
+                  />
+                  <!-- Dropdown (filtreli) -->
+                  <div
+                    v-if="brandDropdownOpen && filteredBrandOptions.length"
+                    class="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-auto"
+                  >
+                    <div
+                      v-for="b in filteredBrandOptions"
+                      :key="b"
+                      @click="selectBrand(b)"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {{ b }}
+                    </div>
+                  </div>
+                </div>
+
                 <div v-if="errors.length" class="text-red-500 mt-1">
                   {{ errors[0] }}
                 </div>
@@ -127,20 +166,36 @@
             </div>
 
             <div class="mb-10 w-1/2">
-              <Field name="model" v-slot="{ field, errors }">
-                <p>Model</p>
-                <input
-                  type="text"
-                  list="modelList"
-                  v-bind="field"
-                  v-model="model"
-                  :disabled="!brand"
-                  placeholder="Model gir veya seç"
-                  class="w-full h-10 rounded-md border border-grey-2 px-4 py-1 focus:outline-none"
-                />
-                <datalist id="modelList">
-                  <option v-for="m in modelOptions" :key="m" :value="m" />
-                </datalist>
+              <Field name="model" v-slot="{ errors }">
+                <p class="mb-1">Model</p>
+                <div class="relative w-full" ref="modelWrapper">
+                  <!-- Input alanı -->
+                  <input
+                    type="text"
+                    v-model="model"
+                    @focus="modelDropdownOpen = true"
+                    @input="modelDropdownOpen = true"
+                    :disabled="!brand"
+                    placeholder="Model yaz veya seç"
+                    class="w-full px-4 py-2 border rounded bg-white shadow-sm focus:outline-none"
+                  />
+
+                  <!-- Dropdown -->
+                  <div
+                    v-if="modelDropdownOpen && filteredModelOptions.length"
+                    class="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-auto"
+                  >
+                    <div
+                      v-for="m in filteredModelOptions"
+                      :key="m"
+                      @click="selectModel(m)"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {{ m }}
+                    </div>
+                  </div>
+                </div>
+
                 <div v-if="errors.length" class="text-red-500 mt-1">
                   {{ errors[0] }}
                 </div>
@@ -149,20 +204,38 @@
           </div>
           <div class="flex items-center justify-center gap-4 mb-3">
             <div class="mb-10 w-1/2">
-              <Field name="category" v-slot="{ field, errors }">
-                <p>Kategori</p>
-                <input
-                  type="text"
-                  list="categoryList"
-                  v-bind="field"
-                  v-model="category"
-                  :disabled="!model"
-                  placeholder="Kategori yaz veya seç"
-                  class="w-full h-10 rounded-md border border-grey-2 px-4 py-1 focus:outline-none"
-                />
-                <datalist id="categoryList">
-                  <option v-for="c in categoryOptions" :key="c" :value="c" />
-                </datalist>
+              <Field name="category" v-slot="{ errors }">
+                <p class="mb-1">Kategori</p>
+                <div class="relative w-full" ref="categoryWrapper">
+                  <!-- Input -->
+                  <input
+                    type="text"
+                    v-model="category"
+                    @focus="categoryDropdownOpen = true"
+                    @input="categoryDropdownOpen = true"
+                    :disabled="!model"
+                    placeholder="Kategori yaz veya seç"
+                    class="w-full px-4 py-2 border rounded bg-white shadow-sm focus:outline-none"
+                  />
+
+                  <!-- Dropdown -->
+                  <div
+                    v-if="
+                      categoryDropdownOpen && filteredCategoryOptions.length
+                    "
+                    class="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-auto"
+                  >
+                    <div
+                      v-for="c in filteredCategoryOptions"
+                      :key="c"
+                      @click="selectCategory(c)"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {{ c }}
+                    </div>
+                  </div>
+                </div>
+
                 <div v-if="errors.length" class="text-red-500 mt-1">
                   {{ errors[0] }}
                 </div>
@@ -170,20 +243,39 @@
             </div>
 
             <div class="mb-10 w-1/2">
-              <Field name="subCategory" v-slot="{ field, errors }">
-                <p>Alt Kategori</p>
-                <input
-                  type="text"
-                  list="subCategoryList"
-                  v-bind="field"
-                  v-model="subCategory"
-                  :disabled="!category"
-                  placeholder="Alt kategori yaz veya seç"
-                  class="w-full h-10 rounded-md border border-grey-2 px-4 py-1 focus:outline-none"
-                />
-                <datalist id="subCategoryList">
-                  <option v-for="s in subCategoryOptions" :key="s" :value="s" />
-                </datalist>
+              <Field name="subCategory" v-slot="{ errors }">
+                <p class="mb-1">Alt Kategori</p>
+                <div class="relative w-full" ref="subCategoryWrapper">
+                  <!-- Input -->
+                  <input
+                    type="text"
+                    v-model="subCategory"
+                    @focus="subCategoryDropdownOpen = true"
+                    @input="subCategoryDropdownOpen = true"
+                    :disabled="!category"
+                    placeholder="Alt kategori yaz veya seç"
+                    class="w-full px-4 py-2 border rounded bg-white shadow-sm focus:outline-none"
+                  />
+
+                  <!-- Dropdown -->
+                  <div
+                    v-if="
+                      subCategoryDropdownOpen &&
+                      filteredSubCategoryOptions.length
+                    "
+                    class="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-auto"
+                  >
+                    <div
+                      v-for="s in filteredSubCategoryOptions"
+                      :key="s"
+                      @click="selectSubCategory(s)"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {{ s }}
+                    </div>
+                  </div>
+                </div>
+
                 <div v-if="errors.length" class="text-red-500 mt-1">
                   {{ errors[0] }}
                 </div>
@@ -215,19 +307,12 @@
             </div>
           </div>
         </div>
-        <div class="text-center mt-6">
+        <div class="text-left mt-6 mb-4">
           <button
             type="submit"
-            class="w-full bg-[#fe9f43] text-white py-3 rounded-lg relative overflow-hidden group border border-[#fe9f43] hover:bg-white hover:text-[#fe9f43]"
+            class="px-4 bg-[#fe9f43] text-white py-3 rounded-md border border-[#fe9f43] hover:bg-white hover:text-[#fe9f43] transition"
           >
-            <span
-              class="absolute inset-0 bg-white scale-y-0 group-hover:scale-y-100 transform transition-transform duration-300 origin-top"
-            ></span>
-            <span
-              class="relative group-hover:text-[#fe9f43] transition-colors duration-300"
-            >
-              Urun Ekle
-            </span>
+            <span> Ürün Ekle </span>
           </button>
         </div>
       </Form>
@@ -235,9 +320,8 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { Field, Form } from "vee-validate";
-import { onMounted } from "vue";
 import * as yup from "yup";
 import { useStockData } from "@/stores/stock";
 import { useToast } from "vue-toast-notification";
@@ -249,9 +333,10 @@ import {
   fetchCategories,
   fetchSubCategories,
 } from "@/components/Helpers/useProductHelpers";
-import { watch } from "vue";
 import { isSkuExists } from "@/components/Helpers/useProductHelpers";
 import { useCompanyStore } from "@/stores/company"; // Pinia store'un
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
+import { useClickOutside } from "@/components/Helpers/useClickOutside";
 
 const companyStore = useCompanyStore();
 const companyOptions = ref([]);
@@ -261,12 +346,68 @@ const brand = ref("");
 const model = ref("");
 const category = ref("");
 const subCategory = ref("");
-
 const router = useRouter();
 const $toast = useToast();
 
-// --- Seçilen değerler ve dropdownlar
+// Dropmenuler
+const dropdownOpen = ref(false);
+const brandDropdownOpen = ref(false);
+const companyWrapper = ref(null);
+const brandWrapper = ref(null);
+const modelDropdownOpen = ref(false);
+const modelWrapper = ref(null);
+const categoryDropdownOpen = ref(false);
+const categoryWrapper = ref(null);
+const subCategoryDropdownOpen = ref(false);
+const subCategoryWrapper = ref(null);
 
+function selectCompany(name) {
+  seller.value = name;
+  dropdownOpen.value = false;
+}
+//Brand Menu
+const selectBrand = (value) => {
+  brand.value = value;
+  brandDropdownOpen.value = false;
+};
+const filteredBrandOptions = computed(() =>
+  brandOptions.value.filter((b) =>
+    b.toLowerCase().includes(brand.value.toLowerCase())
+  )
+);
+//Model Menu
+const filteredModelOptions = computed(() =>
+  modelOptions.value.filter((m) =>
+    m.toLowerCase().includes(model.value.toLowerCase())
+  )
+);
+function selectModel(value) {
+  model.value = value;
+  modelDropdownOpen.value = false;
+}
+// Category Menu
+const filteredCategoryOptions = computed(() =>
+  categoryOptions.value.filter((c) =>
+    c.toLowerCase().includes(category.value.toLowerCase())
+  )
+);
+function selectCategory(value) {
+  category.value = value;
+  categoryDropdownOpen.value = false;
+}
+//Sub Category Menu
+const filteredSubCategoryOptions = computed(() =>
+  subCategoryOptions.value.filter((s) =>
+    s.toLowerCase().includes(subCategory.value.toLowerCase())
+  )
+);
+
+function selectSubCategory(value) {
+  subCategory.value = value;
+  subCategoryDropdownOpen.value = false;
+}
+
+// --- Seçilen değerler ve dropdownlar
 const brandOptions = ref([]);
 const modelOptions = ref([]);
 const categoryOptions = ref([]);
@@ -276,7 +417,7 @@ const subCategoryOptions = ref([]);
 onMounted(async () => {
   brandOptions.value = await fetchBrands();
   await companyStore.fetchCompanies(); // şirketleri çek
-  companyOptions.value = companyStore.companyList; // firma listesi ata
+  companyOptions.value = [...companyStore.companys];
 });
 
 watch(brand, async (newVal) => {
@@ -307,13 +448,31 @@ const loading = ref(false);
 const stockData = useStockData();
 
 function onSubmit(values, { resetForm }) {
+  if (!seller.value) {
+    $toast.error("Lütfen satıcı firma seçin!");
+    return;
+  }
+  if (!brand.value) {
+    $toast.error("Lütfen araç bilgisini girin!");
+    return;
+  }
+
   if (skuError.value) {
     $toast.error("Lütfen benzersiz bir stok kodu girin!");
     return;
   }
+
   loading.value = true;
+
   stockData
-    .getStockData(values)
+    .getStockData({
+      ...values,
+      seller: seller.value,
+      brand: brand.value,
+      model: model.value,
+      category: category.value,
+      subCategory: subCategory.value,
+    })
     .then(() => {
       $toast.success("Ürün başarı ile eklendi !");
     })
@@ -325,6 +484,7 @@ function onSubmit(values, { resetForm }) {
       loading.value = false;
     });
 }
+
 watch(brand, async (newVal) => {
   if (newVal) {
     modelOptions.value = await fetchModels(newVal);
@@ -344,5 +504,23 @@ watch(sku, async (newVal) => {
   } else {
     skuError.value = "";
   }
+});
+// click dışında tıklanırsa menüyü kapat
+useClickOutside(companyWrapper, () => {
+  dropdownOpen.value = false;
+});
+
+useClickOutside(brandWrapper, () => {
+  brandDropdownOpen.value = false;
+});
+
+useClickOutside(modelWrapper, () => {
+  modelDropdownOpen.value = false;
+});
+useClickOutside(categoryWrapper, () => {
+  categoryDropdownOpen.value = false;
+});
+useClickOutside(subCategoryWrapper, () => {
+  subCategoryDropdownOpen.value = false;
 });
 </script>

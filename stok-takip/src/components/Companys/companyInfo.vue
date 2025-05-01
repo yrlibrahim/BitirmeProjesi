@@ -2,13 +2,15 @@
   <div class="p-6 m-6 bg-white rounded-lg border border-gray-200 shadow-md">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-2xl font-bold mb-4">Firma Detayları</h2>
-      <button
-        class="bg-[#092c4c] rounded-md p-2 text-[#ffffff]"
-        @click="router.back()"
-      >
-        <font-awesome-icon icon="fa-solid fa-arrow-left" />
-        Geri Dön
-      </button>
+      <div class="">
+        <button
+          class="bg-[#092c4c] rounded-md p-2 text-[#ffffff] flex items-center gap-3"
+          @click="router.back()"
+        >
+          <ArrowUturnLeftIcon class="w-5 h-5" />
+          Geri Dön
+        </button>
+      </div>
     </div>
     <div class="overflow-x-auto w-full">
       <table
@@ -79,6 +81,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useToast } from "vue-toast-notification";
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
 
 const priceChange = ref(0);
 const priceMode = ref("increase"); // increase = zam, decrease = indirim

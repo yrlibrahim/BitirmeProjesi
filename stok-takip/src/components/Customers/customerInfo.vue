@@ -2,13 +2,15 @@
   <div class="p-6 m-6 bg-white rounded-lg border border-gray-200 shadow-md">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-2xl font-bold mb-4">Müşteri Detayları</h2>
-      <button
-        class="bg-[#092c4c] rounded-md p-2 text-[#ffffff]"
-        @click="router.back()"
-      >
-        <font-awesome-icon icon="fa-solid fa-arrow-left" />
-        Geri Dön
-      </button>
+      <div class="">
+        <button
+          class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"
+          @click="router.back()"
+        >
+          <ArrowUturnLeftIcon class="w-5 h-5" />
+          Geri Dön
+        </button>
+      </div>
     </div>
 
     <div class="overflow-x-auto w-full">
@@ -42,6 +44,7 @@ import { useRoute, useRouter } from "vue-router";
 import { doc, getDoc } from "firebase/firestore";
 import { DB } from "@/utils/firebase";
 import { useToast } from "vue-toast-notification";
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
 
 const $toast = useToast();
 const router = useRouter();
@@ -61,7 +64,7 @@ onMounted(async () => {
       customerData.value = data;
 
       customerFields.value = {
-        "Firma Adı": data.name || "-",
+        "Firma Adı": data.companyName || "-",
         "Mail Adresi": data.email || "-",
         "Vergi Numarası": data.taxNumber || "-",
         "Vergi Dairesi": data.taxOffice || "-",

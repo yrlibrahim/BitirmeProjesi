@@ -28,12 +28,12 @@
         <h1 class="text-3xl">Firma Güncelle</h1>
         <p class="text-lg">Bu firmayı düzenle</p>
       </div>
-      <div>
+      <div class="">
         <button
-          class="bg-[#092c4c] rounded-md p-2 text-white"
+          class="bg-[#092c4c] rounded-md p-2 text-[#ffffff] flex items-center gap-3"
           @click="router.back()"
         >
-          <font-awesome-icon icon="fa-solid fa-arrow-left" />
+          <ArrowUturnLeftIcon class="w-5 h-5" />
           Geri Dön
         </button>
       </div>
@@ -176,6 +176,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { DB } from "@/utils/firebase";
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
 
 const router = useRouter();
 const route = useRoute();

@@ -66,25 +66,33 @@
             <td class="px-4 py-2">{{ item.invoiceTitle }}</td>
             <td class="px-4 py-2">{{ item.invoiceAddress }}</td>
             <td class="px-4 py-2">{{ item.phone }}</td>
-            <td class="px-4 py-2 flex items-center gap-2">
-              <button
-                class="p-2 rounded hover:bg-gray-100"
-                @click="goToCompanyInfo(item.id)"
-              >
-                <font-awesome-icon icon="eye" />
-              </button>
-              <div v-if="!userStore.user.isAdmin">
-                <button
-                  class="p-2 rounded hover:bg-gray-100"
-                  @click="goToSetCompany(item.id)"
+            <td class="p-3">
+              <div class="flex gap-2">
+                <router-link
+                  :to="{
+                    name: 'companyInfo',
+                    params: { id: item.id },
+                  }"
+                  class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
                 >
-                  <font-awesome-icon icon="pen-to-square" />
-                </button>
+                  <EyeIcon class="w-5 h-5 text-gray-600" />
+                </router-link>
+
+                <router-link
+                  :to="{
+                    name: 'setCompany',
+                    params: { id: item.id },
+                  }"
+                  class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
+                >
+                  <PencilSquareIcon class="w-5 h-5" />
+                </router-link>
+
                 <button
-                  class="p-2 rounded hover:bg-gray-100 text-red-500"
                   @click="removeCompany(item.id)"
+                  class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
                 >
-                  <font-awesome-icon icon="trash" />
+                  <TrashIcon class="w-5 h-5 text-red-500" />
                 </button>
               </div>
             </td>
@@ -101,6 +109,11 @@ import { useCompanyStore } from "@/stores/company";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import Swal from "sweetalert2";
+import {
+  EyeIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/vue/24/outline";
 
 const companyStore = useCompanyStore();
 const userStore = useUserStore();

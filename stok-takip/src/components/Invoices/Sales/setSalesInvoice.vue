@@ -1,29 +1,29 @@
 <template>
   <div class="p-6 space-y-8">
-    <h2 class="text-2xl font-bold">Gelen Fatura Düzenle</h2>
+    <h2 class="text-2xl font-bold">Satış Faturası Düzenle</h2>
 
-    <!-- 1. Kademe: Firma ve Fatura No -->
+    <!-- 1. Kademe: Müşteri ve Fatura No -->
     <div class="flex items-center gap-4">
       <div>
-        <label class="block text-sm font-medium mb-1">Firma Seç</label>
+        <label class="block text-sm font-medium mb-1">Müşteri Seç</label>
         <div class="relative">
           <div
             class="border rounded px-4 py-2 cursor-pointer bg-white shadow-sm"
             @click="showDropdown = !showDropdown"
           >
-            {{ selectedCompanyLabel }}
+            {{ selectedCustomerLabel }}
           </div>
           <ul
             v-if="showDropdown"
             class="absolute z-50 mt-1 w-full bg-white border rounded shadow-md max-h-48 overflow-auto"
           >
             <li
-              v-for="firma in companys"
-              :key="firma.id"
+              v-for="cust in customerList"
+              :key="cust.id"
               class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              @click="selectCompany(firma)"
+              @click="selectCustomer(cust)"
             >
-              {{ firma.companyName }}
+              {{ cust.companyName }}
             </li>
           </ul>
         </div>
@@ -45,12 +45,12 @@
       :key="index"
       class="grid grid-cols-[40px_repeat(9,minmax(0,1fr))] gap-2 bg-gray-50 p-4 rounded-md border items-center"
     >
-      <button
-        @click="removeRow(index)"
-        class="flex justify-center item center py-1 border border-[#092C4C] text-[#092C4C] hover:bg-[#092C4C] hover:text-white rounded-md"
-      >
+      <!-- Çöp butonu -->
+      <button @click="removeRow(index)" class="text-red-500 hover:text-red-700">
         <TrashIcon class="w-5 h-5" />
       </button>
+
+      <!-- Inputlar -->
       <input
         v-model="row.sku"
         @blur="fetchProductDetails(index)"
@@ -106,18 +106,17 @@
         class="border bg-gray-100 rounded px-2 py-1 text-gray-700"
       />
     </div>
-
     <button
       @click="addRow"
-      class="flex items-center btn bg-[#FE9F43] text-white rounded-md border px-4 py-2 hover:bg-white hover:text-[#FE9F43] hover:border-[#FE9F43] transition"
+      class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
     >
-      <PlusCircleIcon class="w-5 me-2" />
-      Satır Ekle
+      + Satır Ekle
     </button>
 
-    <!-- Toplamlar -->
+    <!-- 3. Kademe: Toplamlar -->
     <div class="mt-10 space-y-3 border-t pt-6">
       <h3 class="text-xl font-semibold">Toplamlar</h3>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <div>
           <label class="block text-sm font-medium mb-1">Ara Toplam</label>
@@ -154,7 +153,7 @@
       </div>
     </div>
 
-    <!-- Not ve Güncelle -->
+    <!-- 4. Kademe: Not ve Güncelle -->
     <div class="mt-10 space-y-4 space-x-4 border-t pt-6">
       <h3 class="text-xl font-semibold">Not</h3>
       <textarea
@@ -163,6 +162,7 @@
         rows="4"
         class="w-full px-4 py-2 border rounded"
       ></textarea>
+
       <button
         @click="updateInvoice"
         class="mt-4 hover:bg-[#FE9F43] hover:text-white rounded-md border px-4 py-2 bg-white text-[#FE9F43] border-[#FE9F43] transition"
@@ -170,7 +170,7 @@
         Faturayı Güncelle
       </button>
       <button
-        @click="router.push({ name: 'purchaseInvoices' })"
+        @click="router.push({ name: 'salesInvoices' })"
         class="px-6 py-2 bg-[#092C4C] text-white border border-[#092C4C] rounded hover:bg-white hover:text-[#092C4C] transition"
       >
         İptal
@@ -180,16 +180,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useCustomerStore } from "@/stores/customer";
 import { storeToRefs } from "pinia";
-import { useCompanyStore } from "@/stores/company";
 import {
   getProductBySKU,
-  fetchPurchaseInvoiceById,
-  updatePurchaseInvoice,
-} from "@/stores/invoice";
-import { TrashIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
+  fetchSalesInvoiceById,
+  updateSalesInvoice,
+} from "@/stores/salesInvoice";
+import { TrashIcon } from "@heroicons/vue/24/outline";
 import { useToast } from "vue-toast-notification";
 
 const toast = useToast();
@@ -197,38 +197,37 @@ const route = useRoute();
 const router = useRouter();
 const invoiceId = route.params.id;
 
-const companyStore = useCompanyStore();
-const { companys } = storeToRefs(companyStore);
+const customerStore = useCustomerStore();
+const { customerList } = storeToRefs(customerStore);
 
-const selectedCompany = ref(null);
+const selectedCustomer = ref(null);
 const invoiceNumber = ref("");
 const note = ref("");
 const showDropdown = ref(false);
 const productRows = ref([]);
 
-const selectedCompanyLabel = computed(
-  () => selectedCompany.value?.companyName || "Firma seçiniz"
+const selectedCustomerLabel = computed(
+  () => selectedCustomer.value?.companyName || "Müşteri seçiniz"
 );
 
 onMounted(async () => {
-  await companyStore.fetchCompanies();
-
+  await customerStore.fetchCustomers();
   try {
-    const invoice = await fetchPurchaseInvoiceById(invoiceId);
-    selectedCompany.value = companys.value.find(
-      (f) => f.companyName === invoice.companyName
+    const invoice = await fetchSalesInvoiceById(invoiceId);
+    selectedCustomer.value = customerList.value.find(
+      (c) => c.companyName === invoice.customerName
     );
-    invoiceNumber.value = invoice.invoiceNumber;
+    invoiceNumber.value = invoice.invoiceNo;
     note.value = invoice.note || "";
     productRows.value = invoice.products.map((item) => ({ ...item }));
   } catch (err) {
-    toast.error("Fatura verileri getirilemedi.");
+    alert("Fatura verileri getirilemedi.");
     console.error(err);
   }
 });
 
-function selectCompany(company) {
-  selectedCompany.value = company;
+function selectCustomer(customer) {
+  selectedCustomer.value = customer;
   showDropdown.value = false;
 }
 
@@ -297,29 +296,27 @@ const grandTotal = computed(
 );
 
 const updateInvoice = async () => {
-  if (!selectedCompany.value || !invoiceNumber.value) {
-    toast.error("Firma ve fatura numarası zorunludur.");
+  if (!selectedCustomer.value || !invoiceNumber.value) {
+    alert("Lütfen müşteri ve fatura numarasını girin.");
     return;
   }
 
   const invoiceData = {
-    companyId: selectedCompany.value.id,
-    companyName: selectedCompany.value.companyName,
-    invoiceNumber: invoiceNumber.value,
-    invoiceDate: new Date().toISOString(),
+    customerName: selectedCustomer.value.companyName,
+    invoiceNo: invoiceNumber.value,
     note: note.value,
   };
 
   try {
-    await updatePurchaseInvoice(invoiceId, invoiceData, productRows.value);
-    toast.success("Fatura ve stok başarıyla güncellendi!");
-    router.push({ name: "purchaseInvoices" });
+    await updateSalesInvoice(invoiceId, invoiceData, productRows.value);
+    toast.success("Fatura güncellendi.");
+    router.push({ name: "salesInvoices" });
   } catch (err) {
+    toast.error("Hata: Güncelleme başarısız.");
     console.error(err);
-    toast.error("Fatura kaydedildi ama stok güncellenemedi.");
   }
 };
-
+// Para formatlama
 function formatCurrency(value) {
   const number = Number(value) || 0;
   return new Intl.NumberFormat("tr-TR", {
@@ -329,6 +326,7 @@ function formatCurrency(value) {
   }).format(number);
 }
 
+// Sayıyı düzgün input'a geri çevirmek
 function onRawInput(event, field, index) {
   const raw = event.target.value.replace(/[^\d.,]/g, "").replace(",", ".");
   productRows.value[index][field] = parseFloat(raw) || 0;

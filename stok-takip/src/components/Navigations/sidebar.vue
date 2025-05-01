@@ -1,5 +1,5 @@
 <template>
-  <div class="w-60 h-screen bg-white text-gray-800 px-4 shadow-md">
+  <div class="w-60 h-screen bg-white text-gray-800 px-4 border-e">
     <div class="flex items-center">
       <img src="../../assets/Images/logo-no-bg.png" class="w-24 h-2w-24" />
       <h1 class="text-2xl font-medium font-serif">
@@ -12,11 +12,13 @@
       <li>
         <router-link
           to="/"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
           exact
-        >
-          Anasayfa
+          ><div class="flex items-center gap-2">
+            <HomeIcon class="w-5" />
+            <p class="text-[16px]">Anasayfa</p>
+          </div>
         </router-link>
       </li>
 
@@ -25,30 +27,29 @@
 
       <!-- Stok Yönetimi -->
       <li class="text-sm font-semibold text-gray-500 uppercase px-3">
-        Stok Yönetimi
+        <p>Stok Yönetimi</p>
       </li>
       <li>
         <router-link
           to="/product"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Ürünler</router-link
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <CubeIcon class="w-5" />
+            <p class="text-[16px]">Ürünler</p>
+          </div></router-link
         >
       </li>
       <li>
         <router-link
           to="/create-new-product"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Ürün Ekle</router-link
-        >
-      </li>
-      <li>
-        <router-link
-          to="/low-stock"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Düşük Stoklar</router-link
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          ><div class="flex items-center gap-2">
+            <SquaresPlusIcon class="w-5" />
+            <p class="text-[16px]">Ürün Ekle</p>
+          </div></router-link
         >
       </li>
 
@@ -60,39 +61,52 @@
         Faturalar
       </li>
       <li class="ml-2 text-xs text-orange-400 mt-1">Alış</li>
-      <li class="ml-4">
+      <li class="">
         <router-link
           to="/purchase-invoices"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Gelen Faturalar</router-link
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
         >
+          <div class="flex items-center gap-2">
+            <DocumentArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Gelen Faturalar</p>
+          </div>
+        </router-link>
       </li>
-      <li class="ml-4">
+      <li class="">
         <router-link
           to="/addPurchaseInvoice"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Fatura Oluştur</router-link
-        >
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          ><div class="flex items-center gap-2">
+            <DocumentPlusIcon class="w-5" />
+            <p class="text-[16px]">Fatura Oluştur</p>
+          </div>
+        </router-link>
       </li>
 
       <li class="ml-2 text-xs text-orange-400 mt-2">Satış</li>
-      <li class="ml-4">
+      <li class="">
         <router-link
           to="/sales-invoices"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Giden Faturalar</router-link
-        >
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          ><div class="flex items-center gap-2">
+            <DocumentArrowUpIcon class="w-5" />
+            <p class="text-[16px]">Gelen Faturalar</p>
+          </div>
+        </router-link>
       </li>
-      <li class="ml-4">
+      <li class="">
         <router-link
-          to="/create-sales-invoice"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Fatura Oluştur</router-link
-        >
+          to="/addSalesInvoice"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          ><div class="flex items-center gap-2">
+            <DocumentPlusIcon class="w-5" />
+            <p class="text-[16px]">Fatura Oluştur</p>
+          </div>
+        </router-link>
       </li>
 
       <!-- Divider -->
@@ -105,19 +119,37 @@
       <li>
         <router-link
           to="/customers"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Müşteriler</router-link
-        >
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          ><div class="flex items-center gap-2">
+            <UsersIcon class="w-5" />
+            <p class="text-[16px]">Müşteriler</p>
+          </div>
+        </router-link>
       </li>
       <li>
         <router-link
           to="/companys"
-          class="block px-3 py-2 rounded hover:bg-gray-100"
-          active-class="text-orange-500 font-semibold"
-          >Şirketler</router-link
-        >
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          ><div class="flex items-center gap-2">
+            <UserGroupIcon class="w-5" />
+            <p class="text-[16px]">Firmalar</p>
+          </div>
+        </router-link>
       </li>
     </ul>
   </div>
 </template>
+<script setup>
+import {
+  HomeIcon,
+  CubeIcon,
+  SquaresPlusIcon,
+  DocumentArrowDownIcon,
+  DocumentArrowUpIcon,
+  DocumentPlusIcon,
+  UsersIcon,
+  UserGroupIcon,
+} from "@heroicons/vue/24/outline";
+</script>

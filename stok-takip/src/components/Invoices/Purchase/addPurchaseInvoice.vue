@@ -1,10 +1,19 @@
 <template>
   <div class="p-6 space-y-8">
-    <h2 class="text-2xl font-bold">Gelen Fatura Ekle</h2>
+    <div class="flex items-center justify-between">
+      <h2 class="text-2xl font-bold">Gelen Fatura Ekle</h2>
+      <button
+        class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"
+        @click="router.back()"
+      >
+        <ArrowUturnLeftIcon class="w-5 h-5" />
+        Geri Dön
+      </button>
+    </div>
 
     <!-- 1. Kademe: Firma Seçimi ve Fatura No -->
-    <div class="flex items-center gap-4">
-      <div>
+    <div class="flex flex-wrap md:flex-nowrap items-center gap-4">
+      <div class="flex-1 min-w-[200px]">
         <label class="block text-sm font-medium mb-1">Firma Seç</label>
         <div class="relative">
           <div
@@ -30,7 +39,7 @@
       </div>
 
       <!-- Fatura Numarası -->
-      <div>
+      <div class="flex-1 min-w-[200px]">
         <label class="block text-sm font-medium mb-1">Fatura Numarası</label>
         <input
           type="text"
@@ -42,109 +51,140 @@
     </div>
 
     <!-- 2. Kademe: Ürün Satırları -->
-    <div class="space-y-6 border-t pt-6">
-      <h3 class="text-xl font-semibold">Mal Hizmet Bilgileri</h3>
 
+    <div class="space-y-6 border-t pt-6">
+      <h3 class="text-xl font-semibold">Mal/Hizmet Bilgileri</h3>
+
+      <!-- Başlık Satırı -->
+      <div
+        class="grid grid-cols-[40px_repeat(9,minmax(0,1fr))] gap-2 text-sm font-semibold text-gray-600 px-1 ms-5"
+      >
+        <span></span>
+        <span>Stok Kodu</span>
+        <span>Ad</span>
+        <span>Marka</span>
+        <span>Model</span>
+        <span>Adet</span>
+        <span>Fiyat</span>
+        <span>Vergi %</span>
+        <span>İskonto %</span>
+        <span>Toplam</span>
+      </div>
+
+      <!-- Ürün Satırları -->
       <div
         v-for="(row, index) in productRows"
         :key="index"
-        class="p-4 mb-4 space-y-2"
+        class="grid grid-cols-[40px_repeat(9,minmax(0,1fr))] gap-2 bg-gray-50 p-4 rounded-md border items-center"
       >
-        <div class="flex items-center justify-between gap-5">
-          <div class="grid grid-cols-5 gap-4">
-            <div>
-              <label>Stok Kodu</label>
-              <input
-                v-model="row.sku"
-                @blur="fetchProductDetails(index)"
-                placeholder="Stok kodu girin"
-                class="w-full px-3 py-2 border rounded"
-              />
-            </div>
-            <div>
-              <label>Adet</label>
-              <input
-                type="number"
-                v-model.number="row.quantity"
-                @input="calculateRowTotal(index)"
-                class="w-full px-3 py-2 border rounded"
-              />
-            </div>
-            <div>
-              <label>Fiyat</label>
-              <input
-                type="number"
-                v-model.number="row.price"
-                @input="calculateRowTotal(index)"
-                class="w-full px-3 py-2 border rounded"
-              />
-            </div>
-            <div>
-              <label>Vergi %</label>
-              <input
-                type="number"
-                v-model.number="row.tax"
-                @input="calculateRowTotal(index)"
-                class="w-full px-3 py-2 border rounded"
-              />
-            </div>
-            <div>
-              <label>İskonto %</label>
-              <input
-                type="number"
-                v-model.number="row.discount"
-                @input="calculateRowTotal(index)"
-                class="w-full px-3 py-2 border rounded"
-              />
-            </div>
-          </div>
+        <!-- Çöp butonu -->
+        <button
+          @click="removeRow(index)"
+          class="text-red-500 hover:text-red-700"
+        >
+          <TrashIcon class="w-5 h-5" />
+        </button>
 
-          <div class="flex items-center gap-5">
-            <div>
-              <label>Toplam</label>
-              <input
-                type="text"
-                :value="`${row.total.toFixed(2)} ₺`"
-                readonly
-                class="w-full px-3 py-2 border rounded bg-gray-100 text-gray-800"
-              />
-            </div>
-
-            <button @click="removeRow(index)" class="mt-5">
-              <TrashIcon class="w-5 h-5 text-red-500" />
-            </button>
-          </div>
-        </div>
-
-        <div v-if="row.name" class="flex text-sm gap-4">
-          <p>{{ row.brand }}</p>
-          //
-          <p>{{ row.model }}</p>
-          //
-          <p>{{ row.subCategory }}</p>
-          //
-          <p>{{ row.name }}</p>
-        </div>
+        <!-- Inputlar -->
+        <input
+          v-model="row.sku"
+          @blur="fetchProductDetails(index)"
+          placeholder="Stok Kodu"
+          class="border rounded px-2 py-1"
+        />
+        <input
+          v-model="row.name"
+          disabled
+          placeholder="Ad"
+          class="border rounded px-2 py-1 bg-gray-100"
+        />
+        <input
+          v-model="row.brand"
+          disabled
+          placeholder="Marka"
+          class="border rounded px-2 py-1 bg-gray-100"
+        />
+        <input
+          v-model="row.model"
+          disabled
+          placeholder="Model"
+          class="border rounded px-2 py-1 bg-gray-100"
+        />
+        <input
+          type="number"
+          v-model.number="row.quantity"
+          @input="calculateRowTotal(index)"
+          class="border rounded px-2 py-1"
+        />
+        <input
+          type="text"
+          :value="formatCurrency(row.price)"
+          @input="onRawInput($event, 'price', index)"
+          @blur="calculateRowTotal(index)"
+          class="border rounded px-2 py-1"
+        />
+        <input
+          type="number"
+          v-model.number="row.tax"
+          @input="calculateRowTotal(index)"
+          class="border rounded px-2 py-1"
+        />
+        <input
+          type="number"
+          v-model.number="row.discount"
+          @input="calculateRowTotal(index)"
+          class="border rounded px-2 py-1"
+        />
+        <input
+          :value="formatCurrency(row.total)"
+          readonly
+          class="border bg-gray-100 rounded px-2 py-1 text-gray-700"
+        />
       </div>
 
+      <!-- Satır Ekle Butonu -->
       <button
         @click="addRow"
-        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        class="flex items-center btn bg-[#FE9F43] text-white rounded-md border px-4 py-2 hover:bg-white hover:text-[#FE9F43] hover:border-[#FE9F43] transition"
       >
-        + Satır Ekle
+        <PlusCircleIcon class="w-5 me-2" />
+        Satır Ekle
       </button>
     </div>
 
     <!-- 3. Kademe: Toplamlar -->
-    <div class="mt-10 space-y-3 border-t pt-6">
-      <h3 class="text-xl font-semibold">Toplamlar</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-        <p><strong>Ara Toplam:</strong> {{ subtotal.toFixed(2) }} ₺</p>
-        <p><strong>Toplam KDV:</strong> {{ totalTax.toFixed(2) }} ₺</p>
-        <p>
-          <strong>Toplam İskonto:</strong> -{{ totalDiscount.toFixed(2) }} ₺
-        </p>
-        <p><strong>Genel Toplam:</strong> {{ grandTotal.toFixed(2) }} ₺</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+      <div>
+        <label class="block text-sm font-medium mb-1">Ara Toplam</label>
+        <input
+          :value="formatCurrency(subtotal)"
+          readonly
+          class="w-full px-4 py-2 border rounded bg-gray-100 text-gray-700"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Toplam KDV</label>
+        <input
+          :value="formatCurrency(totalTax)"
+          readonly
+          class="w-full px-4 py-2 border rounded bg-gray-100 text-gray-700"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Toplam İskonto</label>
+        <input
+          :value="formatCurrency(-totalDiscount)"
+          readonly
+          class="w-full px-4 py-2 border rounded bg-gray-100 text-gray-700"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Genel Toplam</label>
+        <input
+          :value="formatCurrency(grandTotal)"
+          readonly
+          class="w-full px-4 py-2 border rounded bg-gray-100 text-gray-700 font-semibold"
+        />
       </div>
     </div>
 
@@ -160,7 +200,7 @@
 
       <button
         @click="saveInvoice"
-        class="mt-4 px-6 py-2 bg-orange-600 text-white rounded hover:bg-orange-700"
+        class="mt-4 btn bg-[#FE9F43] text-white rounded-md border px-4 py-2 hover:bg-white hover:text-[#FE9F43] hover:border-[#FE9F43] transition"
       >
         Faturayı Kaydet
       </button>
@@ -177,7 +217,11 @@ import {
   increaseStockQuantities,
 } from "@/stores/invoice";
 import { useRouter } from "vue-router";
-import { TrashIcon } from "@heroicons/vue/24/outline";
+import {
+  TrashIcon,
+  PlusCircleIcon,
+  ArrowUturnLeftIcon,
+} from "@heroicons/vue/24/outline";
 import { useToast } from "vue-toast-notification";
 
 const toast = useToast();
@@ -316,12 +360,27 @@ const saveInvoice = async () => {
 
   try {
     await savePurchaseInvoice(invoiceData, productRows.value);
-    await increaseStockQuantities(productRows.value); // 🔥 stok arttırımı
+    await increaseStockQuantities(productRows.value);
     toast.success("Fatura ve stok başarıyla kaydedildi!");
-    router.push({ name: "home" }); // varsa liste sayfası
+    router.push({ name: "home" });
   } catch (err) {
     console.error("Fatura/stok kaydında hata:", err);
     toast.error("Fatura kaydedildi ama stok güncellenemedi.");
   }
+};
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    minimumFractionDigits: 2,
+  }).format(Number(value) || 0);
+};
+
+// Kullanıcı input girdikçe formatı kaldır, sayı olarak kaydet
+const onRawInput = (event, field, index) => {
+  const rawValue = event.target.value.replace(/\D/g, "");
+  const numericValue = parseFloat(rawValue) / 100;
+  productRows.value[index][field] = isNaN(numericValue) ? 0 : numericValue;
+  calculateRowTotal(index);
 };
 </script>

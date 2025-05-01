@@ -23,17 +23,14 @@
   </div>
 
   <div v-else class="p-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl">Ürün Güncelle</h1>
-        <p class="text-lg">Bu ürünü düzenle</p>
-      </div>
-      <div>
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold">Ürünü Düzenle</h2>
+      <div class="">
         <button
-          class="bg-[#092c4c] rounded-md p-2 text-white"
+          class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"
           @click="router.back()"
         >
-          <font-awesome-icon icon="fa-solid fa-arrow-left" />
+          <ArrowUturnLeftIcon class="w-5 h-5" />
           Geri Dön
         </button>
       </div>
@@ -199,6 +196,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { DB } from "@/utils/firebase";
 import { useCompanyStore } from "@/stores/company";
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
 
 const companyStore = useCompanyStore();
 const companyOptions = ref([]);
@@ -235,7 +233,7 @@ onMounted(async () => {
       router.back();
     }
     await companyStore.fetchCompanies();
-    companyOptions.value = companyStore.companyList;
+    companyOptions.value = [...companyStore.companys];
   } catch (err) {
     $toast.error("Veri alınırken hata oluştu");
     console.error("Firestore hatası:", err);

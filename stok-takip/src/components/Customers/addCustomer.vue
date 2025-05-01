@@ -31,10 +31,10 @@
       </div>
       <div class="">
         <button
-          class="bg-[#092c4c] rounded-md p-2 text-[#ffffff]"
+          class="bg-[#092c4c] rounded-md p-2 text-[#ffffff] flex items-center gap-3"
           @click="router.back()"
         >
-          <font-awesome-icon icon="fa-solid fa-arrow-left" />
+          <ArrowUturnLeftIcon class="w-5 h-5" />
           Geri Dön
         </button>
       </div>
@@ -159,6 +159,7 @@ import { Form, Field } from "vee-validate";
 import { useToast } from "vue-toast-notification";
 import { ref, onMounted } from "vue";
 import router from "@/router";
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
 
 const $toast = useToast();
 const customerStore = useCustomerStore();

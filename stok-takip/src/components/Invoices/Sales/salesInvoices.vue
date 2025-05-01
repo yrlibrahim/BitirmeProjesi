@@ -1,16 +1,14 @@
 <template>
   <div class="p-6">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold">Gelen Faturalar</h1>
-    </div>
+    <h1 class="text-2xl font-bold mb-6">Satış Faturaları</h1>
 
     <div v-if="isLoading">Yükleniyor...</div>
 
     <div v-else>
       <div class="bg-white border shadow-md rounded-md overflow-hidden mt-6">
-        <!-- Arama ve Filtre Alanı -->
+        <!-- Arama ve Filtre -->
         <div class="p-4 flex flex-wrap justify-between items-center gap-2">
-          <!-- Arama Kutusu -->
+          <!-- Arama -->
           <div class="relative border rounded-md w-full max-w-xs">
             <input
               type="text"
@@ -38,25 +36,24 @@
             </div>
           </div>
 
-          <!-- Filtre Butonları -->
+          <!-- Filtreler -->
           <div class="flex gap-3 items-center">
             <!-- Tarih Aralığı -->
             <button
               @click="openDatePicker"
               class="border px-4 py-2 rounded-md text-gray-700 hover:bg-[#FE9F43] hover:text-white hover:border-[#FE9F43] transition"
-              title="Tarih aralığı seç"
             >
               <CalendarDateRangeIcon class="w-5 h-5" />
             </button>
 
-            <!-- Firma Dropdown -->
+            <!-- Müşteri Dropdown -->
             <div class="relative w-48" ref="brandDropdownRef">
               <button
                 @click="openBrand = !openBrand"
                 class="w-full border px-4 py-2 rounded-md text-gray-700 hover:bg-[#FE9F43] hover:text-white hover:border-[#FE9F43] transition"
               >
                 <span class="flex items-center justify-between">
-                  {{ selectedBrand || "Tüm Firmalar" }}
+                  {{ selectedBrand || "Tüm Müşteriler" }}
                   <ChevronDownIcon class="w-4 h-4 ml-2" />
                 </span>
               </button>
@@ -69,7 +66,7 @@
                   class="px-4 py-2 hover:bg-[#FE9F431A] hover:text-[#FE9F43] cursor-pointer"
                   @click="selectBrand('')"
                 >
-                  Tüm Firmalar
+                  Tüm Müşteriler
                 </div>
                 <div
                   v-for="brand in brands"
@@ -98,7 +95,7 @@
             <thead class="bg-[#F9FAFB] text-gray-600 text-left">
               <tr>
                 <th class="p-3">Fatura No</th>
-                <th class="p-3">Firma</th>
+                <th class="p-3">Müşteri</th>
                 <th class="p-3">Tarih</th>
                 <th class="p-3">Toplam</th>
                 <th class="p-3 flex justify-center">İşlem</th>
@@ -110,17 +107,21 @@
                 :key="fatura.id"
                 class="border-t hover:bg-gray-50"
               >
-                <td class="p-3">{{ fatura.invoiceNumber }}</td>
-                <td class="p-3">{{ fatura.companyName }}</td>
+                <td class="p-3">{{ fatura.invoiceNo }}</td>
+                <td class="p-3">{{ fatura.customerName }}</td>
                 <td class="p-3">
-                  {{ new Date(fatura.invoiceDate).toLocaleDateString() }}
+                  {{
+                    new Date(
+                      fatura.createdAt?.seconds * 1000
+                    ).toLocaleDateString()
+                  }}
                 </td>
                 <td class="p-3">{{ fatura.totalAmount?.toFixed(2) }} ₺</td>
                 <td class="p-3">
                   <div class="flex justify-center gap-2">
                     <router-link
                       :to="{
-                        name: 'purchaseInvoiceInfo',
+                        name: 'salesInvoiceInfo',
                         params: { id: fatura.id },
                       }"
                       class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
@@ -130,7 +131,7 @@
 
                     <router-link
                       :to="{
-                        name: 'setPurchaseInvoiceInfo',
+                        name: 'setSalesInvoice',
                         params: { id: fatura.id },
                       }"
                       class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
@@ -161,7 +162,7 @@ import Swal from "sweetalert2";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { useToast } from "vue-toast-notification";
-import { fetchPurchaseInvoices, deletePurchaseInvoice } from "@/stores/invoice";
+import { fetchSalesInvoices, deleteSalesInvoice } from "@/stores/salesInvoice";
 import {
   EyeIcon,
   PencilSquareIcon,
@@ -180,7 +181,7 @@ const openBrand = ref(false);
 const brandDropdownRef = ref(null);
 const selectedDateRange = ref({ start: null, end: null });
 
-// Firma seçimi
+// Müşteri seçimi
 const selectBrand = (brand) => {
   selectedBrand.value = brand;
   openBrand.value = false;
@@ -193,13 +194,13 @@ const resetFilters = () => {
   selectedDateRange.value = { start: null, end: null };
 };
 
-// Benzersiz firmaları listele
+// Müşteri listesini filtrele
 const getUniqueBrands = () => {
-  const all = invoices.value.map((f) => f.companyName);
+  const all = invoices.value.map((f) => f.customerName);
   brands.value = [...new Set(all)];
 };
 
-// Tarih aralığı seçimi
+// Tarih filtresi
 const openDatePicker = async () => {
   const { value: dateRange } = await Swal.fire({
     title: "Tarih Aralığı Seç",
@@ -226,20 +227,22 @@ const openDatePicker = async () => {
   }
 };
 
-// Filtreden geçmiş fatura listesi
+// Filtrelenmiş liste
 const filteredInvoices = computed(() => {
   return invoices.value.filter((fatura) => {
-    const matchesSearch = fatura.invoiceNumber
+    const matchesSearch = fatura.invoiceNo
       ?.toLowerCase()
       .includes(searchTerm.value.toLowerCase());
 
     const matchesBrand =
-      !selectedBrand.value || fatura.companyName === selectedBrand.value;
+      !selectedBrand.value || fatura.customerName === selectedBrand.value;
 
     const matchesDate =
       !selectedDateRange.value.start ||
-      (new Date(fatura.invoiceDate) >= selectedDateRange.value.start &&
-        new Date(fatura.invoiceDate) <= selectedDateRange.value.end);
+      (new Date(fatura.createdAt?.seconds * 1000) >=
+        selectedDateRange.value.start &&
+        new Date(fatura.createdAt?.seconds * 1000) <=
+          selectedDateRange.value.end);
 
     return matchesSearch && matchesBrand && matchesDate;
   });
@@ -249,7 +252,7 @@ const filteredInvoices = computed(() => {
 const handleDelete = async (id) => {
   const result = await Swal.fire({
     title: "Emin misin?",
-    text: "Bu fatura silinecek!",
+    text: "Bu satış faturası silinecek!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Evet, sil!",
@@ -258,23 +261,23 @@ const handleDelete = async (id) => {
 
   if (result.isConfirmed) {
     try {
-      await deletePurchaseInvoice(id);
+      await deleteSalesInvoice(id);
       invoices.value = invoices.value.filter((f) => f.id !== id);
-      Swal.fire("Silindi!", "Fatura başarıyla silindi.", "success");
+      toast.success("Silme işlemi başarılı.");
     } catch (err) {
-      Swal.fire("Hata!", "Silme işlemi başarısız oldu.", "error");
+      toast.error("Silme işlemi başarısız.");
     }
   }
 };
 
-// Sayfa yüklenince verileri al
+// Sayfa yüklenince
 onMounted(async () => {
   try {
-    invoices.value = await fetchPurchaseInvoices();
+    invoices.value = await fetchSalesInvoices();
     getUniqueBrands();
   } catch (e) {
-    console.error("Fatura/stok kaydında hata:", e);
-    toast.error("Faturalar alınamadı!");
+    console.error(e);
+    toast.error("Faturalar alınamadı.");
   } finally {
     isLoading.value = false;
   }

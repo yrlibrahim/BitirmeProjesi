@@ -4,12 +4,12 @@
       <!-- Başlık ve Buton -->
       <div class="flex justify-between items-center">
         <div class="">
-          <h4 class="text-3xl">Ürün Listesi</h4>
-          <h6 class="text-xl text-[#646B72] pt-4">Ürünlerinizi yönetin</h6>
+          <h4 class="text-[22px]">Ürün Listesi</h4>
+          <h6 class="text-[18px] text-[#646B72] pt-4">Ürünlerinizi yönetin</h6>
         </div>
         <button
           @click="goToCreateProduct"
-          class="btn bg-[#FE9F43] text-white rounded-md border px-4 py-2"
+          class="btn bg-[#FE9F43] text-white border-[#FE9F43] hover:bg-white hover:text-[#FE9F43] transition rounded-md border px-4 py-2"
         >
           <div class="flex items-center">
             <span><PlusCircleIcon class="w-5 me-2" /></span>Ürün Ekle
@@ -172,9 +172,9 @@
 
                     <button
                       @click="removeProduct(item.id)"
-                      class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
+                      class="p-2 border border-[#E6EAED] hover:bg-[#092C4C] hover:text-[white] hover:border-[#092C4C] transition rounded-md"
                     >
-                      <TrashIcon class="w-5 h-5 text-red-500" />
+                      <TrashIcon class="w-5 h-5" />
                     </button>
                   </div>
                 </td>
@@ -240,22 +240,14 @@ const goToCreateProduct = () => {
   router.push("/create-new-product");
 };
 
-const goToInfo = (id) => {
-  router.push({ name: "productInfo", params: { id } });
-};
-
-const goToEdit = (id) => {
-  router.push({ name: "setProduct", params: { id } });
-};
-
 const removeProduct = (id) => {
   Swal.fire({
     title: "Emin misiniz?",
     text: "Bu işlem geri alınamaz!",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#fe9f43",
-    cancelButtonColor: "#d33",
+    confirmButtonColor: "#FE9F43",
+    cancelButtonColor: "#092C4C",
     confirmButtonText: "Evet, sil",
   }).then((result) => {
     if (result.isConfirmed) {
