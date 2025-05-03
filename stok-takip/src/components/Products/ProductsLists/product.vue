@@ -1,10 +1,35 @@
 <template>
-  <div class="">
+  <div v-if="isLoading">
+    <div class="flex items-center justify-center min-h-screen">
+      <svg
+        class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+
+  <div v-else>
     <div class="content">
       <!-- Başlık ve Buton -->
       <div class="flex justify-between items-center">
         <div class="">
-          <h4 class="text-[22px]">Ürün Listesi</h4>
+          <h4 class="text-[22px] text-[#646B72] font-semibold">Ürün Listesi</h4>
           <h6 class="text-[18px] text-[#646B72] pt-4">Ürünlerinizi yönetin</h6>
         </div>
         <button
@@ -151,7 +176,7 @@
                 <td class="p-3">{{ item.model }}</td>
                 <td class="p-3">{{ item.category }}</td>
                 <td class="p-3">{{ item.subCategory }}</td>
-                <td class="p-3">{{ item.price }} ₺</td>
+                <td class="p-3">{{ formatCurrency(item.price) }}</td>
                 <td class="p-3">{{ item.count }}</td>
 
                 <td class="p-3">
@@ -266,10 +291,12 @@ onMounted(async () => {
   ];
   brands.value = [...new Set(stockData.adminStock.map((item) => item.brand))];
 });
-</script>
 
-<style scoped>
-.page-wrapper {
-  padding: 20px;
-}
-</style>
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    minimumFractionDigits: 2,
+  }).format(Number(value) || 0);
+};
+</script>

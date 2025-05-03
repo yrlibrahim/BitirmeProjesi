@@ -1,37 +1,39 @@
 <template>
   <!--Loading Iconu-->
-  <div v-if="loading" class="flex items-center justify-center min-h-screen">
-    <svg
-      class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        class="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        stroke-width="4"
-      ></circle>
-      <path
-        class="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
-      ></path>
-    </svg>
+  <div v-if="loading">
+    <div class="flex items-center justify-center min-h-screen">
+      <svg
+        class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+        ></path>
+      </svg>
+    </div>
   </div>
   <!--Loading Iconu-->
 
   <div v-else class="flex items-center justify-between">
     <div>
-      <h1 class="text-[22px]">Ürün Oluştur</h1>
+      <h1 class="text-[22px] text-[#646B72] font-semibold">Ürün Oluştur</h1>
       <p class="text-[18px] text-[#646B72] pt-4">Yeni ürün ekle</p>
     </div>
     <div class="">
       <button
-        class="bg-[#092c4c] rounded-md p-2 text-[#ffffff] flex items-center gap-3"
+        class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"
         @click="router.back()"
       >
         <ArrowUturnLeftIcon class="w-5 h-5" />
@@ -40,14 +42,16 @@
     </div>
   </div>
   <div class="bg-[#ffffff] mt-4 px-4 p-2 rounded-lg border border-[#c1c7cc]">
-    <h1 class="text-2xl border-b mb-4 p-2">Ürün Bilgileri</h1>
+    <h1 class="text-[#646B72] text-[18px] font-semibold border-b mb-4 p-2">
+      Ürün Bilgileri
+    </h1>
     <div>
       <Form @submit="onSubmit">
         <div>
           <div class="flex items-center justify-start gap-4 mb-3">
             <div class="mb-10 w-1/2">
               <Field name="seller" v-slot="{ errors }">
-                <p class="mb-1">Satıcı Firma</p>
+                <p class="mb-1 text-[#646B72]">Satıcı Firma</p>
                 <div class="relative w-full" ref="companyWrapper">
                   <!-- Seçilen firma gösterilir -->
                   <div
@@ -96,7 +100,7 @@
           <div class="flex items-center justify-start gap-4">
             <div class="mb-10 w-1/2">
               <Field name="sku" v-slot="{ field, errors }">
-                <p>Stok Kodu</p>
+                <p class="text-[#646B72]">Stok Kodu</p>
                 <input
                   type="text"
                   v-bind="field"
@@ -114,7 +118,7 @@
             </div>
             <div class="mb-10 w-1/2">
               <Field name="name" v-slot="{ field, errors }">
-                <p>Ürün</p>
+                <p class="text-[#646B72]">Ürün</p>
                 <input
                   type="text"
                   class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
@@ -132,7 +136,7 @@
           <div class="flex items-center justify-center gap-4 mb-3">
             <div class="mb-10 w-1/2">
               <Field name="brand" v-slot="{ errors }">
-                <p class="mb-1">Araç</p>
+                <p class="mb-1 text-[#646B72]">Araç</p>
                 <div class="relative w-full" ref="brandWrapper">
                   <!-- Input alanı -->
                   <input
@@ -167,7 +171,7 @@
 
             <div class="mb-10 w-1/2">
               <Field name="model" v-slot="{ errors }">
-                <p class="mb-1">Model</p>
+                <p class="mb-1 text-[#646B72]">Model</p>
                 <div class="relative w-full" ref="modelWrapper">
                   <!-- Input alanı -->
                   <input
@@ -205,7 +209,7 @@
           <div class="flex items-center justify-center gap-4 mb-3">
             <div class="mb-10 w-1/2">
               <Field name="category" v-slot="{ errors }">
-                <p class="mb-1">Kategori</p>
+                <p class="mb-1 text-[#646B72]">Kategori</p>
                 <div class="relative w-full" ref="categoryWrapper">
                   <!-- Input -->
                   <input
@@ -244,7 +248,7 @@
 
             <div class="mb-10 w-1/2">
               <Field name="subCategory" v-slot="{ errors }">
-                <p class="mb-1">Alt Kategori</p>
+                <p class="mb-1 text-[#646B72]">Alt Kategori</p>
                 <div class="relative w-full" ref="subCategoryWrapper">
                   <!-- Input -->
                   <input
@@ -285,7 +289,7 @@
           <div class="flex items-center justify-center gap-4 mb-3">
             <div class="mb-10 w-1/2">
               <Field name="count" v-slot="{ field, errors }">
-                <p>Adet</p>
+                <p class="text-[#646B72]">Adet</p>
                 <input
                   type="number"
                   class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
@@ -296,7 +300,7 @@
             </div>
             <div class="mb-10 w-1/2">
               <Field name="price" v-slot="{ field, errors }">
-                <p>Fiyat</p>
+                <p class="text-[#646B72]">Fiyat ₺</p>
                 <input
                   type="number"
                   class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"

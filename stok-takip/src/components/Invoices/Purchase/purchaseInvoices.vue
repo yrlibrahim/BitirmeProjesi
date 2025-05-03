@@ -1,10 +1,71 @@
 <template>
-  <div class="p-6">
+  <div v-if="isLoading">
+    <div class="flex items-center justify-center min-h-screen">
+      <svg
+        class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  <div v-else class="">
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold">Gelen Faturalar</h1>
+      <div>
+        <h1 class="text-[22px] text-[#646B72] font-semibold">
+          Gelen Faturalar
+        </h1>
+        <h2 class="text-[18px] text-[#646B72] pt-4">Faturalarızı Yönetin</h2>
+      </div>
+
+      <button
+        @click="goToaddPurchaseInvoice"
+        class="btn bg-[#FE9F43] text-white border-[#FE9F43] hover:bg-white hover:text-[#FE9F43] transition rounded-md border px-4 py-2"
+      >
+        <div class="flex items-center">
+          <span><DocumentPlusIcon class="w-5 me-2" /></span>Fatura Ekle
+        </div>
+      </button>
     </div>
 
-    <div v-if="isLoading">Yükleniyor...</div>
+    <div v-if="isLoading">
+      <div class="flex items-center justify-center min-h-screen">
+        <svg
+          class="animate-spin h-16 w-16 mr-3 text-[#fe9f43]"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8z"
+          ></path>
+        </svg>
+      </div>
+    </div>
 
     <div v-else>
       <div class="bg-white border shadow-md rounded-md overflow-hidden mt-6">
@@ -94,7 +155,7 @@
 
         <!-- Tablo -->
         <div>
-          <table class="min-w-full bg-white border">
+          <table class="min-w-full bg-white text-sm border">
             <thead class="bg-[#F9FAFB] text-gray-600 text-left">
               <tr>
                 <th class="p-3">Fatura No</th>
@@ -115,7 +176,9 @@
                 <td class="p-3">
                   {{ new Date(fatura.invoiceDate).toLocaleDateString() }}
                 </td>
-                <td class="p-3">{{ fatura.totalAmount?.toFixed(2) }} ₺</td>
+                <td class="p-3">
+                  {{ formatCurrency(fatura.totalAmount?.toFixed(2)) }}
+                </td>
                 <td class="p-3">
                   <div class="flex justify-center gap-2">
                     <router-link
@@ -140,9 +203,9 @@
 
                     <button
                       @click="handleDelete(fatura.id)"
-                      class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
+                      class="flex justify-center item center p-2 border [#E6EAED] text-[#092C4C] hover:bg-[#092C4C] hover:border-[#092C4C] hover:text-white rounded-md transition"
                     >
-                      <TrashIcon class="w-5 h-5 text-red-500" />
+                      <TrashIcon class="w-5 h-5" />
                     </button>
                   </div>
                 </td>
@@ -157,6 +220,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import router from "@/router";
 import Swal from "sweetalert2";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -168,6 +232,7 @@ import {
   TrashIcon,
   ChevronDownIcon,
   CalendarDateRangeIcon,
+  DocumentPlusIcon,
 } from "@heroicons/vue/24/outline";
 
 const toast = useToast();
@@ -179,6 +244,11 @@ const selectedBrand = ref("");
 const openBrand = ref(false);
 const brandDropdownRef = ref(null);
 const selectedDateRange = ref({ start: null, end: null });
+
+// Router Islemleri
+const goToaddPurchaseInvoice = () => {
+  router.push("/add-purchase-invoice");
+};
 
 // Firma seçimi
 const selectBrand = (brand) => {
@@ -254,6 +324,8 @@ const handleDelete = async (id) => {
     showCancelButton: true,
     confirmButtonText: "Evet, sil!",
     cancelButtonText: "Vazgeç",
+    confirmButtonColor: "#FE9F43",
+    cancelButtonColor: "#092C4C",
   });
 
   if (result.isConfirmed) {
@@ -279,4 +351,12 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    minimumFractionDigits: 2,
+  }).format(Number(value) || 0);
+};
 </script>

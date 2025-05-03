@@ -73,18 +73,6 @@
           </div>
         </router-link>
       </li>
-      <li class="">
-        <router-link
-          to="/addPurchaseInvoice"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-          ><div class="flex items-center gap-2">
-            <DocumentPlusIcon class="w-5" />
-            <p class="text-[16px]">Fatura Oluştur</p>
-          </div>
-        </router-link>
-      </li>
-
       <li class="ml-2 text-xs text-orange-400 mt-2">Satış</li>
       <li class="">
         <router-link
@@ -93,18 +81,7 @@
           active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
           ><div class="flex items-center gap-2">
             <DocumentArrowUpIcon class="w-5" />
-            <p class="text-[16px]">Gelen Faturalar</p>
-          </div>
-        </router-link>
-      </li>
-      <li class="">
-        <router-link
-          to="/addSalesInvoice"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-          ><div class="flex items-center gap-2">
-            <DocumentPlusIcon class="w-5" />
-            <p class="text-[16px]">Fatura Oluştur</p>
+            <p class="text-[16px]">Giden Faturalar</p>
           </div>
         </router-link>
       </li>
@@ -148,7 +125,6 @@ import {
   SquaresPlusIcon,
   DocumentArrowDownIcon,
   DocumentArrowUpIcon,
-  DocumentPlusIcon,
   UsersIcon,
   UserGroupIcon,
 } from "@heroicons/vue/24/outline";

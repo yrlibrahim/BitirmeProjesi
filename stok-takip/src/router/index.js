@@ -94,7 +94,7 @@ const router = createRouter({
       component: customerInfo,
     },
     {
-      path: "/addPurchaseInvoice",
+      path: "/add-purchase-invoice",
       name: "addPurchaseInvoice",
       component: addPurchaseInvoice,
     },
@@ -114,7 +114,7 @@ const router = createRouter({
       component: setPurchaseInvoice,
     },
     {
-      path: "/addSalesInvoice",
+      path: "/add-sales-invoice",
       name: "addSalesInvoice",
       component: addSalesInvoice,
     },

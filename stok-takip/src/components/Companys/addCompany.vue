@@ -31,7 +31,7 @@
       </div>
       <div class="">
         <button
-          class="bg-[#092c4c] rounded-md p-2 text-[#ffffff] flex items-center gap-3"
+          class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"
           @click="router.back()"
         >
           <ArrowUturnLeftIcon class="w-5 h-5" />
@@ -142,7 +142,7 @@
           <div class="mt-6">
             <button
               type="submit"
-              class="bg-[#fe9f43] hover:bg-orange-500 text-white px-6 py-2 rounded-md"
+              class="btn bg-[#FE9F43] text-white border-[#FE9F43] hover:bg-white hover:text-[#FE9F43] transition rounded-md border px-4 py-2"
             >
               Kaydet
             </button>
