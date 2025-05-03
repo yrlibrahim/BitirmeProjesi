@@ -1,7 +1,7 @@
 <template>
   <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-md">
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-[22px] font-bold">Ürün Detayı</h2>
+      <h2 class="text-[22px] text-[#646B72] font-semibold">Ürün Detayı</h2>
       <div class="">
         <button
           class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"

@@ -20,6 +20,7 @@ import setPurchaseInvoice from "@/components/Invoices/Purchase/setPurchaseInvoic
 import addSalesInvoice from "@/components/Invoices/Sales/addSalesInvoice.vue";
 import salesInvoices from "@/components/Invoices/Sales/salesInvoices.vue";
 import { useUserStore } from "@/stores/user";
+import CustomerPayments from "@/components/Payments/CustomerPayments/customerPayments.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -134,6 +135,18 @@ const router = createRouter({
       name: "setSalesInvoice",
       component: () =>
         import("@/components/Invoices/Sales/setSalesInvoice.vue"),
+    },
+    {
+      path: "/add-customer-payment",
+      name: "addCustomerPayment",
+      component: () =>
+        import("@/components/Payments/CustomerPayments/addCustomerPayment.vue"),
+    },
+    {
+      path: "/customer-payments",
+      name: "customerPayments",
+      component: () =>
+        import("@/components/Payments/CustomerPayments/customerPayments.vue"),
     },
   ],
 });

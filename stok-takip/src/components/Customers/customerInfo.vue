@@ -1,7 +1,9 @@
 <template>
-  <div class="p-6 m-6 bg-white rounded-lg border border-gray-200 shadow-md">
+  <div class="p-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-2xl font-bold mb-4">Müşteri Detayları</h2>
+      <h2 class="text-[22px] text-[#646B72] font-semibold">
+        Müşteri Detayları
+      </h2>
       <div class="">
         <button
           class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"
@@ -13,7 +15,7 @@
       </div>
     </div>
 
-    <div class="overflow-x-auto w-full">
+    <div class="overflow-x-auto w-full mt-4">
       <table
         class="min-w-[700px] w-full text-sm text-left text-gray-700 border border-gray-300"
       >
@@ -34,6 +36,11 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="border-t mt-4 pt-4">
+      <div class="">
+        <p class="text-[22px] text-[#646B72] font-semibold">Cari Durum</p>
+      </div>
     </div>
   </div>
 </template>

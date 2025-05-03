@@ -4,13 +4,19 @@ import { RouterView, useRoute } from "vue-router";
 import Header from "@/components/Navigations/Header.vue";
 import Sidebar from "@/components/Navigations/sidebar.vue";
 import { firstLoad } from "./composables/auth";
-const hideSidebarRoutes = ["/signin"];
-const shouldShowSidebar = computed(
-  () => !hideSidebarRoutes.includes(route.path)
-);
+import { useUserStore } from "@/stores/user";
 
 const { loading } = firstLoad();
 const route = useRoute();
+const userStore = useUserStore();
+
+const hideSidebarRoutes = ["/signin"];
+
+const shouldShowSidebar = computed(() => {
+  return userStore.auth && !hideSidebarRoutes.includes(route.path);
+});
+
+const shouldShowLayout = computed(() => userStore.auth);
 </script>
 
 <template>
@@ -40,7 +46,7 @@ const route = useRoute();
     </div>
   </div>
 
-  <div v-else class="flex h-screen">
+  <div v-else-if="shouldShowLayout" class="flex h-screen">
     <!-- Sabit Sidebar -->
     <div class="w-60 bg-gray-800 text-white fixed top-0 left-0 h-screen z-20">
       <Sidebar v-if="shouldShowSidebar" />
@@ -54,5 +60,10 @@ const route = useRoute();
         <RouterView />
       </main>
     </div>
+  </div>
+
+  <div v-else>
+    <!-- Eğer kullanıcı giriş yapmamışsa sadece RouterView (giriş sayfası gibi) -->
+    <RouterView />
   </div>
 </template>
