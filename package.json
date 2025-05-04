@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "chart.js": "^4.4.9",
+    "vue-chartjs": "^5.3.2",
     "vuetify": "^3.7.5",
     "yup": "^1.4.0"
   }

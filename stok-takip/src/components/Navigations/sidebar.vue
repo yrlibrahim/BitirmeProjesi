@@ -156,13 +156,25 @@
       <li class="ml-2 text-xs text-orange-400 mt-2">Firmalar</li>
       <li>
         <router-link
-          to=""
+          to="/company-accounts"
           class="block px-3 py-2 rounded hover:bg-gray-100 transition"
           active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
         >
           <div class="flex items-center gap-2">
             <UserGroupIcon class="w-5" />
             <p class="text-[16px]">Cari Hesaplar</p>
+          </div>
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/company-payments"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <DocumentArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Ödemeler</p>
           </div>
         </router-link>
       </li>

@@ -145,11 +145,7 @@
                 <td class="p-3">{{ fatura.invoiceNo }}</td>
                 <td class="p-3">{{ fatura.companyName }}</td>
                 <td class="p-3">
-                  {{
-                    new Date(
-                      fatura.createdAt?.seconds * 1000
-                    ).toLocaleDateString()
-                  }}
+                  {{ formatDate(fatura.date) }}
                 </td>
                 <td class="p-3">{{ fatura.totalAmount?.toFixed(2) }} ₺</td>
                 <td class="p-3">
@@ -240,6 +236,11 @@ const getUniqueBrands = () => {
   const all = invoices.value.map((f) => f.customerName);
   brands.value = [...new Set(all)];
 };
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const [year, month, day] = dateStr.split("-");
+  return `${day}.${month}.${year}`;
+}
 
 // Tarih filtresi
 const openDatePicker = async () => {

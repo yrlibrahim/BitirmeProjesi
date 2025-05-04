@@ -62,6 +62,15 @@
               class="w-full px-4 py-2 border rounded"
             />
           </div>
+          <!-- Fatura Tarihi -->
+          <div class="flex-1 min-w-[200px]">
+            <label class="block text-sm font-medium mb-1">Fatura Tarihi</label>
+            <input
+              type="date"
+              v-model="invoiceDate"
+              class="w-full px-4 py-2 border rounded"
+            />
+          </div>
         </div>
 
         <!-- Ürün Satırları -->
@@ -103,22 +112,26 @@
             />
             <input
               v-model="item.name"
-              disabled
+              :disabled="!item.isLabor"
               placeholder="Ad"
-              class="border rounded px-2 py-1 bg-gray-100"
+              class="border rounded px-2 py-1"
+              :class="{ 'bg-gray-100': !item.isLabor }"
             />
             <input
               v-model="item.brand"
-              disabled
+              :disabled="!item.isLabor"
               placeholder="Marka"
-              class="border rounded px-2 py-1 bg-gray-100"
+              class="border rounded px-2 py-1"
+              :class="{ 'bg-gray-100': !item.isLabor }"
             />
             <input
               v-model="item.model"
-              disabled
+              :disabled="!item.isLabor"
               placeholder="Model"
-              class="border rounded px-2 py-1 bg-gray-100"
+              class="border rounded px-2 py-1"
+              :class="{ 'bg-gray-100': !item.isLabor }"
             />
+
             <input
               type="number"
               v-model.number="item.quantity"
@@ -253,6 +266,9 @@ const showDropdown = ref(false);
 const invoiceNo = ref("");
 const note = ref("");
 
+const today = new Date().toISOString().split("T")[0];
+const invoiceDate = ref(today);
+
 const selectedCustomerLabel = computed(
   () => selectedCustomer.value?.companyName || "Müşteri seçiniz"
 );
@@ -274,6 +290,7 @@ const productList = ref([
     tax: 20,
     discount: 0,
     total: 0,
+    isLabor: false,
   },
 ]);
 
@@ -287,9 +304,10 @@ function addRow() {
     subCategory: "",
     quantity: 1,
     price: 0,
-    tax: 0,
+    tax: 20,
     discount: 0,
     total: 0,
+    isLabor: false,
   });
 }
 
@@ -298,10 +316,20 @@ function removeRow(index) {
 }
 
 async function onSKUChange(index) {
-  const sku = productList.value[index].sku;
-  const product = await getProductBySKU(sku);
-  if (product) {
-    Object.assign(productList.value[index], product);
+  const item = productList.value[index];
+  if (item.sku === "0000") {
+    item.isLabor = true;
+    item.name = "";
+    item.brand = "";
+    item.model = "";
+    item.category = "";
+    item.subCategory = "";
+  } else {
+    item.isLabor = false;
+    const product = await getProductBySKU(item.sku);
+    if (product) {
+      Object.assign(item, product);
+    }
   }
   calculateRowTotal(index);
 }
@@ -344,6 +372,7 @@ async function submitInvoice() {
     customerId: selectedCustomer.value.id,
     companyName: selectedCustomer.value.companyName,
     invoiceNo: invoiceNo.value,
+    date: invoiceDate.value,
     note: note.value,
   };
 

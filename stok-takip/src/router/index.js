@@ -148,10 +148,41 @@ const router = createRouter({
         import("@/components/Payments/CustomerPayments/customerPayments.vue"),
     },
     {
+      path: "/customer-accounts/:id",
+      name: "customerAccountDetail",
+      component: () =>
+        import("@/components/AccountBalance/customerAccountDetail.vue"),
+    },
+
+    {
       path: "/customer-accounts",
       name: "customerAccounts",
       component: () =>
         import("@/components/AccountBalance/customerAccounts.vue"),
+    },
+    {
+      path: "/company-accounts",
+      name: "companyAccounts",
+      component: () =>
+        import("@/components/AccountBalance/companyAccounts.vue"),
+    },
+    {
+      path: "/company-accounts/:id",
+      name: "companyAccountDetail",
+      component: () =>
+        import("@/components/AccountBalance/companyAccountDetail.vue"),
+    },
+    {
+      path: "/add-company-payment",
+      name: "addCompanyPayment",
+      component: () =>
+        import("@/components/Payments/CompanyPayments/addCompanyPayment.vue"),
+    },
+    {
+      path: "/company-payments",
+      name: "companyPayments",
+      component: () =>
+        import("@/components/Payments/CompanyPayments/companyPayments.vue"),
     },
   ],
 });

@@ -174,7 +174,7 @@
                 <td class="p-3">{{ fatura.invoiceNumber }}</td>
                 <td class="p-3">{{ fatura.companyName }}</td>
                 <td class="p-3">
-                  {{ new Date(fatura.invoiceDate).toLocaleDateString() }}
+                  {{ formatDate(fatura.date) }}
                 </td>
                 <td class="p-3">
                   {{ formatCurrency(fatura.totalAmount?.toFixed(2)) }}
@@ -295,6 +295,12 @@ const openDatePicker = async () => {
     selectedDateRange.value = dateRange;
   }
 };
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const [year, month, day] = dateStr.split("-");
+  return `${day}.${month}.${year}`;
+}
 
 // Filtreden geçmiş fatura listesi
 const filteredInvoices = computed(() => {

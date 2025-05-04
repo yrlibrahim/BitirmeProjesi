@@ -60,6 +60,17 @@
               class="w-full px-4 py-2 border rounded"
             />
           </div>
+          <!-- Fatura Tarihi -->
+          <div class="flex-1 min-w-[200px]">
+            <label class="block text-sm text-[#646B72] mb-1"
+              >Fatura Tarihi</label
+            >
+            <input
+              type="date"
+              v-model="invoiceDate"
+              class="w-full px-4 py-2 border rounded"
+            />
+          </div>
         </div>
 
         <!-- 2. Kademe: Ürün Satırları -->
@@ -260,6 +271,7 @@ const selectedCompany = ref(null);
 const invoiceNumber = ref("");
 const note = ref("");
 const showDropdown = ref(false);
+const invoiceDate = ref(new Date().toISOString().split("T")[0]);
 
 // Seçilen firma label'ı
 const selectedCompanyLabel = computed(
@@ -376,7 +388,7 @@ const saveInvoice = async () => {
     companyId: selectedCompany.value.id,
     companyName: selectedCompany.value.companyName,
     invoiceNumber: invoiceNumber.value,
-    invoiceDate: new Date().toISOString(),
+    date: invoiceDate.value,
     note: note.value,
   };
 

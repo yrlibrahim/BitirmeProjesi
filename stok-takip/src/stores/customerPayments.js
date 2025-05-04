@@ -25,8 +25,7 @@ export async function getCustomerList() {
 export async function addCustomerPayment(data) {
   return await addDoc(paymentsCol, {
     ...data,
-    timestamp: serverTimestamp(),
-    date: new Date().toISOString().split("T")[0],
+    createdAt: serverTimestamp(),
   });
 }
 
@@ -45,7 +44,7 @@ export async function updateCustomerPayment(id, updatedData) {
   const ref = doc(DB, "CustomerPayments", id);
   return await updateDoc(ref, {
     ...updatedData,
-    timestamp: serverTimestamp(),
+    createdAt: serverTimestamp(),
   });
 }
 

@@ -15,6 +15,15 @@
         </option>
       </select>
     </div>
+    <!-- Tarih Seçimi -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Ödeme Tarihi</label>
+      <input
+        type="date"
+        v-model="paymentDate"
+        class="w-full border rounded px-4 py-2"
+      />
+    </div>
 
     <!-- Tutar -->
     <div>
@@ -74,6 +83,7 @@ const selectedCustomer = ref("");
 const amount = ref("");
 const paymentType = ref("Nakit");
 const description = ref("");
+const paymentDate = ref(new Date().toISOString().split("T")[0]);
 
 // Müşteri listesini çek
 onMounted(async () => {
@@ -94,6 +104,7 @@ const submitPayment = async () => {
       amount: Number(amount.value),
       type: paymentType.value,
       description: description.value,
+      date: paymentDate.value,
     });
 
     $toast.success("Ödeme kaydedildi!");

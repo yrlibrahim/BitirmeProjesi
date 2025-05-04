@@ -35,7 +35,7 @@
             </td>
             <td class="px-4 py-2">{{ payment.type }}</td>
             <td class="px-4 py-2">{{ payment.description }}</td>
-            <td class="px-4 py-2">{{ payment.date }}</td>
+            <td class="px-4 py-2">{{ formatDate(payment.date) }}</td>
             <td class="px-4 py-2 flex gap-2">
               <button
                 @click="openDetailModal(payment)"
@@ -94,7 +94,7 @@
             </tr>
             <tr class="border-b">
               <td class="px-4 py-2 w-1/3 font-medium bg-gray-50">Tarih:</td>
-              <td class="px-4 py-2">{{ selectedPayment.date }}</td>
+              <td class="px-4 py-2">{{ formatDate(selectedPayment.date) }}</td>
             </tr>
           </tbody>
         </table>
@@ -198,6 +198,12 @@ const openEditModal = (payment) => {
   editPayment.value = { ...payment };
   showEditModal.value = true;
 };
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const [year, month, day] = dateStr.split("-");
+  return `${day}.${month}.${year}`;
+}
 
 const updatePayment = async () => {
   try {
