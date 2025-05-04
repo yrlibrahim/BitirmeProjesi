@@ -277,7 +277,7 @@ onMounted(async () => {
   try {
     const invoice = await fetchSalesInvoiceById(invoiceId);
     selectedCustomer.value = customerList.value.find(
-      (c) => c.companyName === invoice.customerName
+      (c) => c.companyName === invoice.companyName
     );
     invoiceNumber.value = invoice.invoiceNo;
     note.value = invoice.note || "";

@@ -143,7 +143,7 @@
                 class="border-t hover:bg-gray-50"
               >
                 <td class="p-3">{{ fatura.invoiceNo }}</td>
-                <td class="p-3">{{ fatura.customerName }}</td>
+                <td class="p-3">{{ fatura.companyName }}</td>
                 <td class="p-3">
                   {{
                     new Date(

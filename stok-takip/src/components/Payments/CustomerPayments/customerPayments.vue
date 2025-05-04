@@ -29,7 +29,7 @@
             :key="payment.id"
             class="border-t hover:bg-gray-50"
           >
-            <td class="px-4 py-2">{{ payment.customerName }}</td>
+            <td class="px-4 py-2">{{ payment.companyName }}</td>
             <td class="px-4 py-2">
               {{ payment.amount.toLocaleString("tr-TR") }}₺
             </td>
@@ -78,7 +78,7 @@
           <tbody>
             <tr class="border-b">
               <td class="px-4 py-2 w-1/3 font-medium bg-gray-50">Müşteri:</td>
-              <td class="px-4 py-2">{{ selectedPayment.customerName }}</td>
+              <td class="px-4 py-2">{{ selectedPayment.companyName }}</td>
             </tr>
             <tr class="border-b">
               <td class="px-4 py-2 w-1/3 font-medium bg-gray-50">Tutar:</td>

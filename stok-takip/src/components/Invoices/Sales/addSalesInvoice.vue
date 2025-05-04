@@ -341,7 +341,8 @@ async function submitInvoice() {
   }
 
   const invoiceData = {
-    customerName: selectedCustomer.value.companyName,
+    customerId: selectedCustomer.value.id,
+    companyName: selectedCustomer.value.companyName,
     invoiceNo: invoiceNo.value,
     note: note.value,
   };

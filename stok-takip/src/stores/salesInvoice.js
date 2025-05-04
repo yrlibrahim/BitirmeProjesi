@@ -135,7 +135,7 @@ export async function decreaseStockQuantities(products) {
       if (!snapshot.empty) {
         const stockDocRef = snapshot.docs[0].ref;
         await updateDoc(stockDocRef, {
-          count: increment(-Number(item.quantity)), // ❗ Azaltma işlemi
+          count: increment(-Number(item.quantity)),
         });
       } else {
         console.warn(`Stok bulunamadı: ${item.sku}`);

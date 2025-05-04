@@ -90,7 +90,7 @@ const submitPayment = async () => {
   try {
     await addCustomerPayment({
       customerId: selectedCustomer.value.id,
-      customerName: selectedCustomer.value.companyName,
+      companyName: selectedCustomer.value.companyName,
       amount: Number(amount.value),
       type: paymentType.value,
       description: description.value,

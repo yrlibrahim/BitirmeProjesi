@@ -51,7 +51,7 @@
           <tbody>
             <tr class="border-b">
               <th class="p-2 bg-[#F9FAFB] text-left w-1/3">Müşteri</th>
-              <td class="p-2">{{ invoice.customerName }}</td>
+              <td class="p-2">{{ invoice.companyName }}</td>
             </tr>
             <tr class="border-b">
               <th class="p-2 bg-[#F9FAFB] text-left">Fatura No</th>

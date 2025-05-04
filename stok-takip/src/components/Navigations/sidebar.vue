@@ -129,7 +129,7 @@
       <li class="ml-2 text-xs text-orange-400 mt-1">Müşteriler</li>
       <li>
         <router-link
-          to=""
+          to="/customer-accounts"
           class="block px-3 py-2 rounded hover:bg-gray-100 transition"
           active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
         >
@@ -156,7 +156,7 @@
       <li class="ml-2 text-xs text-orange-400 mt-2">Firmalar</li>
       <li>
         <router-link
-          to="/company-accounts"
+          to=""
           class="block px-3 py-2 rounded hover:bg-gray-100 transition"
           active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
         >
