@@ -87,7 +87,9 @@ const paymentDate = ref(new Date().toISOString().split("T")[0]);
 
 // Müşteri listesini çek
 onMounted(async () => {
-  customers.value = await getCustomerList(); // ✅ Store fonksiyonu
+  customers.value = (await getCustomerList()).sort((a, b) =>
+    a.companyName.localeCompare(b.companyName, "tr", { sensitivity: "base" })
+  );
 });
 
 // Ödeme kaydı ekle

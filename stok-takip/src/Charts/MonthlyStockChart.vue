@@ -41,7 +41,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="chartData" class="w-1/2">
+  <div v-if="chartData" class="">
     <Line :data="chartData" :options="options" />
   </div>
   <div v-else class="text-gray-500">Yükleniyor...</div>

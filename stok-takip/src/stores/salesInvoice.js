@@ -194,3 +194,41 @@ export async function deleteSalesInvoice(id) {
     throw err;
   }
 }
+
+// Top Selling Hesaplama
+// Top Selling Hesaplama
+export async function getTopSellingProducts(limitCount = 5) {
+  try {
+    const snapshot = await getDocs(collection(DB, "SalesInvoices"));
+    const sales = snapshot.docs.flatMap((doc) => doc.data().products || []);
+
+    // SKU bazlı toplama, işçilik ve eski fatura kodunu hariç tut
+    const salesMap = {};
+    for (const item of sales) {
+      const sku = item.sku;
+
+      // İşçilik ve eski fatura kodlarını atla
+      if (!sku || sku === "0000" || sku === "EFSK") continue;
+
+      if (!salesMap[sku]) {
+        salesMap[sku] = {
+          sku,
+          name: item.name,
+          totalSold: 0,
+        };
+      }
+      salesMap[sku].totalSold += Number(item.quantity);
+    }
+
+    // En çok satanlara göre sırala
+    const sortedSales = Object.values(salesMap).sort(
+      (a, b) => b.totalSold - a.totalSold
+    );
+
+    console.log("En çok satan ürünler:", sortedSales);
+    return sortedSales.slice(0, limitCount);
+  } catch (err) {
+    console.error("Top selling ürün hesaplama hatası:", err);
+    throw err;
+  }
+}

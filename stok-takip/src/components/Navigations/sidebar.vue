@@ -13,7 +13,7 @@
       <!-- Anasayfa -->
       <li>
         <router-link
-          to="/"
+          to="/home"
           class="block px-3 py-2 rounded hover:bg-gray-100 transition"
           active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
           exact
@@ -175,6 +175,58 @@
           <div class="flex items-center gap-2">
             <DocumentArrowDownIcon class="w-5" />
             <p class="text-[16px]">Ödemeler</p>
+          </div>
+        </router-link>
+      </li>
+      <li class="border-t border-gray-300 my-3"></li>
+      <li class="text-sm font-semibold text-gray-500 uppercase px-3">
+        Eklemeler
+      </li>
+      <li>
+        <router-link
+          to="/invoice-add"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <DocumentArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Fatura Ekleme</p>
+          </div>
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/payment-add"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <DocumentArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Ödeme Ekleme</p>
+          </div>
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/companys-add"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <DocumentArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Firma Ekleme</p>
+          </div>
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/customers-add"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <DocumentArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Müşteri Ekleme</p>
           </div>
         </router-link>
       </li>

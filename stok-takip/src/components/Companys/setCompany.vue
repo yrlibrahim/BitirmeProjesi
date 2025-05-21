@@ -70,21 +70,6 @@
               </div>
             </div>
           </Field>
-
-          <Field name="taxNumber" v-slot="{ field, errors }">
-            <div>
-              <label>Vergi Numarası</label>
-              <input
-                v-bind="field"
-                type="number"
-                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
-              />
-              <div v-if="errors.length" class="text-red-500">
-                {{ errors[0] }}
-              </div>
-            </div>
-          </Field>
-
           <Field name="taxOffice" v-slot="{ field, errors }">
             <div>
               <label>Vergi Dairesi</label>
@@ -102,20 +87,6 @@
           <Field name="invoiceTitle" v-slot="{ field, errors }">
             <div>
               <label>Fatura Başlığı</label>
-              <input
-                v-bind="field"
-                type="text"
-                class="w-full h-10 rounded-md border mt-1 px-4 py-1"
-              />
-              <div v-if="errors.length" class="text-red-500">
-                {{ errors[0] }}
-              </div>
-            </div>
-          </Field>
-
-          <Field name="invoiceAddress" v-slot="{ field, errors }">
-            <div>
-              <label>Fatura Adresi</label>
               <input
                 v-bind="field"
                 type="text"
@@ -197,10 +168,8 @@ onMounted(async () => {
       companyData.value = {
         companyName: data.companyName || "",
         email: data.email || "",
-        taxNumber: data.taxNumber || "",
         taxOffice: data.taxOffice || "",
         invoiceTitle: data.invoiceTitle || "",
-        invoiceAddress: data.invoiceAddress || "",
         phone: data.phone || "",
         description: data.description || "",
       };

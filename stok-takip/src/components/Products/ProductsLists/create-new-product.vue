@@ -95,6 +95,18 @@
                 </div>
               </Field>
             </div>
+            <div class="mb-10 w-1/2">
+              <Field name="minCount" v-slot="{ field, errors }">
+                <p class="text-[#646B72]">Minimum Stok</p>
+                <input
+                  type="number"
+                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+                  v-bind="field"
+                  placeholder="En az kaç adet olmalı?"
+                />
+                <div v-if="errors.length" class="">{{ errors[0] }}</div>
+              </Field>
+            </div>
           </div>
 
           <div class="flex items-center justify-start gap-4">

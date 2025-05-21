@@ -68,18 +68,6 @@
                 <div v-if="errors.length" class="">{{ errors[0] }}</div>
               </Field>
             </div>
-
-            <div>
-              <Field name="taxNumber" v-slot="{ field, errors }">
-                <p>Vergi Numarası</p>
-                <input
-                  type="number"
-                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-                  v-bind="field"
-                />
-                <div v-if="errors.length" class="">{{ errors[0] }}</div>
-              </Field>
-            </div>
             <div>
               <Field name="taxOffice" v-slot="{ field, errors }">
                 <p>Vergi Dairesi</p>
@@ -95,17 +83,6 @@
             <div>
               <Field name="invoiceTitle" v-slot="{ field, errors }">
                 <p>Fatura Başlığı</p>
-                <input
-                  type="text"
-                  class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-                  v-bind="field"
-                />
-                <div v-if="errors.length" class="">{{ errors[0] }}</div>
-              </Field>
-            </div>
-            <div>
-              <Field name="invoiceAddress" v-slot="{ field, errors }">
-                <p>Fatura Adresi</p>
                 <input
                   type="text"
                   class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"

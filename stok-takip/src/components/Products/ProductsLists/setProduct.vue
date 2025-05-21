@@ -159,7 +159,19 @@
               </div>
             </div>
           </Field>
-
+          <Field name="minCount" v-slot="{ field, errors }">
+            <div>
+              <label>Minimum Stok</label>
+              <input
+                v-bind="field"
+                type="number"
+                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
+              />
+              <div v-if="errors.length" class="text-red-500">
+                {{ errors[0] }}
+              </div>
+            </div>
+          </Field>
           <Field name="price" v-slot="{ field, errors }">
             <div>
               <label>Fiyat</label>
@@ -226,6 +238,7 @@ onMounted(async () => {
         category: data.category || "",
         subCategory: data.subCategory || "",
         count: data.count ?? 0,
+        minCount: data.minCount ?? 0,
         price: data.price ?? 0,
       };
     } else {

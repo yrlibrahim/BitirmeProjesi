@@ -317,18 +317,48 @@ function removeRow(index) {
 
 async function onSKUChange(index) {
   const item = productList.value[index];
+
+  // İşçilik kodu kontrolü
   if (item.sku === "0000") {
     item.isLabor = true;
-    item.name = "";
+    item.name = "İşçilik";
     item.brand = "";
     item.model = "";
-    item.category = "";
-    item.subCategory = "";
-  } else {
+    item.category = "Hizmet";
+    item.subCategory = "İşçilik";
+  }
+  // Eski fatura kodu kontrolü
+  else if (item.sku === "EFSK") {
+    item.isLabor = false;
+    item.name = "Eski Fatura";
+    item.brand = "-";
+    item.model = "-";
+    item.category = "Geçmiş";
+    item.subCategory = "Eski Kayıt";
+    item.price = 0;
+    item.quantity = 1;
+    item.tax = 0;
+    item.discount = 0;
+    item.total = 0;
+  }
+  // Normal stok kodu işlemi
+  else {
     item.isLabor = false;
     const product = await getProductBySKU(item.sku);
     if (product) {
       Object.assign(item, product);
+    } else {
+      // Eğer ürün bulunamazsa
+      item.name = "Ürün Bulunamadı";
+      item.brand = "";
+      item.model = "";
+      item.category = "";
+      item.subCategory = "";
+      item.price = 0;
+      item.quantity = 1;
+      item.tax = 0;
+      item.discount = 0;
+      item.total = 0;
     }
   }
   calculateRowTotal(index);

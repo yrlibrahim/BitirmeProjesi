@@ -24,9 +24,13 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
+      path: "/home",
       name: "home",
       component: Home,
+    },
+    {
+      path: "/",
+      redirect: "/signin",
     },
     {
       path: "/signin",
@@ -183,6 +187,31 @@ const router = createRouter({
       name: "companyPayments",
       component: () =>
         import("@/components/Payments/CompanyPayments/companyPayments.vue"),
+    },
+    {
+      path: "/low-stock",
+      name: "lowStock",
+      component: () => import("@/components/Products/Stocks/lowStock.vue"),
+    },
+    {
+      path: "/invoice-add",
+      name: "invoiceAdd",
+      component: () => import("@/components/user/invoiceAdd.vue"),
+    },
+    {
+      path: "/payment-add",
+      name: "paymentAdd",
+      component: () => import("@/components/user/uploadPayment.vue"),
+    },
+    {
+      path: "/companys-add",
+      name: "companysAdd",
+      component: () => import("@/components/user/UploadCompanies.vue"),
+    },
+    {
+      path: "/customers-add",
+      name: "customersAdd",
+      component: () => import("@/components/user/UploadCustomers.vue"),
     },
   ],
 });

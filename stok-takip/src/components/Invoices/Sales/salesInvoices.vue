@@ -233,7 +233,7 @@ const resetFilters = () => {
 
 // Müşteri listesini filtrele
 const getUniqueBrands = () => {
-  const all = invoices.value.map((f) => f.customerName);
+  const all = invoices.value.map((f) => f.companyName);
   brands.value = [...new Set(all)];
 };
 function formatDate(dateStr) {

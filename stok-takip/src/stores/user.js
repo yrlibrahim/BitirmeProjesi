@@ -75,7 +75,7 @@ export const useUserStore = defineStore("user", {
         if (userData) {
           this.user = { ...DEFAULT_USER, ...userData };
           this.auth = true;
-          router.push("/");
+          router.push("/home");
           $toast.success("Hoşgeldiniz");
         } else {
           $toast.error("Kullanıcı verisi bulunamadı.");

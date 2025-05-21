@@ -102,10 +102,8 @@ onMounted(async () => {
     companyFields.value = {
       "Firma Adı": companyData.value.companyName || "-",
       "Mail Adresi": companyData.value.email || "-",
-      "Vergi Numarası": companyData.value.taxNumber || "-",
       "Vergi Dairesi": companyData.value.taxOffice || "-",
       "Fatura Başlığı": companyData.value.invoiceTitle || "-",
-      "Fatura Adresi": companyData.value.invoiceAddress || "-",
       "Telefon Numarası": companyData.value.phone || "-",
       Açıklama: companyData.value.description || "-",
     };

@@ -69,18 +69,6 @@
           </div>
 
           <div>
-            <label class="form-label">Vergi Numarası</label>
-            <Field name="taxNumber" v-slot="{ field, errors }">
-              <input
-                v-bind="field"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-                placeholder="Vergi Numarası"
-              />
-              <span class="form-error">{{ errors[0] }}</span>
-            </Field>
-          </div>
-
-          <div>
             <label class="form-label">Vergi Dairesi</label>
             <Field name="taxOffice" v-slot="{ field, errors }">
               <input
@@ -99,18 +87,6 @@
                 v-bind="field"
                 class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
                 placeholder="Fatura Başlığı"
-              />
-              <span class="form-error">{{ errors[0] }}</span>
-            </Field>
-          </div>
-
-          <div>
-            <label class="form-label">Fatura Adresi</label>
-            <Field name="invoiceAddress" v-slot="{ field, errors }">
-              <input
-                v-bind="field"
-                class="w-full h-10 rounded-md border border-grey-2 mt-1 px-4 py-1 focus:outline-none"
-                placeholder="Fatura Adresi"
               />
               <span class="form-error">{{ errors[0] }}</span>
             </Field>

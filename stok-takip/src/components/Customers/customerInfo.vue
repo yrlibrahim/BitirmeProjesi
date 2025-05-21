@@ -73,10 +73,10 @@ onMounted(async () => {
       customerFields.value = {
         "Firma Adı": data.companyName || "-",
         "Mail Adresi": data.email || "-",
-        "Vergi Numarası": data.taxNumber || "-",
+
         "Vergi Dairesi": data.taxOffice || "-",
         "Fatura Başlığı": data.invoiceTitle || "-",
-        "Fatura Adresi": data.invoiceAddress || "-",
+
         "Telefon Numarası": data.phone || "-",
         Açıklama: data.description || "-",
       };

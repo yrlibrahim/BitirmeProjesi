@@ -144,10 +144,10 @@
           >
             <td class="px-4 py-2">{{ item.companyName }}</td>
             <td class="px-4 py-2">{{ item.email }}</td>
-            <td class="px-4 py-2">{{ item.taxNumber }}</td>
+
             <td class="px-4 py-2">{{ item.taxOffice }}</td>
             <td class="px-4 py-2">{{ item.invoiceTitle }}</td>
-            <td class="px-4 py-2">{{ item.invoiceAddress }}</td>
+
             <td class="px-4 py-2">{{ item.phone }}</td>
             <td class="p-3">
               <div class="flex gap-2">
@@ -215,10 +215,8 @@ const openFilter = ref(false);
 const headers = [
   { key: "name", label: "Firma Adı" },
   { key: "email", label: "Mail Adresi" },
-  { key: "taxNumber", label: "Vergi Numarası" },
   { key: "taxOffice", label: "Vergi Dairesi" },
   { key: "invoiceTitle", label: "Fatura Başlığı" },
-  { key: "invoiceAddress", label: "Fatura Adresi" },
   { key: "phone", label: "Telefon Numarası" },
   { key: "description", label: "İşlemler" },
 ];
