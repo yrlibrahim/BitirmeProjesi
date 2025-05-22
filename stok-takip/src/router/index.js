@@ -213,6 +213,16 @@ const router = createRouter({
       name: "customersAdd",
       component: () => import("@/components/user/UploadCustomers.vue"),
     },
+    {
+      path: "/upload-company-invoices",
+      name: "uploadCompanyInvoices",
+      component: () => import("@/components/user/uploadCompanyInvoices.vue"),
+    },
+    {
+      path: "/upload-company-payments",
+      name: "uploadCompanyPayments",
+      component: () => import("@/components/user/uploadCompanyPayments.vue"),
+    },
   ],
 });
 
