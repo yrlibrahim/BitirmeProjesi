@@ -11,6 +11,7 @@ import {
   updateDoc,
   increment,
   deleteDoc,
+  orderBy,
 } from "firebase/firestore";
 
 export async function saveSalesInvoice(invoiceData, productList) {
@@ -150,9 +151,11 @@ export async function decreaseStockQuantities(products) {
 /**
  * Satış faturalarını getir
  */
+
 export async function fetchSalesInvoices() {
   try {
-    const snapshot = await getDocs(query(collection(DB, "SalesInvoices")));
+    const q = query(collection(DB, "SalesInvoices"), orderBy("date", "desc"));
+    const snapshot = await getDocs(q);
 
     return snapshot.docs.map((doc) => ({
       id: doc.id,

@@ -11,6 +11,7 @@ import {
   updateDoc,
   increment,
   deleteDoc,
+  orderBy,
 } from "firebase/firestore";
 
 /**
@@ -109,7 +110,11 @@ export async function increaseStockQuantities(products) {
 
 export async function fetchPurchaseInvoices() {
   try {
-    const snapshot = await getDocs(query(collection(DB, "PurchaseInvoices")));
+    const q = query(
+      collection(DB, "PurchaseInvoices"),
+      orderBy("date", "desc")
+    );
+    const snapshot = await getDocs(q);
 
     return snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -120,6 +125,7 @@ export async function fetchPurchaseInvoices() {
     throw err;
   }
 }
+
 /**
  * ID ile fatura detayını getir
  */

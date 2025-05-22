@@ -59,7 +59,8 @@ function handleFile(event) {
         const [tarih, tur, aciklama, tutar] = parts;
 
         // ❗️ Sadece Gelen Fatura satırlarını işleyelim
-        if (tur !== "Gelen Fatura") return null;
+        if (!tur || tur.toLocaleLowerCase("tr-TR") !== "gelen fatura")
+          return null;
 
         try {
           const [g, a, y] = tarih.split(".");

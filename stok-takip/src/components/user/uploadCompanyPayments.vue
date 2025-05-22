@@ -57,7 +57,7 @@ function handleFile(event) {
         if (parts.length < 4 || parts.some((p) => !p)) return null;
 
         const [tarih, tur, aciklama, tutar] = parts;
-        if (tur !== "Ödeme") return null;
+        if (!tur || tur.toLocaleLowerCase("tr-TR") !== "ödeme") return null;
 
         try {
           const [g, a, y] = tarih.split(".");

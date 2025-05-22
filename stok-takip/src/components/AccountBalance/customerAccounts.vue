@@ -1,52 +1,64 @@
 <template>
-  <div class="p-6 space-y-6">
-    <h2 class="text-2xl font-bold">Müşteri Cari Durumları</h2>
+  <div class="">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-[22px] text-[#646B72] font-semibold">
+          Müşteri Cari Durumları
+        </h1>
+        <h2 class="text-[18px] text-[#646B72] pt-4">
+          Cari Durumlarınızı Takip Edin
+        </h2>
+      </div>
+    </div>
 
     <!-- Arama ve Dropmenu -->
-    <div class="flex items-center gap-4 mb-4">
+    <div
+      class="flex justify-between items-center gap-2 p-4 rounded-t-md bg-white border"
+    >
       <!-- Arama -->
       <input
         v-model="searchTerm"
         placeholder="Müşteri Adına Göre Ara..."
-        class="border rounded px-4 py-2 w-full max-w-xs"
+        class="border rounded px-4 py-2 w-full max-w-xs focus:outline-none focus:ring-0"
       />
-
-      <!-- Müşteri Dropmenu -->
-      <div class="relative" ref="dropdownRef">
-        <button
-          @click="toggleDropdown"
-          class="border rounded px-4 py-2 bg-white shadow-sm hover:bg-[#FE9F43] hover:text-white transition"
-        >
-          {{ selectedCustomer || "Tüm Müşteriler" }}
-        </button>
-        <div
-          v-if="dropdownOpen"
-          class="absolute mt-1 w-48 bg-white border rounded shadow-md z-10"
-        >
-          <div
-            class="px-4 py-2 hover:bg-[#FE9F431A] hover:text-[#FE9F43] cursor-pointer"
-            @click="selectCustomer('')"
+      <div class="flex gap-2">
+        <!-- Müşteri Dropmenu -->
+        <div class="relative" ref="dropdownRef">
+          <button
+            @click="toggleDropdown"
+            class="border rounded px-4 py-2 bg-white shadow-sm hover:bg-[#FE9F43] hover:text-white transition"
           >
-            Tüm Müşteriler
-          </div>
+            {{ selectedCustomer || "Tüm Müşteriler" }}
+          </button>
           <div
-            v-for="customer in uniqueCustomers"
-            :key="customer"
-            class="px-4 py-2 hover:bg-[#FE9F431A] hover:text-[#FE9F43] cursor-pointer"
-            @click="selectCustomer(customer)"
+            v-if="dropdownOpen"
+            class="absolute mt-1 w-48 bg-white border rounded shadow-md z-10 max-h-60 overflow-y-auto"
           >
-            {{ customer }}
+            <div
+              class="px-4 py-2 hover:bg-[#FE9F431A] hover:text-[#FE9F43] cursor-pointer"
+              @click="selectCustomer('')"
+            >
+              Tüm Müşteriler
+            </div>
+            <div
+              v-for="customer in uniqueCustomers"
+              :key="customer"
+              class="px-4 py-2 hover:bg-[#FE9F431A] hover:text-[#FE9F43] cursor-pointer"
+              @click="selectCustomer(customer)"
+            >
+              {{ customer }}
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Sıfırlama -->
-      <button
-        @click="resetFilters"
-        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded"
-      >
-        Sıfırla
-      </button>
+        <!-- Sıfırlama -->
+        <button
+          @click="resetFilters"
+          class="border rounded px-4 py-2 bg-white shadow-sm hover:bg-[#FE9F43] hover:text-white transition"
+        >
+          Sıfırla
+        </button>
+      </div>
     </div>
 
     <div class="overflow-auto rounded border">
@@ -91,9 +103,9 @@
             <td class="px-4 py-2">
               <router-link
                 :to="`/customer-accounts/${entry.customerId}`"
-                class="text-blue-500 hover:underline"
+                class="hover:text-[#092C4C]"
               >
-                Detay
+                <EyeIcon class="w-5 h-5 text-gray-600" />
               </router-link>
             </td>
           </tr>
@@ -106,6 +118,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { getCariSummary } from "@/stores/cariAccount";
+import { EyeIcon } from "@heroicons/vue/24/outline";
 
 const summary = ref([]);
 const searchTerm = ref("");

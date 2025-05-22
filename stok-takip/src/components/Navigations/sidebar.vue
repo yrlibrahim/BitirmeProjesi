@@ -60,9 +60,45 @@
 
       <!-- Faturalar -->
       <li class="text-sm font-semibold text-gray-500 uppercase px-3">
-        Faturalar
+        Cari Takip
       </li>
-      <li class="ml-2 text-xs text-orange-400 mt-1">Alış</li>
+      <li class="ml-2 text-xs text-orange-400 mt-1">Müşteri</li>
+      <li class="">
+        <router-link
+          to="/sales-invoices"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          ><div class="flex items-center gap-2">
+            <DocumentArrowUpIcon class="w-5" />
+            <p class="text-[16px]">Giden Faturalar</p>
+          </div>
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/customer-payments"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <BarsArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Gelen Ödemeler</p>
+          </div>
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/customer-accounts"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <UsersIcon class="w-5" />
+            <p class="text-[16px]">Cari Hesaplar</p>
+          </div>
+        </router-link>
+      </li>
+      <li class="ml-2 text-xs text-orange-400 mt-2">Firma</li>
       <li class="">
         <router-link
           to="/purchase-invoices"
@@ -75,15 +111,27 @@
           </div>
         </router-link>
       </li>
-      <li class="ml-2 text-xs text-orange-400 mt-2">Satış</li>
-      <li class="">
+      <li>
         <router-link
-          to="/sales-invoices"
+          to="/company-payments"
           class="block px-3 py-2 rounded hover:bg-gray-100 transition"
           active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-          ><div class="flex items-center gap-2">
-            <DocumentArrowUpIcon class="w-5" />
-            <p class="text-[16px]">Giden Faturalar</p>
+        >
+          <div class="flex items-center gap-2">
+            <BarsArrowUpIcon class="w-5" />
+            <p class="text-[16px]">Giden Ödemeler</p>
+          </div>
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/company-accounts"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <UserGroupIcon class="w-5" />
+            <p class="text-[16px]">Cari Hesaplar</p>
           </div>
         </router-link>
       </li>
@@ -120,65 +168,6 @@
       <!-- Divider -->
       <li class="border-t border-gray-300 my-3"></li>
 
-      <!-- Cari Takip -->
-      <li class="text-sm font-semibold text-gray-500 uppercase px-3">
-        Cari Takip
-      </li>
-
-      <!-- Müşteri Cari -->
-      <li class="ml-2 text-xs text-orange-400 mt-1">Müşteriler</li>
-      <li>
-        <router-link
-          to="/customer-accounts"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <UsersIcon class="w-5" />
-            <p class="text-[16px]">Cari Hesaplar</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/customer-payments"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Ödemeler</p>
-          </div>
-        </router-link>
-      </li>
-
-      <!-- Firma Cari -->
-      <li class="ml-2 text-xs text-orange-400 mt-2">Firmalar</li>
-      <li>
-        <router-link
-          to="/company-accounts"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <UserGroupIcon class="w-5" />
-            <p class="text-[16px]">Cari Hesaplar</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/company-payments"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Ödemeler</p>
-          </div>
-        </router-link>
-      </li>
-      <li class="border-t border-gray-300 my-3"></li>
       <li class="text-sm font-semibold text-gray-500 uppercase px-3">
         Eklemeler
       </li>
@@ -266,6 +255,8 @@ import {
   DocumentArrowUpIcon,
   UsersIcon,
   UserGroupIcon,
+  BarsArrowDownIcon,
+  BarsArrowUpIcon,
 } from "@heroicons/vue/24/outline";
 </script>
 

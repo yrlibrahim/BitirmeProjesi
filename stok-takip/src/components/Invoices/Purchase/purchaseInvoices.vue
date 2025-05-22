@@ -158,9 +158,9 @@
           <table class="min-w-full bg-white text-sm border">
             <thead class="bg-[#F9FAFB] text-gray-600 text-left">
               <tr>
-                <th class="p-3">Fatura No</th>
-                <th class="p-3">Firma</th>
                 <th class="p-3">Tarih</th>
+                <th class="p-3">Firma</th>
+                <th class="p-3">Fatura No</th>
                 <th class="p-3">Toplam</th>
                 <th class="p-3 flex justify-center">İşlem</th>
               </tr>
@@ -171,11 +171,11 @@
                 :key="fatura.id"
                 class="border-t hover:bg-gray-50"
               >
-                <td class="p-3">{{ fatura.invoiceNumber }}</td>
-                <td class="p-3">{{ fatura.companyName }}</td>
                 <td class="p-3">
                   {{ formatDate(fatura.date) }}
                 </td>
+                <td class="p-3">{{ fatura.companyName }}</td>
+                <td class="p-3">{{ fatura.invoiceNumber }}</td>
                 <td class="p-3">
                   {{ formatCurrency(fatura.totalAmount?.toFixed(2)) }}
                 </td>

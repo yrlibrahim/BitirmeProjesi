@@ -17,7 +17,6 @@ import {
   UserGroupIcon,
 } from "@heroicons/vue/24/outline";
 import { ref, onMounted } from "vue";
-import MonthlyStockChart from "@/Charts/MonthlyStockChart.vue";
 import FinancialSummary from "@/Charts/FinancialSummary.vue";
 import PaymentTypeComparisonChart from "@/Charts/PaymentTypeComparisonChart.vue";
 import { useStockData } from "@/stores/stock";
@@ -222,9 +221,5 @@ const formattedDate = ref(
       <!-- Ödeme Tipi Karşılaştırma -->
       <PaymentTypeComparisonChart />
     </div>
-  </div>
-  <!-- Aylık Stok Grafiği -->
-  <div class="p-6 mt-6 bg-white rounded-lg shadow">
-    <MonthlyStockChart />
   </div>
 </template>
