@@ -1,45 +1,89 @@
 <template>
   <div class="">
-    <div class="p-4">
-      <!-- Başlık ve Yeni Ekle Butonu -->
+    <div class="">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold">Tüm Müşteri Ödemeleri</h2>
+        <div>
+          <h1 class="text-[22px] text-[#646B72] font-semibold">
+            Gelen Ödemeler
+          </h1>
+          <h2 class="text-[18px] text-[#646B72] pt-4">
+            Gelen Ödemelerinizi Yönetin
+          </h2>
+        </div>
         <router-link
           to="/add-customer-payment"
-          class="bg-[#FE9F43] hover:bg-orange-500 text-white px-4 py-2 rounded transition"
+          class="btn bg-[#FE9F43] text-white border-[#FE9F43] hover:bg-white hover:text-[#FE9F43] transition rounded-md border px-4 py-2"
         >
-          Yeni Ödeme Ekle
+          <div class="flex gap-2">
+            <BarsArrowDownIcon class="w-5" />Ödeme Ekle
+          </div>
         </router-link>
       </div>
 
       <!-- Arama ve Filtre -->
-      <div class="flex items-center gap-4 mb-4">
+      <div
+        class="flex items-center justify-between p-4 bg-white border shadow-md rounded-t-md"
+      >
         <!-- Arama -->
         <input
           v-model="searchTerm"
           placeholder="Müşteri Adına Göre Ara..."
-          class="border rounded px-4 py-2 w-full max-w-xs"
+          class="border rounded px-4 py-2 w-full max-w-xs focus:outline-none focus:ring-0"
         />
+        <div class="flex gap-2">
+          <!-- Müşteri Dropmenu -->
+          <div class="relative w-48" ref="dropdownRef">
+            <button
+              @click="toggleDropdown"
+              class="w-full border px-4 py-2 rounded-md text-gray-700 bg-white shadow-sm hover:bg-[#FE9F43] hover:text-white hover:border-[#FE9F43] transition"
+            >
+              <span class="flex justify-between items-center">
+                {{ selectedCustomer || "Tüm Müşteriler" }}
+                <svg
+                  class="w-4 h-4 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </span>
+            </button>
 
-        <!-- Müşteri Filtreleme -->
-        <select v-model="selectedCustomer" class="border rounded px-4 py-2">
-          <option value="">Tüm Müşteriler</option>
-          <option
-            v-for="customer in uniqueCustomers"
-            :key="customer"
-            :value="customer"
+            <div
+              v-if="dropdownOpen"
+              class="absolute z-50 w-full mt-1 bg-white border rounded shadow-md max-h-60 overflow-y-auto"
+            >
+              <div
+                class="px-4 py-2 hover:bg-[#FE9F431A] hover:text-[#FE9F43] cursor-pointer"
+                @click="selectCustomer('')"
+              >
+                Tüm Müşteriler
+              </div>
+              <div
+                v-for="customer in uniqueCustomers"
+                :key="customer"
+                class="px-4 py-2 hover:bg-[#FE9F431A] hover:text-[#FE9F43] cursor-pointer"
+                @click="selectCustomer(customer)"
+              >
+                {{ customer }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtreyi Sıfırla -->
+          <button
+            @click="resetFilters"
+            class="border px-4 py-2 rounded-md text-gray-700 hover:bg-[#FE9F43] hover:text-white hover:border-[#FE9F43] transition"
           >
-            {{ customer }}
-          </option>
-        </select>
-
-        <!-- Filtreyi Sıfırla -->
-        <button
-          @click="resetFilters"
-          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded"
-        >
-          Sıfırla
-        </button>
+            Sıfırla
+          </button>
+        </div>
       </div>
 
       <!-- Ödeme Tablosu -->
@@ -67,31 +111,31 @@
               :key="payment.id"
               class="border-t hover:bg-gray-50"
             >
+              <td class="px-4 py-2">{{ formatDate(payment.date) }}</td>
+              <td class="px-4 py-2">{{ payment.type }}</td>
               <td class="px-4 py-2">{{ payment.companyName }}</td>
               <td class="px-4 py-2">
                 {{ payment.amount.toLocaleString("tr-TR") }}₺
               </td>
-              <td class="px-4 py-2">{{ payment.type }}</td>
-              <td class="px-4 py-2">{{ payment.description }}</td>
-              <td class="px-4 py-2">{{ formatDate(payment.date) }}</td>
+
               <td class="px-4 py-2 flex gap-2">
                 <button
                   @click="openDetailModal(payment)"
-                  class="text-blue-500 hover:underline"
+                  class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
                 >
-                  Detay
+                  <EyeIcon class="w-5 h-5 text-gray-600" />
                 </button>
                 <button
                   @click="openEditModal(payment)"
-                  class="text-green-500 hover:underline"
+                  class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
                 >
-                  Düzenle
+                  <PencilSquareIcon class="w-5 h-5" />
                 </button>
                 <button
                   @click="deletePayment(payment.id)"
-                  class="text-red-500 hover:underline"
+                  class="p-2 border border-[#E6EAED] hover:bg-[#092C4C] hover:text-[white] hover:border-[#092C4C] transition rounded-md"
                 >
-                  Sil
+                  <TrashIcon class="w-5 h-5" />
                 </button>
               </td>
             </tr>
@@ -149,7 +193,7 @@
       </div>
     </div>
 
-    <!-- Düzenleme Modal -->
+    <!--  Düzenleme Modal -->
     <div
       v-if="showEditModal"
       class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 min-h-screen"
@@ -159,6 +203,7 @@
           Ödemeyi Düzenle
         </h3>
 
+        <!-- Tutar -->
         <div>
           <label class="block text-sm font-medium">Tutar</label>
           <input
@@ -168,6 +213,7 @@
           />
         </div>
 
+        <!-- Tür -->
         <div>
           <label class="block text-sm font-medium">Tür</label>
           <select
@@ -180,6 +226,7 @@
           </select>
         </div>
 
+        <!-- Açıklama -->
         <div>
           <label class="block text-sm font-medium">Açıklama</label>
           <textarea
@@ -189,6 +236,17 @@
           ></textarea>
         </div>
 
+        <!-- Tarih -->
+        <div>
+          <label class="block text-sm font-medium">Tarih</label>
+          <input
+            type="date"
+            v-model="editPayment.date"
+            class="w-full border rounded px-4 py-2"
+          />
+        </div>
+
+        <!-- Butonlar -->
         <div class="flex justify-end gap-2 pt-4 border-t">
           <button
             class="bg-gray-200 px-4 py-2 rounded"
@@ -216,6 +274,13 @@ import {
   updateCustomerPayment,
 } from "@/stores/customerPayments";
 import { useToast } from "vue-toast-notification";
+import Swal from "sweetalert2";
+import {
+  EyeIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  BarsArrowDownIcon,
+} from "@heroicons/vue/24/outline";
 
 const payments = ref([]);
 const showDetailModal = ref(false);
@@ -230,6 +295,24 @@ const sortOrder = ref("desc");
 const searchTerm = ref("");
 const selectedCustomer = ref("");
 const dropdownOpen = ref(false);
+const dropdownRef = ref(null);
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+
+const selectCustomer = (customer) => {
+  selectedCustomer.value = customer;
+  dropdownOpen.value = false;
+};
+
+onMounted(() => {
+  document.addEventListener("click", (e) => {
+    if (dropdownRef.value && !dropdownRef.value.contains(e.target)) {
+      dropdownOpen.value = false;
+    }
+  });
+});
 
 onMounted(async () => {
   payments.value = await fetchCustomerPayments();
@@ -258,6 +341,7 @@ const updatePayment = async () => {
       amount: Number(editPayment.value.amount),
       type: editPayment.value.type,
       description: editPayment.value.description,
+      date: editPayment.value.date, // ✅ tarih de eklendi
     });
     showEditModal.value = false;
     payments.value = await fetchCustomerPayments();
@@ -269,23 +353,35 @@ const updatePayment = async () => {
 };
 
 const deletePayment = async (id) => {
-  try {
-    await deleteCustomerPayment(id);
-    payments.value = await fetchCustomerPayments();
-    $toast.success("Ödeme silindi.");
-  } catch (error) {
-    console.error("Silme hatası:", error);
-    $toast.error("Silme sırasında hata oluştu.");
+  const result = await Swal.fire({
+    title: "Emin misiniz?",
+    text: "Bu ödeme kaydı silinecek ve geri alınamaz!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#FE9F43",
+    cancelButtonColor: "#092C4C",
+    confirmButtonText: "Evet, sil",
+    cancelButtonText: "Vazgeç",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await deleteCustomerPayment(id);
+      payments.value = await fetchCustomerPayments();
+      $toast.success("Ödeme başarıyla silindi.");
+      Swal.fire("Silindi!", "Ödeme başarıyla silindi.", "success");
+    } catch (error) {
+      console.error("Silme hatası:", error);
+      $toast.error("Silme sırasında hata oluştu.");
+    }
   }
 };
-
 // Sıralama yapılacak başlık ve anahtar eşleştirmesi
 const headers = [
+  { label: "Tarih", key: "date" },
+  { label: "Tür", key: "type" },
   { label: "Müşteri", key: "companyName" },
   { label: "Tutar (₺)", key: "amount" },
-  { label: "Tür", key: "type" },
-  { label: "Açıklama", key: "description" },
-  { label: "Tarih", key: "date" },
 ];
 
 // Sıralama işlemi

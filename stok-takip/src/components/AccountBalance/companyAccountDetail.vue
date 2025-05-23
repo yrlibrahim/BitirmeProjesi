@@ -44,6 +44,19 @@
         class="flex justify-end items-center gap-2 p-2 rounded-t-md bg-white border overflow-hidden"
       >
         <button
+          @click="exportToPDF"
+          class="border px-4 py-2 rounded-md text-gray-700 hover:bg-[#F87171] hover:text-white hover:border-[#F87171] transition"
+        >
+          <font-awesome-icon :icon="['far', 'file-pdf']" />
+        </button>
+
+        <button
+          @click="exportToExcel"
+          class="border px-4 py-2 rounded-md text-gray-700 hover:bg-[#3EB780] hover:text-white hover:border-[#3EB780] transition"
+        >
+          <font-awesome-icon :icon="['far', 'file-excel']" />
+        </button>
+        <button
           @click="openDatePicker"
           class="border px-4 py-2 rounded-md text-gray-700 hover:bg-[#FE9F43] hover:text-white hover:border-[#FE9F43] transition"
         >
@@ -94,6 +107,9 @@
 </template>
 
 <script setup>
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx";
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { fetchCompanyPayments } from "@/stores/companyPayments";
@@ -112,6 +128,61 @@ const companyId = route.params.id;
 const companyName = ref("");
 const timeline = ref([]);
 const selectedDateRange = ref({ start: null, end: null });
+
+const fixTurkishChars = (text) => {
+  return text
+    .replace(/İ/g, "I")
+    .replace(/ı/g, "i")
+    .replace(/ş/g, "s")
+    .replace(/Ş/g, "S")
+    .replace(/ğ/g, "g")
+    .replace(/Ğ/g, "G")
+    .replace(/ü/g, "u")
+    .replace(/Ü/g, "U")
+    .replace(/ö/g, "o")
+    .replace(/Ö/g, "O")
+    .replace(/ç/g, "c")
+    .replace(/Ç/g, "C");
+};
+
+//Pdf olarak kaydetme
+const exportToPDF = () => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text(fixTurkishChars(`${companyName.value} - Cari Detaylar`), 14, 20);
+
+  const rows = filteredTimeline.value.map((item) => [
+    fixTurkishChars(formatDate(item.date)),
+    fixTurkishChars(item.type === "payment" ? "Ödeme" : "Fatura"),
+    fixTurkishChars(item.description),
+    `${item.amount.toLocaleString("tr-TR")} ₺`,
+  ]);
+
+  autoTable(doc, {
+    head: [["Tarih", "Tür", "Açiklama", "Tutar"]],
+    body: rows,
+    startY: 30,
+  });
+
+  doc.save(`${fixTurkishChars(companyName.value)}_cari_detaylar.pdf`);
+};
+
+// Excel olarak kaydetme
+const exportToExcel = () => {
+  const data = filteredTimeline.value.map((item) => ({
+    Tarih: formatDate(item.date),
+    Tür: item.type === "payment" ? "Ödeme" : "Fatura",
+    Açıklama: item.description,
+    Tutar: item.amount,
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Cari Detaylar");
+
+  XLSX.writeFile(workbook, `${companyName.value}_cari_detaylar.xlsx`);
+};
 
 // 📅 Tarih formatlayıcı
 const formatDate = (dateStr) => {
