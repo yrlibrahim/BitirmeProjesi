@@ -34,6 +34,7 @@
         </div>
         <button
           @click="goToCreateProduct"
+          v-if="!userStore.getUserData.isAdmin"
           class="btn bg-[#FE9F43] text-white border-[#FE9F43] hover:bg-white hover:text-[#FE9F43] transition rounded-md border px-4 py-2"
         >
           <div class="flex items-center">
@@ -156,7 +157,9 @@
                 <th class="p-3">Alt Kategori</th>
                 <th class="p-3">Fiyat</th>
                 <th class="p-3">Adet</th>
-                <th class="p-3">Actions</th>
+                <th class="p-3" v-if="!userStore.getUserData.isAdmin">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y">
@@ -179,7 +182,7 @@
                 <td class="p-3">{{ formatCurrency(item.price) }}</td>
                 <td class="p-3">{{ item.count }}</td>
 
-                <td class="p-3">
+                <td class="p-3" v-if="!userStore.getUserData.isAdmin">
                   <div class="flex gap-2">
                     <router-link
                       :to="{ name: 'productInfo', params: { id: item.id } }"
@@ -224,16 +227,27 @@ import {
   ChevronDownIcon,
   PlusCircleIcon,
 } from "@heroicons/vue/24/outline";
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
 const stockData = useStockData();
 const searchTerm = ref("");
 const selectedCategory = ref("");
 const selectedBrand = ref("");
-const categories = ref([]);
-const brands = ref([]);
 const openCategory = ref(false);
 const openBrand = ref(false);
-const brandDropdownRef = ref(null);
+
+const isLoading = computed(() => !stockData.adminStock?.length);
+
+const categories = computed(() =>
+  [...new Set(stockData.adminStock.map((item) => item.category))].filter(
+    Boolean
+  )
+);
+
+const brands = computed(() =>
+  [...new Set(stockData.adminStock.map((item) => item.brand))].filter(Boolean)
+);
 
 const selectCategory = (cat) => {
   selectedCategory.value = cat;
@@ -246,7 +260,6 @@ const selectBrand = (brand) => {
 
 const filteredProducts = computed(() => {
   const list = Array.isArray(stockData.adminStock) ? stockData.adminStock : [];
-
   return list.filter((p) => {
     const matchSearch = p.name
       ?.toLowerCase()
@@ -276,7 +289,8 @@ const removeProduct = (id) => {
     confirmButtonText: "Evet, sil",
   }).then((result) => {
     if (result.isConfirmed) {
-      stockData.removeByID(id).then(() => {
+      stockData.removeByID(id).then(async () => {
+        await stockData.adminGetStock();
         Swal.fire("Silindi!", "Ürün başarıyla silindi.", "success");
       });
     }
@@ -284,12 +298,9 @@ const removeProduct = (id) => {
 };
 
 onMounted(async () => {
-  await stockData.adminGetStock();
-  // Benzersiz kategori ve marka listesi oluştur
-  categories.value = [
-    ...new Set(stockData.adminStock.map((item) => item.category)),
-  ];
-  brands.value = [...new Set(stockData.adminStock.map((item) => item.brand))];
+  if (!stockData.adminStock?.length) {
+    await stockData.adminGetStock();
+  }
 });
 
 const formatCurrency = (value) => {

@@ -63,7 +63,6 @@ const shouldShowLayout = computed(() => userStore.auth);
   </div>
 
   <div v-else>
-    <!-- Eğer kullanıcı giriş yapmamışsa sadece RouterView (giriş sayfası gibi) -->
     <RouterView />
   </div>
 </template>

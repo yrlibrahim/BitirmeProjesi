@@ -9,6 +9,7 @@
         </h2>
       </div>
       <router-link
+        v-if="!userStore.getUserData.isAdmin"
         to="/add-company-payment"
         class="btn bg-[#FE9F43] text-white border-[#FE9F43] hover:bg-white hover:text-[#FE9F43] transition rounded-md border px-4 py-2"
       >
@@ -97,7 +98,12 @@
                 {{ sortOrder === "asc" ? "▲" : "▼" }}
               </span>
             </th>
-            <th class="px-4 py-2 text-left">İşlemler</th>
+            <th
+              class="px-4 py-2 text-left"
+              v-if="!userStore.getUserData.isAdmin"
+            >
+              İşlemler
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -113,7 +119,10 @@
               {{ payment.amount.toLocaleString("tr-TR") }} ₺
             </td>
 
-            <td class="px-4 py-2 flex gap-2">
+            <td
+              class="px-4 py-2 flex gap-2"
+              v-if="!userStore.getUserData.isAdmin"
+            >
               <button
                 @click="openDetailModal(payment)"
                 class="p-2 border border-[#E6EAED] hover:bg-gray-200 rounded-md"
@@ -270,7 +279,9 @@ import {
   TrashIcon,
   BarsArrowUpIcon,
 } from "@heroicons/vue/24/outline";
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
 const payments = ref([]);
 const showDetailModal = ref(false);
 const showEditModal = ref(false);

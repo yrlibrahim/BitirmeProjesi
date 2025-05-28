@@ -3,11 +3,16 @@
     class="w-60 h-screen bg-white text-gray-800 px-4 border-e overflow-y-auto"
   >
     <div class="flex items-center">
-      <img src="../../assets/Images/logo-no-bg.png" class="w-24 h-2w-24" />
-      <h1 class="text-2xl font-medium font-serif">
-        <p>Yerli</p>
-        <p>Otomakas</p>
-      </h1>
+      <router-link
+        to="/home"
+        class="flex items-center no-underline hover:opacity-80 transition"
+      >
+        <img src="../../assets/Images/logo-no-bg.png" class="w-24 h-24" />
+        <h1 class="text-2xl font-medium font-serif text-[#000]">
+          <p>Yerli</p>
+          <p>Otomakas</p>
+        </h1>
+      </router-link>
     </div>
     <ul class="space-y-1">
       <!-- Anasayfa -->
@@ -43,7 +48,7 @@
           </div></router-link
         >
       </li>
-      <li>
+      <li v-if="!userStore.getUserData.isAdmin">
         <router-link
           to="/create-new-product"
           class="block px-3 py-2 rounded hover:bg-gray-100 transition"
@@ -168,93 +173,95 @@
       <!-- Divider -->
       <li class="border-t border-gray-300 my-3"></li>
 
-      <li class="text-sm font-semibold text-gray-500 uppercase px-3">
-        Eklemeler
-      </li>
-      <li>
-        <router-link
-          to="/invoice-add"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Fatura Ekleme</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/payment-add"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Ödeme Ekleme</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/companys-add"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Firma Ekleme</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/customers-add"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Müşteri Ekleme</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/upload-company-invoices"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Firma Fatura Ekleme</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/upload-company-payments"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Firma Ödeme Ekleme</p>
-          </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          to="/bulk-upload-page"
-          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
-          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
-        >
-          <div class="flex items-center gap-2">
-            <DocumentArrowDownIcon class="w-5" />
-            <p class="text-[16px]">Ürün Ekleme</p>
-          </div>
-        </router-link>
-      </li>
+      <div v-if="!userStore.getUserData.isAdmin">
+        <li class="text-sm font-semibold text-gray-500 uppercase px-3">
+          Eklemeler
+        </li>
+        <li>
+          <router-link
+            to="/invoice-add"
+            class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+            active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          >
+            <div class="flex items-center gap-2">
+              <DocumentArrowDownIcon class="w-5" />
+              <p class="text-[16px]">Fatura Ekleme</p>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            to="/payment-add"
+            class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+            active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          >
+            <div class="flex items-center gap-2">
+              <DocumentArrowDownIcon class="w-5" />
+              <p class="text-[16px]">Ödeme Ekleme</p>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            to="/companys-add"
+            class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+            active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          >
+            <div class="flex items-center gap-2">
+              <DocumentArrowDownIcon class="w-5" />
+              <p class="text-[16px]">Firma Ekleme</p>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            to="/customers-add"
+            class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+            active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          >
+            <div class="flex items-center gap-2">
+              <DocumentArrowDownIcon class="w-5" />
+              <p class="text-[16px]">Müşteri Ekleme</p>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            to="/upload-company-invoices"
+            class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+            active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          >
+            <div class="flex items-center gap-2">
+              <DocumentArrowDownIcon class="w-5" />
+              <p class="text-[16px]">Firma Fatura Ekleme</p>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            to="/upload-company-payments"
+            class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+            active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          >
+            <div class="flex items-center gap-2">
+              <DocumentArrowDownIcon class="w-5" />
+              <p class="text-[16px]">Firma Ödeme Ekleme</p>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            to="/bulk-upload-page"
+            class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+            active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+          >
+            <div class="flex items-center gap-2">
+              <DocumentArrowDownIcon class="w-5" />
+              <p class="text-[16px]">Ürün Ekleme</p>
+            </div>
+          </router-link>
+        </li>
+      </div>
     </ul>
   </div>
 </template>
@@ -270,6 +277,9 @@ import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
 } from "@heroicons/vue/24/outline";
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore();
 </script>
 
 <style scoped>

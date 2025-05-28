@@ -1,6 +1,17 @@
 <template>
-  <div class="p-6 space-y-6">
-    <h2 class="text-2xl font-bold">Yeni Firma Ödemesi Ekle</h2>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <h2 class="text-2xl font-bold">Yeni Firma Ödemesi Ekle</h2>
+      <div class="">
+        <button
+          class="border border-[#092C4C] bg-[#092C4C] rounded-md p-2 text-[#ffffff] hover:text-[#092C4C] hover:bg-[white] flex items-center gap-3 transition"
+          @click="router.back()"
+        >
+          <ArrowUturnLeftIcon class="w-5 h-5" />
+          Geri Dön
+        </button>
+      </div>
+    </div>
 
     <!-- Firma Seçimi -->
     <div>
@@ -68,7 +79,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
-
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
 // JS dosyasından veri fonksiyonlarını getir
 import { getCompanyList, addCompanyPayment } from "@/stores/companyPayments";
 

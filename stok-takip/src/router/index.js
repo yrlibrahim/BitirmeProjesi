@@ -228,6 +228,11 @@ const router = createRouter({
       name: "bulkUploadPage",
       component: () => import("@/components/user/BulkUploadPage.vue"),
     },
+    {
+      path: "/profile",
+      name: "UserProfile",
+      component: () => import("@/components/Navigations/UserProfile.vue"),
+    },
   ],
 });
 

@@ -6,6 +6,7 @@
     </div>
     <button
       @click="goToaddSalesInvoice"
+      v-if="!userStore.getUserData.isAdmin"
       class="btn bg-[#FE9F43] text-white border-[#FE9F43] hover:bg-white hover:text-[#FE9F43] transition rounded-md border px-4 py-2"
     >
       <div class="flex items-center">
@@ -133,7 +134,12 @@
                 <th class="p-3">Müşteri</th>
                 <th class="p-3">Fatura No</th>
                 <th class="p-3">Toplam</th>
-                <th class="p-3 flex justify-center">İşlem</th>
+                <th
+                  class="p-3 flex justify-center"
+                  v-if="!userStore.getUserData.isAdmin"
+                >
+                  İşlem
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -150,7 +156,7 @@
                 <td class="p-3">
                   {{ formatCurrency(fatura.totalAmount?.toFixed(2)) }}
                 </td>
-                <td class="p-3">
+                <td class="p-3" v-if="!userStore.getUserData.isAdmin">
                   <div class="flex justify-center gap-2">
                     <router-link
                       :to="{
@@ -205,7 +211,9 @@ import {
   CalendarDateRangeIcon,
   DocumentPlusIcon,
 } from "@heroicons/vue/24/outline";
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
 const toast = useToast();
 const invoices = ref([]);
 const isLoading = ref(true);

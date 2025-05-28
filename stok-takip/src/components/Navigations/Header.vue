@@ -1,26 +1,15 @@
 <template>
   <header
-    class="w-full bg-white shadow px-4 py-2 flex items-center justify-between"
+    class="w-full bg-white shadow px-4 py-2 flex items-center justify-end"
   >
-    <!-- Arama Kutusu -->
-    <div class="flex items-center gap-3">
-      <div class="relative">
-        <input
-          type="text"
-          placeholder="Ara..."
-          class="pl-10 pr-4 py-2 border rounded-md w-64 focus:outline-none focus:ring"
-          v-model="searchQuery"
-        />
-        <MagnifyingGlassIcon
-          class="w-5 h-5 text-gray-400 absolute top-1/2 left-3 -translate-y-1/2"
-        />
-      </div>
-    </div>
-
     <!-- Add New + Kullanıcı Menüsü -->
     <div class="flex items-center gap-4">
       <!-- Add New Dropdown -->
-      <div class="relative">
+      <div
+        class="relative"
+        v-if="!userStore.getUserData.isAdmin"
+        ref="addMenuRef"
+      >
         <button
           @click="toggleAddMenu"
           class="bg-[#FE9F43] text-white px-4 py-2 rounded-md flex items-center gap-2"
@@ -31,21 +20,23 @@
         </button>
         <div
           v-if="showAddMenu"
-          class="absolute right-0 mt-2 w-48 bg-white border shadow-md rounded-md z-10"
+          class="absolute right-0 mt-2 w-48 bg-white text-[#646B72] border shadow-md rounded-md z-10"
         >
           <ul class="divide-y divide-gray-200">
             <li>
               <router-link
                 to="/create-new-product"
-                class="block px-4 py-2 hover:bg-gray-100"
-                >➕ Yeni Ürün</router-link
+                class="px-4 py-2 hover:bg-gray-100 flex items-center"
+                ><span><PlusCircleIcon class="w-5 me-2" /></span> Yeni
+                Ürün</router-link
               >
             </li>
             <li>
               <router-link
                 to="/addCustomer"
-                class="block px-4 py-2 hover:bg-gray-100"
-                >👤 Yeni Müşteri</router-link
+                class="px-4 py-2 hover:bg-gray-100 flex items-center"
+                ><span><UserIcon class="w-5 me-2" /></span> Yeni
+                Müşteri</router-link
               >
             </li>
             <li>
@@ -60,9 +51,9 @@
       </div>
 
       <!-- Kullanıcı Dropdown -->
-      <div class="relative">
+      <div class="relative" ref="userMenuRef">
         <button @click="toggleUserMenu" class="flex items-center gap-2">
-          <img src="" class="w-8 h-8 rounded-full" />
+          <span><UserCircleIcon class="w-10 text-[#FE9F43]" /></span>
         </button>
         <div
           v-if="showUserMenu"
@@ -72,16 +63,17 @@
             <li>
               <router-link
                 to="/profile"
-                class="block px-4 py-2 hover:bg-gray-100"
-                >👤 Profil</router-link
+                class="px-4 py-2 hover:bg-gray-100 flex items-center text-[#646B72]"
+                ><span><UserIcon class="w-5 me-2" /></span> Profil</router-link
               >
             </li>
             <li>
               <button
                 @click="logout"
-                class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 text-[#092C4C] flex items-center"
               >
-                🚪 Çıkış Yap
+                <span><ArrowLeftEndOnRectangleIcon class="w-5 me-2" /></span>
+                Çıkış Yap
               </button>
             </li>
           </ul>
@@ -94,10 +86,24 @@
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
-import { MagnifyingGlassIcon, PlusCircleIcon } from "@heroicons/vue/24/solid";
+import {
+  MagnifyingGlassIcon,
+  PlusCircleIcon,
+  UserIcon,
+  UserCircleIcon,
+  ArrowLeftEndOnRectangleIcon,
+} from "@heroicons/vue/24/solid";
+import { useClickOutside } from "@/components/Helpers/useClickOutside";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+router.afterEach(() => {
+  showAddMenu.value = false;
+  showUserMenu.value = false;
+});
+
 const userStore = useUserStore();
 
-const searchQuery = ref("");
 const showAddMenu = ref(false);
 const showUserMenu = ref(false);
 
@@ -114,6 +120,18 @@ const toggleUserMenu = () => {
 const logout = () => {
   userStore.signOut();
 };
+
+// Menü referansları
+const addMenuRef = ref(null);
+const userMenuRef = ref(null);
+
+// Click outside hook
+useClickOutside(addMenuRef, () => {
+  showAddMenu.value = false;
+});
+useClickOutside(userMenuRef, () => {
+  showUserMenu.value = false;
+});
 </script>
 
 <style scoped>

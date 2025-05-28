@@ -1,14 +1,4 @@
 <script setup>
-import { Bar } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-} from "chart.js";
 import {
   CalendarDaysIcon,
   ExclamationTriangleIcon,
@@ -16,79 +6,25 @@ import {
   UsersIcon,
   UserGroupIcon,
 } from "@heroicons/vue/24/outline";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import FinancialSummary from "@/Charts/FinancialSummary.vue";
-import PaymentTypeComparisonChart from "@/Charts/PaymentTypeComparisonChart.vue";
-import { useStockData } from "@/stores/stock";
-import { getTopSellingProducts } from "@/stores/salesInvoice";
-import { fetchCounts } from "@/components/Helpers/useDashboardStats";
+import { useDashboardStore } from "@/stores/dashboard";
+import { useUserStore } from "@/stores/user";
 
-const stock = useStockData();
-const lowStock = ref([]);
+const userStore = useUserStore();
+const user = userStore.getUserData;
 
-onMounted(async () => {
-  lowStock.value = await stock.getLowStockProducts(5);
+const dashboard = useDashboardStore();
+
+onMounted(() => {
+  if (!dashboard.fetched) {
+    dashboard.fetchDashboardData();
+  }
 });
 
-const topSelling = ref([]);
-
-onMounted(async () => {
-  topSelling.value = await getTopSellingProducts(5);
-});
-
-const stats = ref({
-  totalCustomers: 0,
-  totalCompanies: 0,
-});
-
-onMounted(async () => {
-  stats.value = await fetchCounts();
-});
-
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-);
-
-const chartData = ref(null);
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: true,
-      text: "Aylık Gelen ve Giden Ödemeler",
-    },
-  },
-  scales: {
-    x: {
-      grid: {
-        display: false,
-      },
-    },
-    y: {
-      grid: {
-        display: true,
-        borderDash: [2, 1],
-        color: "#cbd5e1",
-      },
-      ticks: {
-        color: "#333",
-      },
-    },
-  },
-};
-
-onMounted(async () => {
-  chartData.value = await getMonthlyPaymentsChartData();
-});
+const stats = ref({ totalCustomers: 0, totalCompanies: 0 });
+const lowStock = computed(() => dashboard.lowStock);
+const topSelling = computed(() => dashboard.topSelling);
 
 const today = new Date();
 const formattedDate = ref(
@@ -103,7 +39,9 @@ const formattedDate = ref(
 <template>
   <!-- Başlık ve Tarih -->
   <div class="flex items-center justify-between">
-    <h1 class="text-[28px] text-[#212b36] font-bold">Hoşgeldiniz</h1>
+    <h1 class="text-[28px] text-[#212b36] font-bold">
+      Hoşgeldiniz {{ user.firstname }} {{ user.lastname }}
+    </h1>
     <span class="text-sm text-gray-600 flex items-center gap-1">
       <CalendarDaysIcon class="w-4 h-4" />
       {{ formattedDate }}
@@ -118,9 +56,7 @@ const formattedDate = ref(
   <!-- Üst Satır: Grafik + İstatistik Kartları -->
   <div class="mt-6 flex flex-col md:flex-row gap-4">
     <!--  En çok satanlar -->
-    <div
-      class="w-full lg:w-1/2 xl:w-1/3 bg-white rounded-xl border shadow-md p-4"
-    >
+    <div class="w-full lg:w-1/2 xl:w-1/3 bg-white rounded-md border p-4">
       <div class="flex items-center gap-2 text-lg font-bold border-b pb-2 mb-2">
         <span class="border bg-[#ffdbec] p-2 rounded-md">
           <CubeIcon class="w-6 text-[#FD3995]" />
@@ -150,10 +86,9 @@ const formattedDate = ref(
         Henüz satış yapılmamış 😔
       </p>
     </div>
+
     <!-- Düşük Stoklar -->
-    <div
-      class="w-full lg:w-1/2 xl:w-1/3 bg-white rounded-xl border shadow-md p-4"
-    >
+    <div class="w-full lg:w-1/2 xl:w-1/3 bg-white rounded-md border p-4">
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center gap-2 text-lg font-bold">
           <span class="border bg-[#ffede9] p-2 rounded-md">
@@ -192,11 +127,12 @@ const formattedDate = ref(
         Tüm ürünlerin stoğu yeterli 🎉
       </p>
     </div>
+
+    <!-- İstatistik Kartları -->
     <div
-      class="w-full md:w-1/3 flex flex-col justify-between gap-2 p-4 border bg-white"
+      class="w-full md:w-1/3 flex flex-col gap-2 p-4 rounded-md border bg-white"
     >
       <div class="flex gap-4 justify-between">
-        <!-- Müşteri -->
         <div
           class="bg-[#F9FAFB] border rounded-lg p-4 flex-1 flex flex-col items-center"
         >
@@ -206,7 +142,6 @@ const formattedDate = ref(
             {{ stats.totalCustomers }}
           </p>
         </div>
-        <!-- Şirket -->
         <div
           class="bg-[#F9FAFB] border rounded-lg p-4 flex-1 flex flex-col items-center"
         >
@@ -217,9 +152,6 @@ const formattedDate = ref(
           </p>
         </div>
       </div>
-
-      <!-- Ödeme Tipi Karşılaştırma -->
-      <PaymentTypeComparisonChart />
     </div>
   </div>
 </template>
