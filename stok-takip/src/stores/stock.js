@@ -61,19 +61,21 @@ export const useStockData = defineStore("stock", {
       this.adminStock = newList;
     },
     async getLowStockProducts(limitCount = 5) {
-      const q = query(
-        stockCol,
-        orderBy("count", "asc"), // en az olandan başla
-        limit(limitCount)
-      );
-
-      const snapshot = await getDocs(q);
-      return snapshot.docs
-        .map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-        .filter((doc) => doc.count < doc.minCount); // filtreyi ayrıca koy
+      const snapshot = await getDocs(stockCol);
+      const all = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      return all
+        .filter(
+          (item) =>
+            Number.isFinite(Number(item.count)) &&
+            Number.isFinite(Number(item.minCount)) &&
+            Number(item.count) <= Number(item.minCount)
+        )
+        .sort((a, b) => {
+          const aFark = a.count - a.minCount;
+          const bFark = b.count - b.minCount;
+          return aFark - bFark;
+        })
+        .slice(0, limitCount);
     },
   },
 });

@@ -223,6 +223,11 @@ const router = createRouter({
       name: "uploadCompanyPayments",
       component: () => import("@/components/user/uploadCompanyPayments.vue"),
     },
+    {
+      path: "/bulk-upload-page",
+      name: "bulkUploadPage",
+      component: () => import("@/components/user/BulkUploadPage.vue"),
+    },
   ],
 });
 

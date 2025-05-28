@@ -58,6 +58,7 @@ onMounted(async () => {
       Model: productData.value.model || "-",
       Kategori: productData.value.category || "-",
       "Alt Kategori": productData.value.subCategory || "-",
+      Açıklama: productData.value.description || "-",
       Adet: productData.value.count || "-",
       Fiyat: productData.value.price
         ? formatCurrency(productData.value.price)

@@ -243,6 +243,18 @@
           </div>
         </router-link>
       </li>
+      <li>
+        <router-link
+          to="/bulk-upload-page"
+          class="block px-3 py-2 rounded hover:bg-gray-100 transition"
+          active-class="text-[#FE9F43] bg-[#FE9F43] bg-opacity-[0.08] transition"
+        >
+          <div class="flex items-center gap-2">
+            <DocumentArrowDownIcon class="w-5" />
+            <p class="text-[16px]">Ürün Ekleme</p>
+          </div>
+        </router-link>
+      </li>
     </ul>
   </div>
 </template>
